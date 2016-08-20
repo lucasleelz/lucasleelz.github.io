@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Quartz2D," />
+  <meta name="keywords" content="Quartz 2D," />
 
 
 
@@ -84,7 +84,7 @@
 
 
 
-<meta name="description" content="什么是Quartz
+<meta name="description" content="什么是Quartz 2D
 Quartz 是一个二维绘图引擎，所以也叫Quartz 2D。为了简单，后面都叫Quartz。
 Quartz的API是纯C语言的，API来自于Core Graphics。
 
@@ -104,12 +104,12 @@ PDF
 自定义UIView    
 …
 
-PageQuartz 2D在图像中使用了绘">
+PageQuartz 在图像中使用了">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Quartz 2D基本概念">
 <meta property="og:url" content="https://lucasleelz.github.io/2016/08/20/Quartz/Quartz基本概念/index.html">
 <meta property="og:site_name" content="Lucas Lee's Blog">
-<meta property="og:description" content="什么是Quartz
+<meta property="og:description" content="什么是Quartz 2D
 Quartz 是一个二维绘图引擎，所以也叫Quartz 2D。为了简单，后面都叫Quartz。
 Quartz的API是纯C语言的，API来自于Core Graphics。
 
@@ -129,15 +129,15 @@ PDF
 自定义UIView    
 …
 
-PageQuartz 2D在图像中使用了绘">
+PageQuartz 在图像中使用了">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/painer's_model.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/quartz_drawing_destinations.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/the_quartz_coordinate_system.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/the_uikit_coordinate_system.png">
-<meta property="og:updated_time" content="2016-08-20T12:43:32.000Z">
+<meta property="og:updated_time" content="2016-08-20T13:36:49.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Quartz 2D基本概念">
-<meta name="twitter:description" content="什么是Quartz
+<meta name="twitter:description" content="什么是Quartz 2D
 Quartz 是一个二维绘图引擎，所以也叫Quartz 2D。为了简单，后面都叫Quartz。
 Quartz的API是纯C语言的，API来自于Core Graphics。
 
@@ -157,7 +157,7 @@ PDF
 自定义UIView    
 …
 
-PageQuartz 2D在图像中使用了绘">
+PageQuartz 在图像中使用了">
 <meta name="twitter:image" content="https://lucasleelz.github.io/images/quartz/painer's_model.png">
 
 
@@ -351,7 +351,7 @@ PageQuartz 2D在图像中使用了绘">
       
 
       
-        <h1 id="什么是Quartz"><a href="#什么是Quartz" class="headerlink" title="什么是Quartz"></a>什么是Quartz</h1><ol>
+        <h1 id="什么是Quartz-2D"><a href="#什么是Quartz-2D" class="headerlink" title="什么是Quartz 2D"></a>什么是Quartz 2D</h1><ol>
 <li><code>Quartz</code> 是一个二维绘图引擎，所以也叫<code>Quartz 2D</code>。为了简单，后面都叫<code>Quartz</code>。</li>
 <li>Quartz的API是纯C语言的，API来自于<code>Core Graphics</code>。</li>
 </ol>
@@ -371,7 +371,7 @@ PageQuartz 2D在图像中使用了绘">
 <li>自定义UIView    </li>
 <li>…</li>
 </ol>
-<h1 id="Page"><a href="#Page" class="headerlink" title="Page"></a>Page</h1><p>Quartz 2D在图像中使用了绘画者模型(painter’s model)。绘画者模型中，每个连续的绘制操作都是将一个绘制层(a layer of ‘paint’)放置于一个画布(‘canvas’)，我们通常称这个画布为Page。 与HTML5中Canvas差不多。<br>绘制顺序所产生的效果也将会不一样：</p>
+<h1 id="Page"><a href="#Page" class="headerlink" title="Page"></a>Page</h1><p>Quartz 在图像中使用了绘画者模型(painter’s model)。绘画者模型中，每个连续的绘制操作都是将一个绘制层(a layer of ‘paint’)放置于一个画布(‘canvas’)，我们通常称这个画布为Page。 与HTML5中Canvas差不多。<br>Quartz 在图像中使用了绘画者模型(painter’s model)。绘画者模型中，每个连续的绘制操作都是将一个绘制层(a layer of ‘paint’)放置于一个画布(‘canvas’)，我们通常称这个画布为Page。 与HTML5中Canvas差不多。<br>绘制顺序所产生的效果也将会不一样：</p>
 <p><img src="/images/quartz/painer&#39;s_model.png" alt="painer&#39;s model"></p>
 <p>Page可以是一张纸(如果输出设备是打印机)，也可以是虚拟的纸张(如果输出设备是PDF文件)，还可以是bitmap图像。这根据实际使用的<code>graphics context</code>而定。</p>
 <h1 id="Graphics-Context"><a href="#Graphics-Context" class="headerlink" title="Graphics Context"></a>Graphics Context</h1><p>Graphics Context是一个数据类型(CGContextRef)，用于封装Quartz绘制图像到输出设备的信息。设备可以是PDF文件、bitmap或者显示器的窗口上。</p>
@@ -415,7 +415,7 @@ PageQuartz 2D在图像中使用了绘">
 <li>使用含有“Create”或“Copy”的函数创建的对象，使用完后必须释放，否则将导致内存泄露</li>
 <li>使用不含有“Create”或“Copy”的函数获取的对象，则不需要释放</li>
 <li>如果retain了一个对象，不再使用时，需要将其release掉</li>
-<li>可以使用Quartz 2D的函数来指定retain和release一个对象。例如，如果创建了一个CGColorSpace对象，则使用函数CGColorSpaceRetain和CGColorSpaceRelease来retain和release对象。</li>
+<li>可以使用Quartz 的函数来指定retain和release一个对象。例如，如果创建了一个CGColorSpace对象，则使用函数CGColorSpaceRetain和CGColorSpaceRelease来retain和release对象。</li>
 <li>也可以使用Core Foundation的CFRetain和CFRelease。注意不能传递NULL值给这些函数</li>
 </ol>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
@@ -445,7 +445,7 @@ PageQuartz 2D在图像中使用了绘">
       
         <div class="post-tags">
           
-            <a href="/tags/Quartz2D/" rel="tag">#Quartz2D</a>
+            <a href="/tags/Quartz-2D/" rel="tag">#Quartz 2D</a>
           
         </div>
       
@@ -554,6 +554,10 @@ PageQuartz 2D在图像中使用了绘">
                   <a href="http://www.mossle.com" title="LemonOA" target="_blank">LemonOA</a>
                 </li>
               
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.yyang.io/" title="yyang" target="_blank">yyang</a>
+                </li>
+              
             </ul>
           </div>
         
@@ -567,7 +571,7 @@ PageQuartz 2D在图像中使用了绘">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是Quartz"><span class="nav-number">1.</span> <span class="nav-text">什么是Quartz</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Quartz-能做什么"><span class="nav-number">2.</span> <span class="nav-text">Quartz 能做什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Page"><span class="nav-number">3.</span> <span class="nav-text">Page</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Graphics-Context"><span class="nav-number">4.</span> <span class="nav-text">Graphics Context</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Data-Types"><span class="nav-number">5.</span> <span class="nav-text">Data Types</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Graphics-State"><span class="nav-number">6.</span> <span class="nav-text">Graphics State</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Coordinate-Systems"><span class="nav-number">7.</span> <span class="nav-text">Coordinate Systems</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CTM-矩阵"><span class="nav-number">8.</span> <span class="nav-text">CTM 矩阵</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内存管理"><span class="nav-number">9.</span> <span class="nav-text">内存管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">10.</span> <span class="nav-text">参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是Quartz-2D"><span class="nav-number">1.</span> <span class="nav-text">什么是Quartz 2D</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Quartz-能做什么"><span class="nav-number">2.</span> <span class="nav-text">Quartz 能做什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Page"><span class="nav-number">3.</span> <span class="nav-text">Page</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Graphics-Context"><span class="nav-number">4.</span> <span class="nav-text">Graphics Context</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Data-Types"><span class="nav-number">5.</span> <span class="nav-text">Data Types</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Graphics-State"><span class="nav-number">6.</span> <span class="nav-text">Graphics State</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Coordinate-Systems"><span class="nav-number">7.</span> <span class="nav-text">Coordinate Systems</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CTM-矩阵"><span class="nav-number">8.</span> <span class="nav-text">CTM 矩阵</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内存管理"><span class="nav-number">9.</span> <span class="nav-text">内存管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">10.</span> <span class="nav-text">参考</span></a></li></ol></div>
             
           </div>
         </section>
