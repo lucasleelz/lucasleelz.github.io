@@ -522,147 +522,16 @@
 
       
         
-          
-            <h1 id="阴影"><a href="#阴影" class="headerlink" title="阴影"></a>阴影</h1><p>如同人在太阳的倒影一样，那么阴影就模拟光源照射到图形对象上所形成的阴影效果。有时候可能需要一种悬浮的效果，那么就可以使用阴影。</p>
+          <h1 id="阴影"><a href="#阴影" class="headerlink" title="阴影"></a>阴影</h1><p>如同人在太阳的倒影一样，那么阴影就模拟光源照射到图形对象上所形成的阴影效果。有时候可能需要一种悬浮的效果，那么就可以使用阴影。</p>
 <h1 id="如何设置阴影"><a href="#如何设置阴影" class="headerlink" title="如何设置阴影"></a>如何设置阴影</h1><ul>
 <li>使用<code>CGContextSetShadow</code>设置阴影</li>
 <li>绘制图形，阴影就会自动呈现</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CGContextSetFillColorWithColor(context, [UIColor blueColor].CGColor);</span><br><span class="line">CGContextSetShadow(context, CGSizeMake(10.0, 10.0), 0.1);</span><br><span class="line">CGContextFillRect(context, CGRectMake(100.0, 100.0, 100.0, 100.0));</span><br></pre></td></tr></table></figure>
-<p><img src="/images/quartz/shadow/shadow1.png" alt="Shadow"></p>
-<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><ol>
-<li><code>CGContextSetShadow</code> 一定要先设置，先设置，先设置。不然是没有效果的。</li>
-<li><p>与Context State 结合使用，是为了不对其他绘图有影响，只作用于该绘图，即关闭了阴影。</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CGContextSaveGState(context);</span><br><span class="line">CGContextRestoreGState(context);</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="阴影属性"><a href="#阴影属性" class="headerlink" title="阴影属性"></a>阴影属性</h2><p>阴影属性实际上就是<code>CGContextSetShadow</code>函数的三个参数的使用。</p>
-<table>
-<thead>
-<tr>
-<th>属性</th>
-<th>类型</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>c</td>
-<td>CGContextRef</td>
-<td>上下文</td>
-</tr>
-<tr>
-<td>offset</td>
-<td>CGSize</td>
-<td>偏移量 根据坐标系而定在什么方向</td>
-</tr>
-<tr>
-<td>blur</td>
-<td>CGFloat</td>
-<td>模糊量 非负数 值越大越模糊</td>
-</tr>
-</tbody>
-</table>
-<h1 id="如何设置彩色阴影"><a href="#如何设置彩色阴影" class="headerlink" title="如何设置彩色阴影"></a>如何设置彩色阴影</h1><ul>
-<li>使用<code>CGContextSetShadowWithColor</code>传递相应的值</li>
-<li>绘制图形，彩色阴影就会自动呈现</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CGContextSaveGState(context);</span><br><span class="line">CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);</span><br><span class="line">CGContextSetShadowWithColor (context, CGSizeMake(10.0, 10.0), 5, [UIColor redColor].CGColor);</span><br><span class="line">CGContextFillRect(context, CGRectMake(10.0, 400.0, 100.0, 100.0));</span><br><span class="line">CGContextRestoreGState(context);</span><br></pre></td></tr></table></figure>
-<p><img src="/images/quartz/shadow/shadow2.png" alt="Shadow"></p>
-<h2 id="彩色阴影属性"><a href="#彩色阴影属性" class="headerlink" title="彩色阴影属性"></a>彩色阴影属性</h2><p>就比阴影属性<code>CGContextSetShadow</code>多了一个CGColor颜色对象</p>
-<table>
-<thead>
-<tr>
-<th>属性</th>
-<th>类型</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>color</td>
-<td>CGColorRef</td>
-<td>色彩</td>
-</tr>
-</tbody>
-</table>
-<h2 id="颜色空间"><a href="#颜色空间" class="headerlink" title="颜色空间"></a>颜色空间</h2><p>使用Quartz中的<code>CGColorCreate</code>创建颜色。记得一定有创建就要有释放。因此需要调用<code>CGColorRelease</code>与<code>CGColorSpaceRelease</code>进行释放。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const CGFloat components[] = &#123;1.0, 0.0, 0.0, 0.6&#125;;</span><br><span class="line">CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();</span><br><span class="line">CGColorRef color = CGColorCreate(colorSpace, components);</span><br><span class="line">CGContextSetShadowWithColor(context, CGSizeMake(10.0, 10.0), 5, color);</span><br><span class="line"></span><br><span class="line">CGContextFillRect(context, CGRectMake(210.0, 100.0, 100.0, 100.0));</span><br><span class="line"></span><br><span class="line">CGColorRelease (color);</span><br><span class="line">CGColorSpaceRelease (colorSpace);</span><br><span class="line"></span><br><span class="line">CGContextRestoreGState(context);</span><br></pre></td></tr></table></figure>
-<p><img src="/images/quartz/shadow/shadow3.png" alt="Shadow"></p>
-<h1 id="CALayer"><a href="#CALayer" class="headerlink" title="CALayer"></a>CALayer</h1><p>还可以通过<code>UIView</code>的layer属性设置阴影。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">UIView *view = [[UIView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];</span><br><span class="line">view.backgroundColor = [UIColor redColor];</span><br><span class="line"></span><br><span class="line">view.layer.shadowColor = [UIColor redColor].CGColor;</span><br><span class="line">view.layer.shadowOffset = CGSizeZero;</span><br><span class="line">view.layer.shadowOpacity = 0.5;</span><br><span class="line">view.layer.shadowRadius = 10;</span><br><span class="line"></span><br><span class="line">[self addSubview:view];</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th>属性</th>
-<th>类型</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>shadowColor</td>
-<td>CGColorRef</td>
-<td>色彩</td>
-</tr>
-<tr>
-<td>shadowOffset</td>
-<td>CGSize</td>
-<td>偏移量，CGSizeZero四边都有阴影</td>
-</tr>
-<tr>
-<td>shadowOpacity</td>
-<td>float</td>
-<td>阴影的透明度</td>
-</tr>
-<tr>
-<td>shadowRadius</td>
-<td>CGFloat</td>
-<td>阴影的半径</td>
-</tr>
-</tbody>
-</table>
-<h1 id="关于Quartz与CALayer偏移量"><a href="#关于Quartz与CALayer偏移量" class="headerlink" title="关于Quartz与CALayer偏移量"></a>关于<code>Quartz</code>与<code>CALayer</code>偏移量</h1><p><code>CALayer</code>与<code>Quartz</code>的阴影<code>height</code>方向不一样。</p>
-<table>
-<thead>
-<tr>
-<th>偏移量</th>
-<th>方式</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>height</td>
-<td>CALayer</td>
-<td>正数在上方    </td>
-</tr>
-<tr>
-<td>height</td>
-<td>Quartz</td>
-<td>正数在下方</td>
-</tr>
-</tbody>
-</table>
-<h1 id="实际案例-给圆角头像设置阴影"><a href="#实际案例-给圆角头像设置阴影" class="headerlink" title="实际案例 给圆角头像设置阴影"></a>实际案例 给圆角头像设置阴影</h1><p>看上去很简单，先给头像设置圆角，在设置阴影。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">CGRect avatarImageViewRect = CGRectMake(100, 100, 100, 100);</span><br><span class="line">UIImageView *avatarImageView = [[UIImageView alloc] initWithFrame:avatarImageViewRect];</span><br><span class="line">avatarImageView.image = [UIImage imageNamed:@&quot;avatar&quot;];</span><br><span class="line">avatarImageView.layer.shadowColor = [UIColor redColor].CGColor;</span><br><span class="line">avatarImageView.layer.shadowOffset = CGSizeZero;</span><br><span class="line">avatarImageView.layer.shadowOpacity = 0.8;</span><br><span class="line">avatarImageView.layer.shadowRadius = 10;</span><br><span class="line">avatarImageView.layer.masksToBounds = YES;</span><br><span class="line">avatarImageView.layer.cornerRadius = 10.0;</span><br><span class="line">[avatarImageView addSubview:avatarImageView];</span><br><span class="line">[self addSubview:avatarImageView];</span><br></pre></td></tr></table></figure>
-<p><img src="/images/quartz/shadow/shadow4.png" alt="Shadow"></p>
-<p>但是因为<code>masksToBounds</code>属性会把阴影也一同剪切掉了。所以是看不见阴影的。</p>
-<ul>
-<li>设置头像为圆角</li>
-<li>把头像加入到一个View中，为View添加阴影</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">CGRect viewRect = CGRectMake(100, 100, 100, 100);</span><br><span class="line"></span><br><span class="line">UIView *shadowView = [[UIView alloc] initWithFrame:viewRect];</span><br><span class="line">shadowView.layer.shadowColor = [UIColor redColor].CGColor;</span><br><span class="line">shadowView.layer.shadowOffset = CGSizeZero;</span><br><span class="line">shadowView.layer.shadowOpacity = 0.8;</span><br><span class="line">shadowView.layer.shadowRadius = 10;</span><br><span class="line">shadowView.clipsToBounds = NO;</span><br><span class="line"></span><br><span class="line">UIImageView *avatarImageView = [[UIImageView alloc] initWithFrame:shadowView.bounds];</span><br><span class="line">avatarImageView.image = [UIImage imageNamed:@&quot;avatar&quot;];</span><br><span class="line">avatarImageView.layer.masksToBounds = YES;</span><br><span class="line">avatarImageView.layer.cornerRadius = 10.0;</span><br><span class="line">[shadowView addSubview:avatarImageView];</span><br><span class="line"></span><br><span class="line">[self addSubview:shadowView];</span><br></pre></td></tr></table></figure>
-<p><img src="/images/quartz/shadow/shadow5.png" alt="Shadow"></p>
-<p>实际上有多种实现方式，上面是新增一个<code>UIView</code>，也可以新增一个<code>CALayer</code>。</p>
-<h1 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h1><p>上面这种最简单的添加阴影的方法是存在性能问题的，特别是<code>UITableViewCell</code>做一些动画，你可能就会发现不流畅，卡顿。因为计算阴影需要Core Animation做一个离屏渲染，以View准确的形状确定清楚如何呈现其阴影。<br>只要你提前告诉CoreAnimation你要渲染的View的形状Shape,就会减少离屏渲染计算。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shadowView.layer.shadowPath = </span><br><span class="line">[UIBezierPath bezierPathWithRect:shadowView.bounds].CGPath;</span><br></pre></td></tr></table></figure></p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="https://developer.apple.com/library/prerelease/content/documentation/GraphicsImaging/Conceptual/drawingwithquartz2d/dq_context/dq_context.html#//apple_ref/doc/uid/TP30001066-CH203-CJBJDEFF" target="_blank" rel="external">Quartz 2D Programming Guide
-</a></li>
-</ol>
-<h1 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h1><p><a href="https://github.com/lucasleelz/iOSExample/tree/master/Quartz2D" target="_blank" rel="external">Quartz2D</a></p>
-
-          
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/08/27/quartz/shadow/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>

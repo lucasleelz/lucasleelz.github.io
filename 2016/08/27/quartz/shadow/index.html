@@ -93,9 +93,7 @@
 <meta name="description" content="阴影如同人在太阳的倒影一样，那么阴影就模拟光源照射到图形对象上所形成的阴影效果。有时候可能需要一种悬浮的效果，那么就可以使用阴影。
 如何设置阴影
 使用CGContextSetShadow设置阴影
-绘制图形，阴影就会自动呈现
-
-123CGContextSetFillColorWithColor(context, [UIColor blueColor].CGColor);CGContextSetSha">
+绘制图形，阴影就会自动呈现">
 <meta property="og:type" content="article">
 <meta property="og:title" content="阴影">
 <meta property="og:url" content="https://lucasleelz.github.io/2016/08/27/quartz/shadow/index.html">
@@ -103,23 +101,19 @@
 <meta property="og:description" content="阴影如同人在太阳的倒影一样，那么阴影就模拟光源照射到图形对象上所形成的阴影效果。有时候可能需要一种悬浮的效果，那么就可以使用阴影。
 如何设置阴影
 使用CGContextSetShadow设置阴影
-绘制图形，阴影就会自动呈现
-
-123CGContextSetFillColorWithColor(context, [UIColor blueColor].CGColor);CGContextSetSha">
+绘制图形，阴影就会自动呈现">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/shadow/shadow1.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/shadow/shadow2.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/shadow/shadow3.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/shadow/shadow4.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/shadow/shadow5.png">
-<meta property="og:updated_time" content="2016-08-29T08:07:31.000Z">
+<meta property="og:updated_time" content="2016-08-29T12:45:20.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="阴影">
 <meta name="twitter:description" content="阴影如同人在太阳的倒影一样，那么阴影就模拟光源照射到图形对象上所形成的阴影效果。有时候可能需要一种悬浮的效果，那么就可以使用阴影。
 如何设置阴影
 使用CGContextSetShadow设置阴影
-绘制图形，阴影就会自动呈现
-
-123CGContextSetFillColorWithColor(context, [UIColor blueColor].CGColor);CGContextSetSha">
+绘制图形，阴影就会自动呈现">
 <meta name="twitter:image" content="https://lucasleelz.github.io/images/quartz/shadow/shadow1.png">
 
 
@@ -335,6 +329,7 @@
 <li>使用<code>CGContextSetShadow</code>设置阴影</li>
 <li>绘制图形，阴影就会自动呈现</li>
 </ul>
+<a id="more"></a>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CGContextSetFillColorWithColor(context, [UIColor blueColor].CGColor);</span><br><span class="line">CGContextSetShadow(context, CGSizeMake(10.0, 10.0), 0.1);</span><br><span class="line">CGContextFillRect(context, CGRectMake(100.0, 100.0, 100.0, 100.0));</span><br></pre></td></tr></table></figure>
 <p><img src="/images/quartz/shadow/shadow1.png" alt="Shadow"></p>
 <h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><ol>
