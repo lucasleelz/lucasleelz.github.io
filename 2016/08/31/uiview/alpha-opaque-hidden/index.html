@@ -76,7 +76,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="iOS,UIView," />
 
 
 
@@ -92,16 +92,37 @@
 
 
 
-<meta name="description" content="iOS DeveloperEmail有任何问题可以联系该邮箱&amp;#108;&amp;#x6c;&amp;#122;&amp;#x71;&amp;#105;&amp;#110;&amp;#x67;&amp;#x64;&amp;#97;&amp;#x6f;&amp;#x32;&amp;#48;&amp;#49;&amp;#x32;&amp;#x40;&amp;#103;&amp;#x6d;&amp;#97;&amp;#105;&amp;#108;&amp;#x2e;&amp;#x63;&amp;#x6f;&amp;#109;.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="关于">
-<meta property="og:url" content="https://lucasleelz.github.io/about/index.html">
+<meta name="description" content="alphaiOS屏幕都是由一个个像素点组成，每一个像素点都可以由RGBA颜色空间组成一种颜色。alpha属性决定视图通过像素显示多少信息。
+
+1.0 整个视图都会在像素上显示出来。
+0.0 整个视图没有在像素上显示出来，但它事实上整个视图还是存在界面上的
+
+一般用于动画中，改变视图alpha值，视图便会若隐若现…
+alpha取值范围 [0.0, 1.0]。
+当为0.0的时候不会响应事件。也就是说不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="alpha opaque hidden">
+<meta property="og:url" content="https://lucasleelz.github.io/2016/08/31/uiview/alpha-opaque-hidden/index.html">
 <meta property="og:site_name" content="Lucas Lee's Blog">
-<meta property="og:description" content="iOS DeveloperEmail有任何问题可以联系该邮箱&amp;#108;&amp;#x6c;&amp;#122;&amp;#x71;&amp;#105;&amp;#110;&amp;#x67;&amp;#x64;&amp;#97;&amp;#x6f;&amp;#x32;&amp;#48;&amp;#49;&amp;#x32;&amp;#x40;&amp;#103;&amp;#x6d;&amp;#97;&amp;#105;&amp;#108;&amp;#x2e;&amp;#x63;&amp;#x6f;&amp;#109;.">
-<meta property="og:updated_time" content="2016-08-20T12:29:44.000Z">
+<meta property="og:description" content="alphaiOS屏幕都是由一个个像素点组成，每一个像素点都可以由RGBA颜色空间组成一种颜色。alpha属性决定视图通过像素显示多少信息。
+
+1.0 整个视图都会在像素上显示出来。
+0.0 整个视图没有在像素上显示出来，但它事实上整个视图还是存在界面上的
+
+一般用于动画中，改变视图alpha值，视图便会若隐若现…
+alpha取值范围 [0.0, 1.0]。
+当为0.0的时候不会响应事件。也就是说不">
+<meta property="og:updated_time" content="2016-08-31T13:40:16.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于">
-<meta name="twitter:description" content="iOS DeveloperEmail有任何问题可以联系该邮箱&amp;#108;&amp;#x6c;&amp;#122;&amp;#x71;&amp;#105;&amp;#110;&amp;#x67;&amp;#x64;&amp;#97;&amp;#x6f;&amp;#x32;&amp;#48;&amp;#49;&amp;#x32;&amp;#x40;&amp;#103;&amp;#x6d;&amp;#97;&amp;#105;&amp;#108;&amp;#x2e;&amp;#x63;&amp;#x6f;&amp;#109;.">
+<meta name="twitter:title" content="alpha opaque hidden">
+<meta name="twitter:description" content="alphaiOS屏幕都是由一个个像素点组成，每一个像素点都可以由RGBA颜色空间组成一种颜色。alpha属性决定视图通过像素显示多少信息。
+
+1.0 整个视图都会在像素上显示出来。
+0.0 整个视图没有在像素上显示出来，但它事实上整个视图还是存在界面上的
+
+一般用于动画中，改变视图alpha值，视图便会若隐若现…
+alpha取值范围 [0.0, 1.0]。
+当为0.0的时候不会响应事件。也就是说不">
 
 
 
@@ -122,15 +143,9 @@
 
 
 
-  <link rel="canonical" href="https://lucasleelz.github.io/about/"/>
+  <link rel="canonical" href="https://lucasleelz.github.io/2016/08/31/uiview/alpha-opaque-hidden/"/>
 
-  <title>
-  
-
-  
-    关于 | Lucas Lee's Blog
-  
-</title>
+  <title> alpha opaque hidden | Lucas Lee's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -170,7 +185,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -260,10 +275,162 @@
 
   <div id="posts" class="posts-expand">
     
-    
-      <h1 id="iOS-Developer"><a href="#iOS-Developer" class="headerlink" title="iOS Developer"></a>iOS Developer</h1><h1 id="Email"><a href="#Email" class="headerlink" title="Email"></a>Email</h1><p>有任何问题可以联系该邮箱<br><a href="&#109;&#97;&#105;&#108;&#x74;&#x6f;&#58;&#108;&#x6c;&#122;&#x71;&#105;&#110;&#x67;&#x64;&#97;&#x6f;&#x32;&#48;&#49;&#x32;&#x40;&#103;&#x6d;&#97;&#105;&#108;&#x2e;&#x63;&#x6f;&#109;">&#108;&#x6c;&#122;&#x71;&#105;&#110;&#x67;&#x64;&#97;&#x6f;&#x32;&#48;&#49;&#x32;&#x40;&#103;&#x6d;&#97;&#105;&#108;&#x2e;&#x63;&#x6f;&#109;</a>.</p>
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                alpha opaque hidden
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-31T20:10:18+08:00" content="2016 08 31">
+              2016 08 31
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/31/uiview/alpha-opaque-hidden/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/31/uiview/alpha-opaque-hidden/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="alpha"><a href="#alpha" class="headerlink" title="alpha"></a>alpha</h1><p>iOS屏幕都是由一个个像素点组成，每一个像素点都可以由RGBA颜色空间组成一种颜色。<br>alpha属性决定视图通过像素显示多少信息。</p>
+<ul>
+<li>1.0 整个视图都会在像素上显示出来。</li>
+<li>0.0 整个视图没有在像素上显示出来，但它事实上整个视图还是存在界面上的</li>
+</ul>
+<p>一般用于动画中，改变视图alpha值，视图便会若隐若现…</p>
+<p>alpha取值范围 <code>[0.0, 1.0]</code>。</p>
+<p>当为0.0的时候不会响应事件。也就是说不会接收触摸事件以及手势。所以不能使用一个非常低的alpha值来创建“透明覆盖层”，捕获触摸事件。</p>
+<p>可以使用alpha为1.0 opaque 为NO，backgroundColor为nil或者[UIColor clearColor]来捕获触摸事件。</p>
+<h1 id="opaque"><a href="#opaque" class="headerlink" title="opaque"></a>opaque</h1><p>这个跟alpha看似相似，却又不一样，BOOL值，UIView默认值是YES，但是UIButton等子类默认值都是NO，设置为NO，opaque表示当前UIView是否 <code>不透明</code>。但决定不了当前UIView是不是透明。 </p>
+<p>如果多个图层有层叠部分，设置为YES，GPU就会计算合成后的颜色。设置为NO，是忽略覆盖在下面的视图。这样子可以改善性能。</p>
+<p>开发中我们应该尽量让其为NO。 特别是继承<code>UIView</code>时候，尽可能设置为NO。</p>
+<h1 id="hidden"><a href="#hidden" class="headerlink" title="hidden"></a>hidden</h1><p>hidden 视图根本不会绘制，也就是界面上不会存在该视图。他当然也就不会接收触摸事件了。 </p>
+<ul>
+<li>当前视图以及子视图都不会绘制</li>
+<li>不也会响应事件，即使加了手势。</li>
+</ul>
+<h1 id="alpha与hidden的区别"><a href="#alpha与hidden的区别" class="headerlink" title="alpha与hidden的区别"></a>alpha与hidden的区别</h1><p>虽然等同于alpha为0.0的时候，但是alpha为0.0的时候界面上实际上还是有该视图的。所以以alpha来做隐藏视图的动画。而hidden根本就不存在所以也就不存在动画了。</p>
+<p>alpha即使设置为0.0，依旧会在界面上存在， 而hidden界面上根本就没有。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.jpg" alt="Lucas Lee Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag">#iOS</a>
+          
+            <a href="/tags/UIView/" rel="tag">#UIView</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/31/quartz/transparency-layers/" rel="next" title="透明层">
+                <i class="fa fa-chevron-left"></i> 透明层
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -274,8 +441,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="about/index.html"
-           data-title="关于" data-url="https://lucasleelz.github.io/about/index.html">
+      <div class="ds-thread" data-thread-key="2016/08/31/uiview/alpha-opaque-hidden/"
+           data-title="alpha opaque hidden" data-url="https://lucasleelz.github.io/2016/08/31/uiview/alpha-opaque-hidden/">
       </div>
     
   </div>
@@ -299,8 +466,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpg"
@@ -365,6 +541,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#alpha"><span class="nav-number">1.</span> <span class="nav-text">alpha</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#opaque"><span class="nav-number">2.</span> <span class="nav-text">opaque</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hidden"><span class="nav-number">3.</span> <span class="nav-text">hidden</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#alpha与hidden的区别"><span class="nav-number">4.</span> <span class="nav-text">alpha与hidden的区别</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -461,6 +648,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 

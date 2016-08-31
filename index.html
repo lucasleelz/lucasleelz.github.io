@@ -275,6 +275,125 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/31/uiview/alpha-opaque-hidden/" itemprop="url">
+                  alpha opaque hidden
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-31T20:10:18+08:00" content="2016 08 31">
+              2016 08 31
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/31/uiview/alpha-opaque-hidden/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/31/uiview/alpha-opaque-hidden/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="alpha"><a href="#alpha" class="headerlink" title="alpha"></a>alpha</h1><p>iOS屏幕都是由一个个像素点组成，每一个像素点都可以由RGBA颜色空间组成一种颜色。<br>alpha属性决定视图通过像素显示多少信息。</p>
+<ul>
+<li>1.0 整个视图都会在像素上显示出来。</li>
+<li>0.0 整个视图没有在像素上显示出来，但它事实上整个视图还是存在界面上的</li>
+</ul>
+<p>一般用于动画中，改变视图alpha值，视图便会若隐若现…</p>
+<p>alpha取值范围 <code>[0.0, 1.0]</code>。</p>
+<p>当为0.0的时候不会响应事件。也就是说不会接收触摸事件以及手势。所以不能使用一个非常低的alpha值来创建“透明覆盖层”，捕获触摸事件。</p>
+<p>可以使用alpha为1.0 opaque 为NO，backgroundColor为nil或者[UIColor clearColor]来捕获触摸事件。</p>
+<h1 id="opaque"><a href="#opaque" class="headerlink" title="opaque"></a>opaque</h1><p>这个跟alpha看似相似，却又不一样，BOOL值，UIView默认值是YES，但是UIButton等子类默认值都是NO，设置为NO，opaque表示当前UIView是否 <code>不透明</code>。但决定不了当前UIView是不是透明。 </p>
+<p>如果多个图层有层叠部分，设置为YES，GPU就会计算合成后的颜色。设置为NO，是忽略覆盖在下面的视图。这样子可以改善性能。</p>
+<p>开发中我们应该尽量让其为NO。 特别是继承<code>UIView</code>时候，尽可能设置为NO。</p>
+<h1 id="hidden"><a href="#hidden" class="headerlink" title="hidden"></a>hidden</h1><p>hidden 视图根本不会绘制，也就是界面上不会存在该视图。他当然也就不会接收触摸事件了。 </p>
+<ul>
+<li>当前视图以及子视图都不会绘制</li>
+<li>不也会响应事件，即使加了手势。</li>
+</ul>
+<h1 id="alpha与hidden的区别"><a href="#alpha与hidden的区别" class="headerlink" title="alpha与hidden的区别"></a>alpha与hidden的区别</h1><p>虽然等同于alpha为0.0的时候，但是alpha为0.0的时候界面上实际上还是有该视图的。所以以alpha来做隐藏视图的动画。而hidden根本就不存在所以也就不存在动画了。</p>
+<p>alpha即使设置为0.0，依旧会在界面上存在， 而hidden界面上根本就没有。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/31/quartz/transparency-layers/" itemprop="url">
                   透明层
                 </a>
@@ -336,106 +455,6 @@
               阅读全文 &raquo;
             </a>
           </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/29/uiview/alpha-opaque-hidden/" itemprop="url">
-                  alpha opaque hidden
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-29T23:10:18+08:00" content="2016 08 29">
-              2016 08 29
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/29/uiview/alpha-opaque-hidden/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/29/uiview/alpha-opaque-hidden/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
         
       
     </div>
