@@ -264,8 +264,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/08/29/tips/top02/" itemprop="url">
-                  UIStoryboard使用
+                <a class="post-title-link" href="/2016/08/31/quartz/transparency-layers/" itemprop="url">
+                  透明层
                 </a>
               
             
@@ -278,8 +278,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-29T13:19:05+08:00" content="2016 08 29">
-              2016 08 29
+            <time itemprop="dateCreated" datetime="2016-08-31T19:41:17+08:00" content="2016 08 31">
+              2016 08 31
             </time>
           </span>
 
@@ -289,8 +289,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/08/29/tips/top02/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/29/tips/top02/" itemprop="commentsCount"></span>
+                <a href="/2016/08/31/quartz/transparency-layers/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/31/quartz/transparency-layers/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -314,17 +314,17 @@
 
       
         
-          
-            <h1 id="关于Storyboard-Reference"><a href="#关于Storyboard-Reference" class="headerlink" title="关于Storyboard Reference"></a>关于Storyboard Reference</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&apos;Storyboard (&lt;UIStoryboard: 0x7f96f9c049d0&gt;)</span><br><span class="line">    doesn&apos;t contain a view controller with identifier</span><br><span class="line">&apos;UIViewController-vU5-PH-Khc&apos;</span><br></pre></td></tr></table></figure>
-<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><p>我们只需拖拽选中这些view controller，然后在Xcode菜单栏上选择<code>Editor</code> -&gt; <code>Refactor to Storyboard</code>。</p>
-<p>今天在重构UIStoryboard时候，很懵逼出现这个错误。</p>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>在Xcode7中，当你改变storyboard ids运行时就会出现上面的错误。这个时候只需要清理一下这个项目。</p>
-<ul>
-<li>command + shift + k</li>
-<li>在Xcode菜单栏上选则<code>Product</code> -&gt; <code>Clean</code>。</li>
+          <p>透明层通过组合来生成一个组合图形。当需要在一组对象上使用特效时，透明层非常有用。</p>
+<h1 id="透明层如何绘制"><a href="#透明层如何绘制" class="headerlink" title="透明层如何绘制"></a>透明层如何绘制</h1><ul>
+<li>调用<code>CGContextBeginTransparencyLayer</code>开始透明层</li>
+<li>绘制组合对象</li>
+<li>调用<code>CGContextEndTransparencyLayer</code>结束透明层</li>
 </ul>
-
-          
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/08/31/quartz/transparency-layers/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -372,8 +372,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/08/28/quartz/gradient/" itemprop="url">
-                  渐变
+                <a class="post-title-link" href="/2016/08/29/quartz/color-colorspaces/" itemprop="url">
+                  颜色与颜色空间
                 </a>
               
             
@@ -386,8 +386,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-28T16:06:43+08:00" content="2016 08 28">
-              2016 08 28
+            <time itemprop="dateCreated" datetime="2016-08-29T21:40:22+08:00" content="2016 08 29">
+              2016 08 29
             </time>
           </span>
 
@@ -397,8 +397,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/08/28/quartz/gradient/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/28/quartz/gradient/" itemprop="commentsCount"></span>
+                <a href="/2016/08/29/quartz/color-colorspaces/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/29/quartz/color-colorspaces/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -422,9 +422,117 @@
 
       
         
+          <p>在现代计算机图形学中，显示在屏幕上的颜色数据都会保存，并遵循色彩模型，也就是色彩空间，将显示生活中的颜色以计算机能够理解的数值表示出来。iOS就是以红绿蓝+透明度来表示颜色。在iOS中这些数组都是在<code>0.0 ~ 1.0</code>之间。 </p>
+<h1 id="RGB色彩模型"><a href="#RGB色彩模型" class="headerlink" title="RGB色彩模型"></a>RGB色彩模型</h1><p>红绿蓝 代表加法三原色，即（RGB色彩模型）。以不同的比例混合三种颜色，会生成一些列不同的颜色，统称为色域（gamut）。</p>
+<h1 id="RYB色彩模型"><a href="#RYB色彩模型" class="headerlink" title="RYB色彩模型"></a>RYB色彩模型</h1><p>以前学过红黄蓝，称之为减法三原色，即（RYB色彩模型）。它的局限性是色域非常有限，还很难用数学方式来表示。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/08/29/quartz/color-colorspaces/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/29/uiview/uistoryboard/" itemprop="url">
+                  UIStoryboard使用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-29T13:19:05+08:00" content="2016 08 29">
+              2016 08 29
+            </time>
+          </span>
+
+          
+
           
             
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/29/uiview/uistoryboard/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/29/uiview/uistoryboard/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="关于Storyboard-Reference"><a href="#关于Storyboard-Reference" class="headerlink" title="关于Storyboard Reference"></a>关于Storyboard Reference</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&apos;Storyboard (&lt;UIStoryboard: 0x7f96f9c049d0&gt;)</span><br><span class="line">    doesn&apos;t contain a view controller with identifier</span><br><span class="line">&apos;UIViewController-vU5-PH-Khc&apos;</span><br></pre></td></tr></table></figure>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/08/29/uiview/uistoryboard/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -688,7 +796,7 @@
             
               
                 
-                <a class="post-title-link" href="/2016/08/24/tips/tips01/" itemprop="url">
+                <a class="post-title-link" href="/2016/08/24/tips/callphone-sendmessage-composeemail/" itemprop="url">
                   iOS常用功能（打电话、发短信、发邮件）
                 </a>
               
@@ -713,8 +821,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/08/24/tips/tips01/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/24/tips/tips01/" itemprop="commentsCount"></span>
+                <a href="/2016/08/24/tips/callphone-sendmessage-composeemail/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/24/tips/callphone-sendmessage-composeemail/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -741,110 +849,10 @@
           <p>在App开发中，一般都会用到给联系人打电话、发短信、发邮件等小功能，比如，在一个企业内部的app中，要找到某个部门的同事，可以直接找到联系方式。在用户点击手机号码时候就自动拨号，或者发短信。公司工作交流一般都是接收邮件的方式，那么就可以直接发送邮件。</p>
 <h1 id="打电话"><a href="#打电话" class="headerlink" title="打电话"></a>打电话</h1><p>打电话功能目前可以使用的有三种方式。</p>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2016/08/24/tips/tips01/#more" rel="contents">
+            <a class="btn" href="/2016/08/24/tips/callphone-sendmessage-composeemail/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/24/uiview/uinavigationbar/" itemprop="url">
-                  UINavigationBar
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-24T21:17:09+08:00" content="2016 08 24">
-              2016 08 24
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/24/uiview/uinavigationbar/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/24/uiview/uinavigationbar/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
         
       
     </div>
@@ -1052,7 +1060,6 @@
 <li>在iOS3.2中添加了UIBezierPath更高级的API来绘制。实际上UIBezierPath是对CGPathRef的封装。</li>
 <li>UIKit依然缺乏对渐变、阴影等高级特性的支持。但UIKit却可以非常方便的实现大部分常见的自定义绘制。</li>
 </ol>
-<h1 id="UIBezierPath带来的好处"><a href="#UIBezierPath带来的好处" class="headerlink" title="UIBezierPath带来的好处"></a>UIBezierPath带来的好处</h1><p>因为是更好级别的API，而不是C语言的层面，所以默认就是ARC，系统帮我们管理内存。而CGPathRef则需要我们自己在合适的时候进行释放内存。从而更专注于绘图。</p>
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/08/20/uiview/uibezierpath/#more" rel="contents">
               阅读全文 &raquo;
@@ -1241,7 +1248,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
