@@ -99,7 +99,7 @@
 
 一般用于动画中，改变视图alpha值，视图便会若隐若现…
 alpha取值范围 [0.0, 1.0]。
-当为0.0的时候不会响应事件。也就是说不">
+opaque这个跟alpha看似相似，却">
 <meta property="og:type" content="article">
 <meta property="og:title" content="alpha opaque hidden">
 <meta property="og:url" content="https://lucasleelz.github.io/2016/08/31/uiview/alpha-opaque-hidden/index.html">
@@ -111,8 +111,8 @@ alpha取值范围 [0.0, 1.0]。
 
 一般用于动画中，改变视图alpha值，视图便会若隐若现…
 alpha取值范围 [0.0, 1.0]。
-当为0.0的时候不会响应事件。也就是说不">
-<meta property="og:updated_time" content="2016-08-31T13:40:16.000Z">
+opaque这个跟alpha看似相似，却">
+<meta property="og:updated_time" content="2016-09-01T08:08:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="alpha opaque hidden">
 <meta name="twitter:description" content="alphaiOS屏幕都是由一个个像素点组成，每一个像素点都可以由RGBA颜色空间组成一种颜色。alpha属性决定视图通过像素显示多少信息。
@@ -122,7 +122,7 @@ alpha取值范围 [0.0, 1.0]。
 
 一般用于动画中，改变视图alpha值，视图便会若隐若现…
 alpha取值范围 [0.0, 1.0]。
-当为0.0的时候不会响应事件。也就是说不">
+opaque这个跟alpha看似相似，却">
 
 
 
@@ -348,8 +348,6 @@ alpha取值范围 [0.0, 1.0]。
 </ul>
 <p>一般用于动画中，改变视图alpha值，视图便会若隐若现…</p>
 <p>alpha取值范围 <code>[0.0, 1.0]</code>。</p>
-<p>当为0.0的时候不会响应事件。也就是说不会接收触摸事件以及手势。所以不能使用一个非常低的alpha值来创建“透明覆盖层”，捕获触摸事件。</p>
-<p>可以使用alpha为1.0 opaque 为NO，backgroundColor为nil或者[UIColor clearColor]来捕获触摸事件。</p>
 <h1 id="opaque"><a href="#opaque" class="headerlink" title="opaque"></a>opaque</h1><p>这个跟alpha看似相似，却又不一样，BOOL值，UIView默认值是YES，但是UIButton等子类默认值都是NO，设置为NO，opaque表示当前UIView是否 <code>不透明</code>。但决定不了当前UIView是不是透明。 </p>
 <p>如果多个图层有层叠部分，设置为YES，GPU就会计算合成后的颜色。设置为NO，是忽略覆盖在下面的视图。这样子可以改善性能。</p>
 <p>开发中我们应该尽量让其为NO。 特别是继承<code>UIView</code>时候，尽可能设置为NO。</p>
@@ -360,6 +358,7 @@ alpha取值范围 [0.0, 1.0]。
 </ul>
 <h1 id="alpha与hidden的区别"><a href="#alpha与hidden的区别" class="headerlink" title="alpha与hidden的区别"></a>alpha与hidden的区别</h1><p>虽然等同于alpha为0.0的时候，但是alpha为0.0的时候界面上实际上还是有该视图的。所以以alpha来做隐藏视图的动画。而hidden根本就不存在所以也就不存在动画了。</p>
 <p>alpha即使设置为0.0，依旧会在界面上存在， 而hidden界面上根本就没有。</p>
+<h1 id="如何创建一个透明背景视图"><a href="#如何创建一个透明背景视图" class="headerlink" title="如何创建一个透明背景视图"></a>如何创建一个透明背景视图</h1><p>当为0.0的时候不会响应事件。也就是说不会接收触摸事件以及手势。所以不能使用一个非常低的alpha值来创建“透明覆盖层”，捕获触摸事件。<br>可以使用alpha为1.0 opaque 为NO，backgroundColor为nil或者[UIColor clearColor]来捕获触摸事件。</p>
 
       
     </div>
@@ -416,6 +415,10 @@ alpha取值范围 [0.0, 1.0]。
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/01/tips/qrcode-scancode/" rel="prev" title="二维码与扫码">
+                二维码与扫码 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -487,7 +490,7 @@ alpha取值范围 [0.0, 1.0]。
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-count">12</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -497,7 +500,7 @@ alpha取值范围 [0.0, 1.0]。
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -548,7 +551,7 @@ alpha取值范围 [0.0, 1.0]。
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#alpha"><span class="nav-number">1.</span> <span class="nav-text">alpha</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#opaque"><span class="nav-number">2.</span> <span class="nav-text">opaque</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hidden"><span class="nav-number">3.</span> <span class="nav-text">hidden</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#alpha与hidden的区别"><span class="nav-number">4.</span> <span class="nav-text">alpha与hidden的区别</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#alpha"><span class="nav-number">1.</span> <span class="nav-text">alpha</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#opaque"><span class="nav-number">2.</span> <span class="nav-text">opaque</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hidden"><span class="nav-number">3.</span> <span class="nav-text">hidden</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#alpha与hidden的区别"><span class="nav-number">4.</span> <span class="nav-text">alpha与hidden的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何创建一个透明背景视图"><span class="nav-number">5.</span> <span class="nav-text">如何创建一个透明背景视图</span></a></li></ol></div>
             
           </div>
         </section>
