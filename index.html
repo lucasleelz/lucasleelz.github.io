@@ -277,7 +277,7 @@
               
                 
                 <a class="post-title-link" href="/2016/09/11/gcd-timer/" itemprop="url">
-                  gcd_timer
+                  GCD 定时器
                 </a>
               
             
@@ -376,8 +376,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/09/11/gcd-dispatch-one/" itemprop="url">
-                  gcd_dispatch_one
+                <a class="post-title-link" href="/2016/09/11/multithreading/gcd-dispatch-once/" itemprop="url">
+                  Dispatch Once
                 </a>
               
             
@@ -401,8 +401,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/09/11/gcd-dispatch-one/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/11/gcd-dispatch-one/" itemprop="commentsCount"></span>
+                <a href="/2016/09/11/multithreading/gcd-dispatch-once/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/11/multithreading/gcd-dispatch-once/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -427,7 +427,23 @@
       
         
           
-            
+            <p><code>dispatch_once</code>函数保证在应用程序中只会执行一次指定处理的API.</p>
+<p><code>dispatch_once_t</code>必须是全局或者static变量。实际上也就是保证dispatch_once_t是全局唯一， Xcode默认已经提供了代码块直接生成代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">static dispatch_once_t onceToken;</span><br><span class="line">dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">    // 初始化</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>dispatch_once 即使在多线程环境下，也保证安全。</p>
+<p>所以dispatch_once常常用来生成单例对象，或者一些重型资源。</p>
+<h1 id="单例"><a href="#单例" class="headerlink" title="单例"></a>单例</h1><ul>
+<li>声明静态变量来保存这个实例</li>
+<li>声明一个静态的<code>dispatch_once_t</code>，保证初始化代码只会执行一次</li>
+<li>代码块中执行初始化，一个类只能被实例化一次</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+ (instancetype)sharedInstance &#123;</span><br><span class="line">    static id sharedInstance = nil;</span><br><span class="line">    static dispatch_once_t onceToken;</span><br><span class="line">    dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">        sharedInstance = [[self alloc] init];</span><br><span class="line">    &#125;);</span><br><span class="line">    return sharedInstance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="其他的使用场景"><a href="#其他的使用场景" class="headerlink" title="其他的使用场景"></a>其他的使用场景</h1><p>NSDateFormatter、NSCalendar、NSDateComponentsFormatter等初始化非常慢，那么就可以想到重用这个对象。在类中添加属性或者静态变量。还有一些调用很频繁的属性。</p>
+<h2 id="NSDateFormatter"><a href="#NSDateFormatter" class="headerlink" title="NSDateFormatter"></a>NSDateFormatter</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">static NSString *LZStringFromDateISO8601(NSDate *date) &#123;</span><br><span class="line">    static NSDateFormatter *formatter = nil;</span><br><span class="line">    static dispatch_once_t onceToken;</span><br><span class="line">    dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">        formatter = [[NSDateFormatter alloc] init];</span><br><span class="line">        [formatter setDateFormat:@&quot;yyyy-MM-dd&quot;];</span><br><span class="line">    &#125;);</span><br><span class="line">    return [formatter stringFromDate:date];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="NSCalendar"><a href="#NSCalendar" class="headerlink" title="NSCalendar"></a>NSCalendar</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">NSCalendar *LZTimeOfDayReferenceCalendar() &#123;</span><br><span class="line">    static NSCalendar *calendar;</span><br><span class="line">    static dispatch_once_t onceToken;</span><br><span class="line">    dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">        calendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];</span><br><span class="line">    &#125;);</span><br><span class="line">    return calendar;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="screenScale"><a href="#screenScale" class="headerlink" title="screenScale"></a>screenScale</h2><p>这个也是大量的用到。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">static CGFloat screenScale = 1.0;</span><br><span class="line">static dispatch_once_t onceToken;</span><br><span class="line">dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">    screenScale = [UIScreen mainScreen].scale;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
           
         
       
@@ -476,7 +492,7 @@
             
               
                 
-                <a class="post-title-link" href="/2016/09/11/gcd-dispatch-semaphore/" itemprop="url">
+                <a class="post-title-link" href="/2016/09/11/multithreading/gcd-dispatch-semaphore/" itemprop="url">
                   信号量
                 </a>
               
@@ -501,8 +517,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/09/11/gcd-dispatch-semaphore/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/11/gcd-dispatch-semaphore/" itemprop="commentsCount"></span>
+                <a href="/2016/09/11/multithreading/gcd-dispatch-semaphore/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/11/multithreading/gcd-dispatch-semaphore/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -527,7 +543,18 @@
       
         
           
-            
+            <p>并行执行任务时更新数据，会产生数据不一致的情况，还可能导致异常。虽然使用<code>Serial Dispatch Queue</code>和<code>dispatch_barrier_async</code>函数可以避免。但有必要进行细粒度的排他控制。</p>
+<p>信号量内部有一个可以原子递增或者递减的值，如果一个任务尝试减少信号量的值，使其等于0，那么这个任务将被等待。直到其他的任务（其他的线程中）增加信号量的值。</p>
+<p>通常一个信号量被初始化一个最大值，表示资源可以同时访问的最大数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">dispatch_semaphore_t semaphore = dispatch_semaphore_create(1);</span><br><span class="line"></span><br><span class="line">NSMutableArray *array = [NSMutableArray array];</span><br><span class="line"></span><br><span class="line">for (NSUInteger index = 0; index &lt; 1000; index++) &#123;</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);</span><br><span class="line">        [array addObject:@(index)];</span><br><span class="line">        dispatch_semaphore_signal(semaphore);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用<code>dispatch_semaphore_create</code>生成一个dispatch_semaphore_t类型的Dispatch Semaphore。</p>
+<p>开始的时候初始化为1。</p>
+<p>dispatch_semaphore_wait等待，一直到Dispatch Semaphore的计数值大于等于1。并且会减1后返回，下一个并发任务进行访问的时候，就刚好为0，需要等待。直到前一个任务执行完成后，进行<code>dispatch_semaphore_signal</code>，对计数值进行加1。那么这时候计数值又大于1了，下一个并发任务就可以执行了。</p>
+<h1 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h1><p>在<code>AFNetworing</code>框架的<code>AFURLSessionManager</code>中的方法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">- (NSArray *)tasksForKeyPath:(NSString *)keyPath &#123;</span><br><span class="line">    __block NSArray *tasks = nil;</span><br><span class="line">    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);</span><br><span class="line">    [self.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) &#123;</span><br><span class="line">        if ([keyPath isEqualToString:NSStringFromSelector(@selector(dataTasks))]) &#123;</span><br><span class="line">            tasks = dataTasks;</span><br><span class="line">        &#125; else if ([keyPath isEqualToString:NSStringFromSelector(@selector(uploadTasks))]) &#123;</span><br><span class="line">            tasks = uploadTasks;</span><br><span class="line">        &#125; else if ([keyPath isEqualToString:NSStringFromSelector(@selector(downloadTasks))]) &#123;</span><br><span class="line">            tasks = downloadTasks;</span><br><span class="line">        &#125; else if ([keyPath isEqualToString:NSStringFromSelector(@selector(tasks))]) &#123;</span><br><span class="line">            tasks = [@[dataTasks, uploadTasks, downloadTasks] valueForKeyPath:@&quot;@unionOfArrays.self&quot;];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        dispatch_semaphore_signal(semaphore);</span><br><span class="line">    &#125;];</span><br><span class="line"></span><br><span class="line">    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);</span><br><span class="line"></span><br><span class="line">    return tasks;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Dispatch Semaphore 初始化就是0，所以dispatch_semaphore_wait会一直等待，直到任务中调用dispatch_semaphore_signal。</p>
+<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>信号量是底层工具，它还是很强大的，但是信号量本身就是锁，能不用锁就不要用。有些时候需要把异步任务转换成同步任务时，信号量就非常适合，例如 <code>AFNetworing</code>的使用。</p>
+
           
         
       
@@ -666,6 +693,8 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">long result = dispatch_group_wait(group, DISPATCH_TIME_FOREVER);</span><br></pre></td></tr></table></figure>
 <h2 id="自定义超时时间"><a href="#自定义超时时间" class="headerlink" title="自定义超时时间"></a>自定义超时时间</h2><p>超时时间一秒。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 1ull * NSEC_PER_SEC);</span><br><span class="line">long result = dispatch_group_wait(group, DISPATCH_TIME_FOREVER);</span><br><span class="line">if (result == 0) &#123;</span><br><span class="line">    NSLog(@&quot;全部结束&quot;);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    NSLog(@&quot;正在执行&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h1 id="另一种方式"><a href="#另一种方式" class="headerlink" title="另一种方式"></a>另一种方式</h1><p>之前使用的<code>dispatch_group_async</code> 和 <code>dispatch_group_notify</code>，然后再更多的时候可能并没有<code>queue</code>队列。但是又想多个任务处理完成后执行完成任务。就可以使用<code>dispatch_group_enter</code>与<code>dispatch_group_leave</code>，这是成对出现的。</p>
+<p>dispatch_group_enter 执行该函数,异步执行的任务会被group监听.</p>
+<p>dispatch_group_leave 任务执行完成.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">dispatch_group_enter(group);</span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 1&quot;);</span><br><span class="line">    dispatch_group_leave(group);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dispatch_group_enter(group);</span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 2&quot;);</span><br><span class="line">    dispatch_group_leave(group);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dispatch_group_enter(group);</span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 3&quot;);</span><br><span class="line">    dispatch_group_leave(group);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dispatch_group_enter(group);</span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 4&quot;);</span><br><span class="line">    dispatch_group_leave(group);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">long result = dispatch_group_wait(group, DISPATCH_TIME_FOREVER);</span><br><span class="line"></span><br><span class="line">if (result == 0) &#123;</span><br><span class="line">    NSLog(@&quot;已经完成&quot;);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    NSLog(@&quot;正在执行&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>控制台输出结果</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Task 4</span><br><span class="line">Task 3</span><br><span class="line">Task 1</span><br><span class="line">Task 2</span><br><span class="line">已经完成</span><br></pre></td></tr></table></figure>
