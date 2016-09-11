@@ -22,7 +22,7 @@
 
 
 
-
+  <meta name="baidu-site-verification" content="wrCQT0B6bf" />
 
 
 
@@ -76,7 +76,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="iOS,UIView,Quartz 2D,CIFilter," />
+  <meta name="keywords" content="iOS,Quartz 2D,UIView,CIFilter," />
 
 
 
@@ -114,8 +114,8 @@
 <meta property="og:image" content="https://lucasleelz.github.io/images/tips/qrcode/2.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/tips/qrcode/3.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/tips/qrcode/4.png">
-<meta property="og:image" content="https://lucasleelz.github.io/images/tips/qrcode/4.png">
-<meta property="og:updated_time" content="2016-09-03T13:44:20.000Z">
+<meta property="og:image" content="https://lucasleelz.github.io/images/tips/qrcode/5.png">
+<meta property="og:updated_time" content="2016-09-03T13:47:00.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="二维码与扫码">
 <meta name="twitter:description" content="在目前二维码遍行天下的时候, 学会制作二维码与扫码是相当重要的。
@@ -147,6 +147,7 @@
 
 
   <link rel="canonical" href="https://lucasleelz.github.io/2016/09/01/tips/qrcode-scancode/"/>
+
 
   <title> 二维码与扫码 | Lucas Lee's Blog </title>
 </head>
@@ -446,10 +447,9 @@
 </ul>
 <p>主要代码</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">guard let filter: CIFilter = CIFilter(name: &quot;CICode128BarcodeGenerator&quot;) else &#123;</span><br><span class="line">    return nil</span><br><span class="line">&#125;</span><br><span class="line">filter.setValue(data, forKey: &quot;inputMessage&quot;)</span><br><span class="line">filter.setValue(20.0, forKey: &quot;inputQuietSpace&quot;)</span><br></pre></td></tr></table></figure>
-<p><img src="/images/tips/qrcode/4.png" alt="BarCode"></p>
+<p><img src="/images/tips/qrcode/5.png" alt="BarCode"></p>
 <h1 id="扫描一维码"><a href="#扫描一维码" class="headerlink" title="扫描一维码"></a>扫描一维码</h1><p>与扫描二维码一样，只需要设置<code>AVCaptureMetadataOutput</code>的metadataObjectTypes，发现如果同时设置二维码与一维码，一维码的识别很慢。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.output.metadataObjectTypes = [AVMetadataObjectTypeCode128Code]</span><br></pre></td></tr></table></figure></p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://developer.apple.com/library/tvos/documentation/GraphicsImaging/Reference/CoreImageFilterReference/index.html#//apple_ref/doc/filter/ci/CICode128BarcodeGenerator" target="_blank" rel="external">CICode128BarcodeGenerator</a></p>
-<p><a href="https://developer.apple.com/library/tvos/documentation/GraphicsImaging/Reference/CoreImageFilterReference/index.html#//apple_ref/doc/filter/ci/CIQRCodeGenerator" target="_blank" rel="external">CIQRCodeGenerator</a></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://developer.apple.com/library/tvos/documentation/GraphicsImaging/Reference/CoreImageFilterReference/index.html#//apple_ref/doc/filter/ci/CICode128BarcodeGenerator" target="_blank" rel="external">CICode128BarcodeGenerator</a><br><a href="https://developer.apple.com/library/tvos/documentation/GraphicsImaging/Reference/CoreImageFilterReference/index.html#//apple_ref/doc/filter/ci/CIQRCodeGenerator" target="_blank" rel="external">CIQRCodeGenerator</a></p>
 <h1 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h1><h2 id="源码环境"><a href="#源码环境" class="headerlink" title="源码环境"></a>源码环境</h2><ul>
 <li>Xcode 7.3</li>
 <li>Swift 2.2</li>
@@ -495,9 +495,9 @@
           
             <a href="/tags/iOS/" rel="tag">#iOS</a>
           
-            <a href="/tags/UIView/" rel="tag">#UIView</a>
-          
             <a href="/tags/Quartz-2D/" rel="tag">#Quartz 2D</a>
+          
+            <a href="/tags/UIView/" rel="tag">#UIView</a>
           
             <a href="/tags/CIFilter/" rel="tag">#CIFilter</a>
           
@@ -515,6 +515,10 @@
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/05/multithreading/basic/" rel="prev" title="多线程基础">
+                多线程基础 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -586,7 +590,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-count">23</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -797,6 +801,9 @@
   
 
   
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
 
 </body>
 </html>
