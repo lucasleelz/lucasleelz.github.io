@@ -1,0 +1,720 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="o_QOQN3-adA79KPRfqy1wAj9zviE8hyD5jvfdQEMVco" />
+
+
+
+  <meta name="baidu-site-verification" content="wrCQT0B6bf" />
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="当Dispatch Queue中的多个任务处理全部结束后想要执行结束任务处理。
+只使用一个Serial Dispatch Queue串行队列时，只需要把结束任务追加到最后即可。
+当使用Concurrent Dispatch Queue并行队列或者多个Serial Dispatch Queue串行队列时，源代码就变得很复杂
+在这种情况下就可以使用Dispatch Group。
+12345678910">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dispatch Group">
+<meta property="og:url" content="https://lucasleelz.github.io/2016/09/11/multithreading/gcd-dispatch-group/index.html">
+<meta property="og:site_name" content="Lucas Lee's Blog">
+<meta property="og:description" content="当Dispatch Queue中的多个任务处理全部结束后想要执行结束任务处理。
+只使用一个Serial Dispatch Queue串行队列时，只需要把结束任务追加到最后即可。
+当使用Concurrent Dispatch Queue并行队列或者多个Serial Dispatch Queue串行队列时，源代码就变得很复杂
+在这种情况下就可以使用Dispatch Group。
+12345678910">
+<meta property="og:updated_time" content="2016-09-11T07:12:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Dispatch Group">
+<meta name="twitter:description" content="当Dispatch Queue中的多个任务处理全部结束后想要执行结束任务处理。
+只使用一个Serial Dispatch Queue串行队列时，只需要把结束任务追加到最后即可。
+当使用Concurrent Dispatch Queue并行队列或者多个Serial Dispatch Queue串行队列时，源代码就变得很复杂
+在这种情况下就可以使用Dispatch Group。
+12345678910">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="https://lucasleelz.github.io/2016/09/11/multithreading/gcd-dispatch-group/"/>
+
+
+  <title> Dispatch Group | Lucas Lee's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-83452966-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?1bdf5801c84abad5fa1eaebd2928862b";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Lucas Lee's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">生于忧患死于安乐</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Dispatch Group
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-11T00:28:26+08:00" content="2016 09 11">
+              2016 09 11
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/11/multithreading/gcd-dispatch-group/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/11/multithreading/gcd-dispatch-group/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>当<code>Dispatch Queue</code>中的多个任务处理全部结束后想要执行结束任务处理。</p>
+<p>只使用一个<code>Serial Dispatch Queue</code>串行队列时，只需要把结束任务追加到最后即可。</p>
+<p>当使用<code>Concurrent Dispatch Queue</code>并行队列或者多个<code>Serial Dispatch Queue</code>串行队列时，源代码就变得很复杂</p>
+<p>在这种情况下就可以使用<code>Dispatch Group</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);</span><br><span class="line">dispatch_group_t group = dispatch_group_create();</span><br><span class="line"></span><br><span class="line">dispatch_group_async(group, queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 1&quot;);</span><br><span class="line">&#125;);</span><br><span class="line">dispatch_group_async(group, queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 2&quot;);</span><br><span class="line">&#125;);</span><br><span class="line">dispatch_group_async(group, queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 3&quot;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dispatch_group_notify(group, queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task done.&quot;);</span><br><span class="line">&#125;);</span><br><span class="line">dispatch_group_async(group, queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 4&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>控制台输出结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">2016-09-11 13:54:19.673 Multithreading-Objc[95343:2805143] Task 3</span><br><span class="line">2016-09-11 13:54:19.673 Multithreading-Objc[95343:2805142] Task 4</span><br><span class="line">2016-09-11 13:54:19.672 Multithreading-Objc[95343:2805141] Task 1</span><br><span class="line">2016-09-11 13:54:19.672 Multithreading-Objc[95343:2805144] Task 2</span><br><span class="line">2016-09-11 13:54:19.674 Multithreading-Objc[95343:2805144] Task done.</span><br></pre></td></tr></table></figure>
+<p>因为使用的是全局并发队列，所以执行任务的顺序不定，但此时的完成任务<code>Task done.</code>永远是最后执行。</p>
+<p>使用<code>dispatch_group_create</code>来创建<code>dispatch_group_t</code>类型的Dispatch Group。</p>
+<p><code>dispatch_group_async</code>函数与<code>dispatch_async</code>相同，都是把任务追加到队列中，不同点在于多了一个Dispatch Group，并且任务属于Dispatch Group。Dispatch Group中并没有<strong>dispatch_group_sync</strong>函数。</p>
+<p>追加到Dispatch Group中的任务全部执行结束后，使用<code>dispatch_group_notify</code>来通知所有的任务都已经执行结束。</p>
+<h1 id="dispatch-group-wait"><a href="#dispatch-group-wait" class="headerlink" title="dispatch_group_wait"></a>dispatch_group_wait</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">long dispatch_group_wait(</span><br><span class="line">	dispatch_group_t group, </span><br><span class="line">	dispatch_time_t timeout</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<h2 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h2><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>group</td>
+<td>dispatch_group_t</td>
+<td>不能为空</td>
+</tr>
+<tr>
+<td>timeout</td>
+<td>dispatch_time_t</td>
+<td>提供DISPATCH_TIME_NOW和DISPATCH_TIME_FOREVER常量，等待多久。即超时时间</td>
+</tr>
+</tbody>
+</table>
+<h2 id="返回结果"><a href="#返回结果" class="headerlink" title="返回结果"></a>返回结果</h2><p>long 类型， 返回0 则表示所有的任务都成功执行完毕。非0则表示正在执行，或者发生了错误。</p>
+<h2 id="马上执行"><a href="#马上执行" class="headerlink" title="马上执行"></a>马上执行</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">long result = dispatch_group_wait(group, DISPATCH_TIME_NOW);</span><br></pre></td></tr></table></figure>
+<h2 id="永久等待"><a href="#永久等待" class="headerlink" title="永久等待"></a>永久等待</h2><p>意思是只有所有的任务都执行完成后，才会等待才会结束。这个时候只会返回0。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">long result = dispatch_group_wait(group, DISPATCH_TIME_FOREVER);</span><br></pre></td></tr></table></figure>
+<h2 id="自定义超时时间"><a href="#自定义超时时间" class="headerlink" title="自定义超时时间"></a>自定义超时时间</h2><p>超时时间一秒。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 1ull * NSEC_PER_SEC);</span><br><span class="line">long result = dispatch_group_wait(group, DISPATCH_TIME_FOREVER);</span><br><span class="line">if (result == 0) &#123;</span><br><span class="line">    NSLog(@&quot;全部结束&quot;);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    NSLog(@&quot;正在执行&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="另一种方式"><a href="#另一种方式" class="headerlink" title="另一种方式"></a>另一种方式</h2><p>之前使用的<code>dispatch_group_async</code> 和 <code>dispatch_group_notify</code>，然后再更多的时候可能并没有<code>queue</code>队列。但是又想多个任务处理完成后执行完成任务。就可以使用<code>dispatch_group_enter</code>与<code>dispatch_group_leave</code>，这是成对出现的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">dispatch_group_enter(group);</span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 1&quot;);</span><br><span class="line">    dispatch_group_leave(group);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dispatch_group_enter(group);</span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 2&quot;);</span><br><span class="line">    dispatch_group_leave(group);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dispatch_group_enter(group);</span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 3&quot;);</span><br><span class="line">    dispatch_group_leave(group);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dispatch_group_enter(group);</span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 4&quot;);</span><br><span class="line">    dispatch_group_leave(group);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">long result = dispatch_group_wait(group, DISPATCH_TIME_FOREVER);</span><br><span class="line"></span><br><span class="line">if (result == 0) &#123;</span><br><span class="line">    NSLog(@&quot;已经完成&quot;);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    NSLog(@&quot;正在执行&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>控制台输出结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">2016-09-11 14:53:03.820 Multithreading-Objc[98206:2871669] Task 4</span><br><span class="line">2016-09-11 14:53:03.820 Multithreading-Objc[98206:2871666] Task 3</span><br><span class="line">2016-09-11 14:53:03.820 Multithreading-Objc[98206:2871667] Task 1</span><br><span class="line">2016-09-11 14:53:03.820 Multithreading-Objc[98206:2871668] Task 2</span><br><span class="line">2016-09-11 14:53:03.822 Multithreading-Objc[98206:2871610] 已经完成</span><br></pre></td></tr></table></figure>
+<p>同时下载多张图片的时候，就可以使用这个方式，在最后通知主线程，去刷新界面。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">typedef void(^BatchPhotoDownloadingCompletionBlock)(NSError *error);</span><br><span class="line"></span><br><span class="line">- (void)downloadPhotosWithCompletionBlock:(BatchPhotoDownloadingCompletionBlock)completionBlock &#123;</span><br><span class="line">    __block NSError *error;</span><br><span class="line">    dispatch_group_t downloadGroup = dispatch_group_create();</span><br><span class="line">    for (NSUInteger index = 0; index &lt; 5; index++) &#123;</span><br><span class="line">        NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@&quot;http://lucaslz/%@&quot;, @(index)]];</span><br><span class="line">        </span><br><span class="line">        dispatch_group_enter(downloadGroup);</span><br><span class="line">        [[NSURLSession sharedSession] dataTaskWithURL:URL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable _error) &#123;</span><br><span class="line">            if (_error) &#123;</span><br><span class="line">                error = error;</span><br><span class="line">            &#125;</span><br><span class="line">            // 处理图片</span><br><span class="line">            </span><br><span class="line">            dispatch_group_leave(downloadGroup);</span><br><span class="line">        &#125;];</span><br><span class="line">    &#125;</span><br><span class="line">    dispatch_group_notify(downloadGroup, dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        if (completionBlock) &#123;</span><br><span class="line">            completionBlock(error);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://www.raywenderlich.com/63338/grand-central-dispatch-in-depth-part-2" target="_blank" rel="external">grand-central-dispatch</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.jpg" alt="Lucas Lee Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/10/multithreading/gcd-queue-api/" rel="next" title="GCD Queue中其他的API">
+                <i class="fa fa-chevron-left"></i> GCD Queue中其他的API
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/11/gcd-dispatch-semaphore/" rel="prev" title="信号量">
+                信号量 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/09/11/multithreading/gcd-dispatch-group/"
+           data-title="Dispatch Group" data-url="https://lucasleelz.github.io/2016/09/11/multithreading/gcd-dispatch-group/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Lucas Lee" />
+          <p class="site-author-name" itemprop="name">Lucas Lee</p>
+          <p class="site-description motion-element" itemprop="description">一些个人学习记录。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.mossle.com" title="LemonOA" target="_blank">LemonOA</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.yyang.io/" title="YYang" target="_blank">YYang</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://boot.ren/" title="枫叶飘零" target="_blank">枫叶飘零</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#dispatch-group-wait"><span class="nav-number">1.</span> <span class="nav-text">dispatch_group_wait</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#参数说明"><span class="nav-number">1.1.</span> <span class="nav-text">参数说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#返回结果"><span class="nav-number">1.2.</span> <span class="nav-text">返回结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#马上执行"><span class="nav-number">1.3.</span> <span class="nav-text">马上执行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#永久等待"><span class="nav-number">1.4.</span> <span class="nav-text">永久等待</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义超时时间"><span class="nav-number">1.5.</span> <span class="nav-text">自定义超时时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#另一种方式"><span class="nav-number">1.6.</span> <span class="nav-text">另一种方式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lucas Lee</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"lucaslee"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+</body>
+</html>
