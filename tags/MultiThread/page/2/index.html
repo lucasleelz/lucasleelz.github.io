@@ -82,7 +82,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="MultiThread,GCD," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -98,22 +98,15 @@
 
 
 
-<meta name="description" content="并行执行任务时更新数据，会产生数据不一致的情况，还可能导致异常。虽然使用Serial Dispatch Queue和dispatch_barrier_async函数可以避免。但有必要进行细粒度的排他控制。
-信号量内部有一个可以原子递增或者递减的值，如果一个任务尝试减少信号量的值，使其等于0，那么这个任务将被等待。直到其他的任务（其他的线程中）增加信号量的值。
-通常一个信号量被初始化一个最大值，表示">
-<meta property="og:type" content="article">
-<meta property="og:title" content="信号量">
-<meta property="og:url" content="https://lucasleelz.github.io/2016/09/11/multithreading/gcd-dispatch-semaphore/index.html">
+<meta name="description" content="一些个人学习记录。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Lucas Lee's Blog">
+<meta property="og:url" content="https://lucasleelz.github.io/tags/MultiThread/page/2/index.html">
 <meta property="og:site_name" content="Lucas Lee's Blog">
-<meta property="og:description" content="并行执行任务时更新数据，会产生数据不一致的情况，还可能导致异常。虽然使用Serial Dispatch Queue和dispatch_barrier_async函数可以避免。但有必要进行细粒度的排他控制。
-信号量内部有一个可以原子递增或者递减的值，如果一个任务尝试减少信号量的值，使其等于0，那么这个任务将被等待。直到其他的任务（其他的线程中）增加信号量的值。
-通常一个信号量被初始化一个最大值，表示">
-<meta property="og:updated_time" content="2016-09-17T07:12:49.000Z">
+<meta property="og:description" content="一些个人学习记录。">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="信号量">
-<meta name="twitter:description" content="并行执行任务时更新数据，会产生数据不一致的情况，还可能导致异常。虽然使用Serial Dispatch Queue和dispatch_barrier_async函数可以避免。但有必要进行细粒度的排他控制。
-信号量内部有一个可以原子递增或者递减的值，如果一个任务尝试减少信号量的值，使其等于0，那么这个任务将被等待。直到其他的任务（其他的线程中）增加信号量的值。
-通常一个信号量被初始化一个最大值，表示">
+<meta name="twitter:title" content="Lucas Lee's Blog">
+<meta name="twitter:description" content="一些个人学习记录。">
 
 
 
@@ -134,9 +127,9 @@
 
 
 
-  <link rel="canonical" href="https://lucasleelz.github.io/2016/09/11/multithreading/gcd-dispatch-semaphore/"/>
+  <link rel="canonical" href="https://lucasleelz.github.io/tags/MultiThread/page/2/"/>
 
-  <title> 信号量 | Lucas Lee's Blog </title>
+  <title> 标签: MultiThread | Lucas Lee's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -176,7 +169,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-left  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -264,170 +257,78 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <div id="posts" class="posts-collapse">
+    <div class="collection-title">
+      <h2 >
+        MultiThread
+        <small>标签</small>
+      </h2>
+    </div>
 
     
-      <header class="post-header">
+      
 
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h1 class="post-title">
         
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
+            <a class="post-title-link" href="/2016/09/08/multithreading/gcd-concurrent-serial/" itemprop="url">
               
-                信号量
+                <span itemprop="name">GCD的基本使用</span>
               
-            
-          </h1>
+            </a>
         
+      </h1>
 
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-11T00:28:45+08:00" content="2016 09 11">
-              2016 09 11
-            </time>
-          </span>
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2016-09-08T17:10:22+08:00"
+              content="2016 09 08" >
+          09-08
+        </time>
+      </div>
 
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/11/multithreading/gcd-dispatch-semaphore/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/11/multithreading/gcd-dispatch-semaphore/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/09/11/multithreading/gcd-dispatch-semaphore/" class="leancloud_visitors" data-flag-title="信号量">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <p>并行执行任务时更新数据，会产生数据不一致的情况，还可能导致异常。虽然使用<code>Serial Dispatch Queue</code>和<code>dispatch_barrier_async</code>函数可以避免。但有必要进行细粒度的排他控制。</p>
-<p>信号量内部有一个可以原子递增或者递减的值，如果一个任务尝试减少信号量的值，使其等于0，那么这个任务将被等待。直到其他的任务（其他的线程中）增加信号量的值。</p>
-<p>通常一个信号量被初始化一个最大值，表示资源可以同时访问的最大数。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">dispatch_semaphore_t semaphore = dispatch_semaphore_create(1);</span><br><span class="line"></span><br><span class="line">NSMutableArray *array = [NSMutableArray array];</span><br><span class="line"></span><br><span class="line">for (NSUInteger index = 0; index &lt; 1000; index++) &#123;</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);</span><br><span class="line">        [array addObject:@(index)];</span><br><span class="line">        dispatch_semaphore_signal(semaphore);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用<code>dispatch_semaphore_create</code>生成一个dispatch_semaphore_t类型的Dispatch Semaphore。</p>
-<p>开始的时候初始化为1。</p>
-<p>dispatch_semaphore_wait等待，一直到Dispatch Semaphore的计数值大于等于1。并且会减1后返回，下一个并发任务进行访问的时候，就刚好为0，需要等待。直到前一个任务执行完成后，进行<code>dispatch_semaphore_signal</code>，对计数值进行加1。那么这时候计数值又大于1了，下一个并发任务就可以执行了。</p>
-<h1 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h1><p>在<code>AFNetworing</code>框架的<code>AFURLSessionManager</code>中的方法如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">- (NSArray *)tasksForKeyPath:(NSString *)keyPath &#123;</span><br><span class="line">    __block NSArray *tasks = nil;</span><br><span class="line">    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);</span><br><span class="line">    [self.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) &#123;</span><br><span class="line">        if ([keyPath isEqualToString:NSStringFromSelector(@selector(dataTasks))]) &#123;</span><br><span class="line">            tasks = dataTasks;</span><br><span class="line">        &#125; else if ([keyPath isEqualToString:NSStringFromSelector(@selector(uploadTasks))]) &#123;</span><br><span class="line">            tasks = uploadTasks;</span><br><span class="line">        &#125; else if ([keyPath isEqualToString:NSStringFromSelector(@selector(downloadTasks))]) &#123;</span><br><span class="line">            tasks = downloadTasks;</span><br><span class="line">        &#125; else if ([keyPath isEqualToString:NSStringFromSelector(@selector(tasks))]) &#123;</span><br><span class="line">            tasks = [@[dataTasks, uploadTasks, downloadTasks] valueForKeyPath:@&quot;@unionOfArrays.self&quot;];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        dispatch_semaphore_signal(semaphore);</span><br><span class="line">    &#125;];</span><br><span class="line"></span><br><span class="line">    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);</span><br><span class="line"></span><br><span class="line">    return tasks;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Dispatch Semaphore 初始化就是0，所以dispatch_semaphore_wait会一直等待，直到任务中调用dispatch_semaphore_signal。</p>
-<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>信号量是底层工具，它还是很强大的，但是信号量本身就是锁，能不用锁就不要用。有些时候需要把异步任务转换成同步任务时，信号量就非常适合，例如 <code>AFNetworing</code>的使用。</p>
-
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <div>
-      
-        
-  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
-    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-      <span>赏</span>
-    </button>
-    <div id="QR" style="display: none;">
-      
-      
-        <div id="alipay" style="display: inline-block">
-          <img id="alipay_qr" src="/images/alipay.jpg" alt="Lucas Lee Alipay"/>
-          <p>支付宝打赏</p>
-        </div>
-      
-    </div>
-  </div>
-
-
-      
-    </div>
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/MultiThread/" rel="tag">#MultiThread</a>
-          
-            <a href="/tags/GCD/" rel="tag">#GCD</a>
-          
-        </div>
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2016/09/11/multithreading/gcd-dispatch-group/" rel="next" title="Dispatch Group">
-                <i class="fa fa-chevron-left"></i> Dispatch Group
-              </a>
-            
-          </div>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/09/11/multithreading/gcd-dispatch-once/" rel="prev" title="Dispatch Once">
-                Dispatch Once <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
+    </header>
   </article>
 
 
-
-    <div class="post-spread">
+    
       
-    </div>
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h1 class="post-title">
+        
+            <a class="post-title-link" href="/2016/09/05/multithreading/basic/" itemprop="url">
+              
+                <span itemprop="name">多线程基础</span>
+              
+            </a>
+        
+      </h1>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2016-09-05T09:45:06+08:00"
+              content="2016 09 05" >
+          09-05
+        </time>
+      </div>
+
+    </header>
+  </article>
+
+
+    
   </div>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/tags/MultiThread/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/tags/MultiThread/">1</a><span class="page-number current">2</span>
+  </nav>
+
 
 
           </div>
@@ -435,14 +336,6 @@
 
 
           
-  <div class="comments" id="comments">
-    
-      <div class="ds-thread" data-thread-key="2016/09/11/multithreading/gcd-dispatch-semaphore/"
-           data-title="信号量" data-url="https://lucasleelz.github.io/2016/09/11/multithreading/gcd-dispatch-semaphore/">
-      </div>
-    
-  </div>
-
 
         </div>
         
@@ -462,17 +355,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel ">
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpg"
@@ -541,17 +425,6 @@
 
       </section>
 
-      
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-            
-              
-            
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#源码分析"><span class="nav-number">1.</span> <span class="nav-text">源码分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最佳实践"><span class="nav-number">2.</span> <span class="nav-text">最佳实践</span></a></li></ol></div>
-            
-          </div>
-        </section>
       
 
     </div>
@@ -664,10 +537,6 @@
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
-
-
 
   
 

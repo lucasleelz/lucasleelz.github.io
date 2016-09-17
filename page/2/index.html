@@ -789,26 +789,42 @@
       
         
           
-            <h1 id="线程与进程"><a href="#线程与进程" class="headerlink" title="线程与进程"></a>线程与进程</h1><h1 id="线程中的串行与并行"><a href="#线程中的串行与并行" class="headerlink" title="线程中的串行与并行"></a>线程中的串行与并行</h1><h1 id="iOS中多线程方案"><a href="#iOS中多线程方案" class="headerlink" title="iOS中多线程方案"></a>iOS中多线程方案</h1><p>pthread</p>
-<p>NSThread</p>
-<p>CGD</p>
-<p>NSOperation</p>
-<h1 id="线程状态"><a href="#线程状态" class="headerlink" title="线程状态"></a>线程状态</h1><p>start<br>executing<br>finished<br>cancelled</p>
-<h1 id="线程间的通讯"><a href="#线程间的通讯" class="headerlink" title="线程间的通讯"></a>线程间的通讯</h1><h1 id="上下文切换"><a href="#上下文切换" class="headerlink" title="上下文切换"></a>上下文切换</h1><h1 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h1><h1 id="多线程引发的问题"><a href="#多线程引发的问题" class="headerlink" title="多线程引发的问题"></a>多线程引发的问题</h1><h1 id="创建dispatch-queue-create"><a href="#创建dispatch-queue-create" class="headerlink" title="创建dispatch_queue_create"></a>创建<code>dispatch_queue_create</code></h1><ol>
-<li>注意点 </li>
-</ol>
-<p>名称 、<br>串行与并行</p>
-<p>DISPATCH_SOURCE_TYPE_TIMER<br>自己手写定时器</p>
-<ul>
-<li>(void)viewDidLoad{[super viewDidLoad];NSLog(@”1”);dispatch_sync(dispatch_get_main_queue(), ^{    NSLog(@”2”);});NSLog(@”3”);}</li>
+            <h1 id="什么是多线程"><a href="#什么是多线程" class="headerlink" title="什么是多线程"></a>什么是多线程</h1><p>多线程是一个比较轻量级的方法来实现单个应用程序内多个代码执行路径。 </p>
+<p>1个CPU核执行多条不同路径上的不同命令，就是多线程。</p>
+<h1 id="多线程的优点"><a href="#多线程的优点" class="headerlink" title="多线程的优点"></a>多线程的优点</h1><ul>
+<li>能适当提高程序的执行效率。</li>
+<li>能适当提高程序的利用率</li>
 </ul>
-<h1 id="多线程下的问题"><a href="#多线程下的问题" class="headerlink" title="多线程下的问题"></a>多线程下的问题</h1><ol>
-<li>线程的生命周期需要自己手动管理， 相当繁琐</li>
-<li>数据竞争（经典案例就是买票）</li>
-<li>死锁 （互相等待）</li>
-<li>太多的线程会导致消耗大量内存</li>
-</ol>
-<p>TODO: 死锁与解决死锁合并在一起..</p>
+<h1 id="多线程的缺点"><a href="#多线程的缺点" class="headerlink" title="多线程的缺点"></a>多线程的缺点</h1><ul>
+<li>开启线程需要消耗资源</li>
+<li>线程越多，CPU开销就越大</li>
+<li>程序设计更复杂，线程之间的通信等</li>
+</ul>
+<h1 id="iOS中多线程方案"><a href="#iOS中多线程方案" class="headerlink" title="iOS中多线程方案"></a>iOS中多线程方案</h1><h2 id="pthread"><a href="#pthread" class="headerlink" title="pthread"></a>pthread</h2><ul>
+<li>通用的多线程API</li>
+<li>跨平台 Unix、Linux、Window</li>
+<li>使用难度大，难以维护</li>
+<li>使用C语言</li>
+</ul>
+<p>iOS开发中基本上没有用到。</p>
+<h2 id="NSThread"><a href="#NSThread" class="headerlink" title="NSThread"></a>NSThread</h2><ul>
+<li>面向对象</li>
+<li>简单易用，直接操作线程对象</li>
+<li>使用OC语言</li>
+</ul>
+<p>iOS开发中比较少使用。</p>
+<h2 id="CGD"><a href="#CGD" class="headerlink" title="CGD"></a>CGD</h2><ul>
+<li>充分利用设备的多核</li>
+<li>替代NSThread等</li>
+<li>C语言</li>
+</ul>
+<p>iOS开发中大量使用。</p>
+<h2 id="NSOperation"><a href="#NSOperation" class="headerlink" title="NSOperation"></a>NSOperation</h2><ul>
+<li>基于GCD</li>
+<li>面向对象</li>
+<li>OC语言</li>
+</ul>
+<p>iOS开发中经常使用。</p>
 
           
         
@@ -1910,7 +1926,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

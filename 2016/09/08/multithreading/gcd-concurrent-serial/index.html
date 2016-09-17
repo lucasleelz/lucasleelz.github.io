@@ -82,7 +82,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="MultiThread,GCD," />
 
 
 
@@ -106,7 +106,7 @@
 <meta property="og:site_name" content="Lucas Lee's Blog">
 <meta property="og:description" content="同步需要等待Block或者闭包代码块执行完毕才继续执行下一步操作。也就是说这里是一个线程阻塞。阻塞当前线程，添加任务到queue中，等待queue队列执行该任务。因此同步稍不注意就会死锁。1234void dispatch_sync (    dispatch_queue_t queue,    dispatch_block_t block);
 异步把Block代码块任务加入到queue队列中，然">
-<meta property="og:updated_time" content="2016-09-09T03:54:41.000Z">
+<meta property="og:updated_time" content="2016-09-17T07:12:31.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GCD的基本使用">
 <meta name="twitter:description" content="同步需要等待Block或者闭包代码块执行完毕才继续执行下一步操作。也就是说这里是一个线程阻塞。阻塞当前线程，添加任务到queue中，等待queue队列执行该任务。因此同步稍不注意就会死锁。1234void dispatch_sync (    dispatch_queue_t queue,    dispatch_block_t block);
@@ -570,6 +570,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/MultiThread/" rel="tag">#MultiThread</a>
+          
+            <a href="/tags/GCD/" rel="tag">#GCD</a>
+          
+        </div>
+      
 
       
         <div class="post-nav">
@@ -667,7 +675,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
