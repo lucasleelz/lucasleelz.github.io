@@ -98,16 +98,24 @@
 
 
 
-<meta name="description" content="一些个人学习记录。">
+<meta name="description" content="NSOperation是对GCD的封装，NSOperation是一个抽象基类，只能使用它的子类。可以把NSOperation理解为一个操作，一项任务。
+在NSOperation.h头文件中，可以看到子类有NSBlockOperation以及NSInvocationOperation。当然我们也可以自定义，需要继承NSOperation，并且重写必要的方法。
+NSBlockOperation的使用1">
 <meta property="og:type" content="article">
-<meta property="og:title" content="nsoperation-basic">
-<meta property="og:url" content="https://lucasleelz.github.io/2016/09/11/nsoperation-basic/index.html">
+<meta property="og:title" content="NSOperation的基本使用">
+<meta property="og:url" content="https://lucasleelz.github.io/2016/09/11/multithreading/nsoperation-basic/index.html">
 <meta property="og:site_name" content="Lucas Lee's Blog">
-<meta property="og:description" content="一些个人学习记录。">
-<meta property="og:updated_time" content="2016-09-11T10:31:49.000Z">
+<meta property="og:description" content="NSOperation是对GCD的封装，NSOperation是一个抽象基类，只能使用它的子类。可以把NSOperation理解为一个操作，一项任务。
+在NSOperation.h头文件中，可以看到子类有NSBlockOperation以及NSInvocationOperation。当然我们也可以自定义，需要继承NSOperation，并且重写必要的方法。
+NSBlockOperation的使用1">
+<meta property="og:image" content="https://lucasleelz.github.io/images/nsoperation/nsoperation_1.png">
+<meta property="og:updated_time" content="2016-09-16T13:56:26.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="nsoperation-basic">
-<meta name="twitter:description" content="一些个人学习记录。">
+<meta name="twitter:title" content="NSOperation的基本使用">
+<meta name="twitter:description" content="NSOperation是对GCD的封装，NSOperation是一个抽象基类，只能使用它的子类。可以把NSOperation理解为一个操作，一项任务。
+在NSOperation.h头文件中，可以看到子类有NSBlockOperation以及NSInvocationOperation。当然我们也可以自定义，需要继承NSOperation，并且重写必要的方法。
+NSBlockOperation的使用1">
+<meta name="twitter:image" content="https://lucasleelz.github.io/images/nsoperation/nsoperation_1.png">
 
 
 
@@ -128,9 +136,9 @@
 
 
 
-  <link rel="canonical" href="https://lucasleelz.github.io/2016/09/11/nsoperation-basic/"/>
+  <link rel="canonical" href="https://lucasleelz.github.io/2016/09/11/multithreading/nsoperation-basic/"/>
 
-  <title> nsoperation-basic | Lucas Lee's Blog </title>
+  <title> NSOperation的基本使用 | Lucas Lee's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -279,7 +287,7 @@
             
             
               
-                nsoperation-basic
+                NSOperation的基本使用
               
             
           </h1>
@@ -302,8 +310,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/09/11/nsoperation-basic/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/11/nsoperation-basic/" itemprop="commentsCount"></span>
+                <a href="/2016/09/11/multithreading/nsoperation-basic/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/11/multithreading/nsoperation-basic/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -313,7 +321,7 @@
 
           
           
-             <span id="/2016/09/11/nsoperation-basic/" class="leancloud_visitors" data-flag-title="nsoperation-basic">
+             <span id="/2016/09/11/multithreading/nsoperation-basic/" class="leancloud_visitors" data-flag-title="NSOperation的基本使用">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -335,7 +343,32 @@
       
 
       
-        
+        <p><code>NSOperation</code>是对GCD的封装，NSOperation是一个抽象基类，只能使用它的子类。可以把NSOperation理解为一个操作，一项任务。</p>
+<p>在<code>NSOperation.h</code>头文件中，可以看到子类有<code>NSBlockOperation</code>以及<code>NSInvocationOperation</code>。当然我们也可以自定义，需要继承NSOperation，并且重写必要的方法。</p>
+<h1 id="NSBlockOperation的使用"><a href="#NSBlockOperation的使用" class="headerlink" title="NSBlockOperation的使用"></a>NSBlockOperation的使用</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NSOperation *operation = [NSBlockOperation blockOperationWithBlock:^&#123;</span><br><span class="line">    NSLog(@&quot;currentThread = %@ &quot;, [NSThread currentThread]);</span><br><span class="line">&#125;];</span><br><span class="line">[operation start];</span><br></pre></td></tr></table></figure>
+<p>有点像NSThread一样，先初始化，当然调用start。代码块就会执行。</p>
+<h2 id="追加任务"><a href="#追加任务" class="headerlink" title="追加任务"></a>追加任务</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[operation addExecutionBlock:^&#123;</span><br><span class="line">    NSLog(@&quot;追加任务 task1 currentThread = %@ &quot;, [NSThread currentThread]);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">追加任务 task1 currentThread = &lt;NSThread: 0x60000006f040&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">追加任务 task3 currentThread = &lt;NSThread: 0x60800026c540&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">追加任务 task2 currentThread = &lt;NSThread: 0x600000264f40&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">currentThread = &lt;NSThread: 0x60800026c4c0&gt;&#123;number = 3, name = (null)&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在主线程或者在子线程中执行任务。</li>
+<li>会并行执行任务</li>
+</ul>
+<h1 id="NSInvocationOperation的使用"><a href="#NSInvocationOperation的使用" class="headerlink" title="NSInvocationOperation的使用"></a>NSInvocationOperation的使用</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">NSOperation *operation = [[NSInvocationOperation alloc]</span><br><span class="line">                       initWithTarget:self</span><br><span class="line">                             selector:@selector(invocationOperation:)</span><br><span class="line">                               object:@&#123;@&quot;name&quot;: @&quot;lucaslee&quot;&#125;];</span><br><span class="line">[operation start];</span><br><span class="line">    </span><br><span class="line">- (void)invocationOperation:(NSDictionary *)info &#123;</span><br><span class="line">    NSLog(@&quot;currentThread = %@, info = %@&quot;, [NSThread currentThread], info);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同NSThread一样，invocationOperation方法的参数可以为nil。</p>
+<h1 id="NSBlockOperation与NSInvocationOperation区别"><a href="#NSBlockOperation与NSInvocationOperation区别" class="headerlink" title="NSBlockOperation与NSInvocationOperation区别"></a>NSBlockOperation与NSInvocationOperation区别</h1><h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>NSBlockOperation使用代码块的方式初始化，可以追加任务。<br>NSInvocationOperation使用<code>selector</code>方式初始化，不可以追加任务。</p>
+<h2 id="相同"><a href="#相同" class="headerlink" title="相同"></a>相同</h2><p>都是NSOperation的子类。并且都需要调用start启动。</p>
+<h1 id="自定义Operation"><a href="#自定义Operation" class="headerlink" title="自定义Operation"></a>自定义Operation</h1><ul>
+<li>继承NSOperation</li>
+<li>重写<code>- (void)main</code>方法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@interface LZCustomOperation : NSOperation</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation LZCustomOperation</span><br><span class="line"></span><br><span class="line">- (void)main &#123;</span><br><span class="line">    NSLog(@&quot;currentThread = %@&quot;, [NSThread currentThread]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NSOperation *operation = [[LZCustomOperation alloc] init];</span><br><span class="line">[operation start];</span><br></pre></td></tr></table></figure>
+<h1 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h1><p><img src="/images/nsoperation/nsoperation_1.png" alt="生命周期"></p>
+<h2 id="取消"><a href="#取消" class="headerlink" title="取消"></a>取消</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@property (readonly, getter=isCancelled) BOOL cancelled;</span><br><span class="line"></span><br><span class="line">- (void)cancel;</span><br></pre></td></tr></table></figure>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property (readonly, getter=isReady) BOOL ready;</span><br></pre></td></tr></table></figure>
+<h2 id="执行中"><a href="#执行中" class="headerlink" title="执行中"></a>执行中</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property (readonly, getter=isExecuting) BOOL executing;</span><br></pre></td></tr></table></figure>
+<h2 id="完成"><a href="#完成" class="headerlink" title="完成"></a>完成</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property (readonly, getter=isFinished) BOOL finished;</span><br></pre></td></tr></table></figure>
+
       
     </div>
 
@@ -384,6 +417,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2016/09/15/multithreading/nsoperationqueue-basic/" rel="prev" title="NSOperationQueue的基本使用">
+                NSOperationQueue的基本使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -408,8 +445,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/09/11/nsoperation-basic/"
-           data-title="nsoperation-basic" data-url="https://lucasleelz.github.io/2016/09/11/nsoperation-basic/">
+      <div class="ds-thread" data-thread-key="2016/09/11/multithreading/nsoperation-basic/"
+           data-title="NSOperation的基本使用" data-url="https://lucasleelz.github.io/2016/09/11/multithreading/nsoperation-basic/">
       </div>
     
   </div>
@@ -454,7 +491,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-count">25</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -502,6 +539,10 @@
                   <a href="http://boot.ren/" title="枫叶飘零" target="_blank">枫叶飘零</a>
                 </li>
               
+                <li class="links-of-blogroll-item">
+                  <a href="http://lingenliu.com" title="lingenliu" target="_blank">lingenliu</a>
+                </li>
+              
             </ul>
           </div>
         
@@ -515,7 +556,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#NSBlockOperation的使用"><span class="nav-number">1.</span> <span class="nav-text">NSBlockOperation的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#追加任务"><span class="nav-number">1.1.</span> <span class="nav-text">追加任务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSInvocationOperation的使用"><span class="nav-number">2.</span> <span class="nav-text">NSInvocationOperation的使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSBlockOperation与NSInvocationOperation区别"><span class="nav-number">3.</span> <span class="nav-text">NSBlockOperation与NSInvocationOperation区别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#区别"><span class="nav-number">3.1.</span> <span class="nav-text">区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相同"><span class="nav-number">3.2.</span> <span class="nav-text">相同</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自定义Operation"><span class="nav-number">4.</span> <span class="nav-text">自定义Operation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用"><span class="nav-number">4.1.</span> <span class="nav-text">使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#生命周期"><span class="nav-number">5.</span> <span class="nav-text">生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#取消"><span class="nav-number">5.1.</span> <span class="nav-text">取消</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#准备"><span class="nav-number">5.2.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行中"><span class="nav-number">5.3.</span> <span class="nav-text">执行中</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完成"><span class="nav-number">5.4.</span> <span class="nav-text">完成</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

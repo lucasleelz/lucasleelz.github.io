@@ -281,8 +281,8 @@
             
               
                 
-                <a class="post-title-link" href="/2016/09/11/nsoperation-basic/" itemprop="url">
-                  nsoperation-basic
+                <a class="post-title-link" href="/2016/09/15/multithreading/nsoperationqueue-basic/" itemprop="url">
+                  NSOperationQueue的基本使用
                 </a>
               
             
@@ -295,8 +295,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-11T18:31:49+08:00" content="2016 09 11">
-              2016 09 11
+            <time itemprop="dateCreated" datetime="2016-09-15T19:59:31+08:00" content="2016 09 15">
+              2016 09 15
             </time>
           </span>
 
@@ -306,8 +306,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/09/11/nsoperation-basic/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/11/nsoperation-basic/" itemprop="commentsCount"></span>
+                <a href="/2016/09/15/multithreading/nsoperationqueue-basic/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/15/multithreading/nsoperationqueue-basic/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -317,7 +317,7 @@
 
           
           
-             <span id="/2016/09/11/nsoperation-basic/" class="leancloud_visitors" data-flag-title="nsoperation-basic">
+             <span id="/2016/09/15/multithreading/nsoperationqueue-basic/" class="leancloud_visitors" data-flag-title="NSOperationQueue的基本使用">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -341,7 +341,184 @@
       
         
           
+            <p>NSOperationQueue队列控制着NSOperation，NSOperationQueue可以串行，并发执行操作。并且有优先级功能。让一个NSOperation操作开始执行，可以直接调用<code>-（void）start</code>方法，也可以添加到NSOperationQueue中，添加之后会自动执行，但是两者不能同时调用。</p>
+<h1 id="主队列"><a href="#主队列" class="headerlink" title="主队列"></a>主队列</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];</span><br></pre></td></tr></table></figure>
+<p>主队列中的操作都会在主线程中执行。</p>
+<h1 id="创建队列"><a href="#创建队列" class="headerlink" title="创建队列"></a>创建队列</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NSOperationQueue *queue = [[NSOperationQueue alloc] init];</span><br></pre></td></tr></table></figure>
+<p>创建的队列串行与并行是在一起的。不像GCD是分开创建的。</p>
+<h1 id="添加操作"><a href="#添加操作" class="headerlink" title="添加操作"></a>添加操作</h1><h2 id="一个操作"><a href="#一个操作" class="headerlink" title="一个操作"></a>一个操作</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^&#123;</span><br><span class="line">    NSLog(@&quot;currentThread = %@ &quot;, [NSThread currentThread]);</span><br><span class="line">&#125;];</span><br><span class="line">[queue addOperation:operation];</span><br></pre></td></tr></table></figure>
+<h2 id="一组操作"><a href="#一组操作" class="headerlink" title="一组操作"></a>一组操作</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">NSOperationQueue *queue = [[NSOperationQueue alloc] init];</span><br><span class="line"></span><br><span class="line">NSBlockOperation *blockOperation = [NSBlockOperation blockOperationWithBlock:^&#123;</span><br><span class="line">    NSLog(@&quot;currentThread = %@ &quot;, [NSThread currentThread]);</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">NSOperation *invocationOperation = [[NSInvocationOperation alloc]</span><br><span class="line">                                    initWithTarget:self</span><br><span class="line">                                    selector:@selector(invocationOperation:)</span><br><span class="line">                                    object:@&#123;@&quot;name&quot;: @&quot;lucaslee&quot;&#125;];</span><br><span class="line"></span><br><span class="line">NSArray *operations = @[blockOperation, invocationOperation];</span><br><span class="line"></span><br><span class="line">[queue addOperations:operations waitUntilFinished:NO];</span><br></pre></td></tr></table></figure>
+<h2 id="block形式操作"><a href="#block形式操作" class="headerlink" title="block形式操作"></a>block形式操作</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[queue addOperationWithBlock:^&#123;</span><br><span class="line">    NSLog(@&quot;task 1 currentThread = %@ &quot;, [NSThread currentThread]);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<h1 id="最大并发数"><a href="#最大并发数" class="headerlink" title="最大并发数"></a>最大并发数</h1><p>设置最大并发数，需要在添加操作之前进行设置。一般就在创建队列的时候进行设置，不然会设置无效。</p>
+<ul>
+<li>小于1，最大值，不受限制。</li>
+<li>等于0，不会执行操作</li>
+<li>等于1，那么就是一个串行队列，与GCD串行不一样，可能会有多个线程。</li>
+<li>大于1，那么就是一个并行队列，并控制最大并发数。</li>
+</ul>
+<h2 id="串行"><a href="#串行" class="headerlink" title="串行"></a>串行</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">NSOperationQueue *queue = [[NSOperationQueue alloc] init];</span><br><span class="line">queue.maxConcurrentOperationCount = 1;</span><br><span class="line"></span><br><span class="line">NSBlockOperation *blockOperation = [NSBlockOperation blockOperationWithBlock:^&#123;</span><br><span class="line">    NSLog(@&quot;task 1 currentThread = %@ &quot;, [NSThread currentThread]);</span><br><span class="line">&#125;];</span><br><span class="line">[queue addOperation:blockOperation];</span><br><span class="line"></span><br><span class="line">blockOperation = [NSBlockOperation blockOperationWithBlock:^&#123;</span><br><span class="line">    NSLog(@&quot;task 2 currentThread = %@ &quot;, [NSThread currentThread]);</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">[queue addOperation:blockOperation];</span><br><span class="line"></span><br><span class="line">[queue addOperationWithBlock:^&#123;</span><br><span class="line">    NSLog(@&quot;task 3 currentThread = %@ &quot;, [NSThread currentThread]);</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">[queue addOperationWithBlock:^&#123;</span><br><span class="line">    NSLog(@&quot;task 4 currentThread = %@ &quot;, [NSThread currentThread]);</span><br><span class="line">&#125;];</span><br><span class="line"></span><br><span class="line">[queue addOperationWithBlock:^&#123;</span><br><span class="line">    NSLog(@&quot;task 5 currentThread = %@ &quot;, [NSThread currentThread]);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p>控制台执行结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">task 1 currentThread = &lt;NSThread: 0x608000276d00&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">task 2 currentThread = &lt;NSThread: 0x600000273a40&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">task 3 currentThread = &lt;NSThread: 0x608000276d00&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">task 4 currentThread = &lt;NSThread: 0x608000276d00&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">task 5 currentThread = &lt;NSThread: 0x608000276d00&gt;&#123;number = 3, name = (null)&#125;</span><br></pre></td></tr></table></figure>
+<p>严格按照FIFO，顺序执行。虽然是串行执行，但是可以看出会创建有多个线程。这一点与GCD的串行不一样。</p>
+<h2 id="并行"><a href="#并行" class="headerlink" title="并行"></a>并行</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">queue.maxConcurrentOperationCount = 5;</span><br></pre></td></tr></table></figure>
+<p>控制台执行结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">task 3 currentThread = &lt;NSThread: 0x6000002732c0&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">task 4 currentThread = &lt;NSThread: 0x608000264bc0&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">task 2 currentThread = &lt;NSThread: 0x608000267000&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">task 5 currentThread = &lt;NSThread: 0x600000273500&gt;&#123;number = 7, name = (null)&#125;</span><br><span class="line">task 1 currentThread = &lt;NSThread: 0x608000264b40&gt;&#123;number = 5, name = (null)&#125;</span><br></pre></td></tr></table></figure></p>
+<p>串行队列，没有顺序。会创建多个线程。</p>
+<h1 id="优先级"><a href="#优先级" class="headerlink" title="优先级"></a>优先级</h1><p>设置队列的优先级，与GCD优先级一样。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">queue.qualityOfService = NSQualityOfServiceUserInteractive;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>NSQualityOfServiceUserInteractive 主线程</li>
+<li>NSQualityOfServiceUserInitiated 高</li>
+<li>NSQualityOfServiceUtility 低</li>
+<li>NSQualityOfServiceBackground 后台</li>
+<li>NSQualityOfServiceDefault 默认</li>
+</ul>
+<h1 id="挂起"><a href="#挂起" class="headerlink" title="挂起"></a>挂起</h1><p>队列是否挂起，默认值为NO。 </p>
+<ul>
+<li>NO 启动队列中的操作，并且执行。</li>
+<li>YES 正在执行的操作继续执行，未执行的操作不会启动</li>
+</ul>
+<p>当设置为YES的时候，还可以继续添加操作，但是会等设置为NO时，操作才会执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">queue.suspended = YES;</span><br></pre></td></tr></table></figure>
+<h1 id="取消所有的操作"><a href="#取消所有的操作" class="headerlink" title="取消所有的操作"></a>取消所有的操作</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[self.queue cancelAllOperations];</span><br></pre></td></tr></table></figure>
+<p>取消是异步的，因为正在进行的操作可能需要一些时间才能够完成。</p>
+<h1 id="队列名称"><a href="#队列名称" class="headerlink" title="队列名称"></a>队列名称</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">queue.name = @&quot;com.lucaslz.queue&quot;;</span><br></pre></td></tr></table></figure>
+<h1 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h1><p>当某个NSOperation依赖于其他的NSOperation时，就可以通过<code>- (void)addDependency:(NSOperation *)op;</code>添加依赖。只有依赖的NSOperation完成时，当前NSOperation才会执行。也可以通过<code>- (void)removeDependency:(NSOperation *)op;</code>删除依赖。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
             
+            
+              
+                
+                <a class="post-title-link" href="/2016/09/11/multithreading/nsoperation-basic/" itemprop="url">
+                  NSOperation的基本使用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-11T18:31:49+08:00" content="2016 09 11">
+              2016 09 11
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/11/multithreading/nsoperation-basic/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/11/multithreading/nsoperation-basic/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/09/11/multithreading/nsoperation-basic/" class="leancloud_visitors" data-flag-title="NSOperation的基本使用">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><code>NSOperation</code>是对GCD的封装，NSOperation是一个抽象基类，只能使用它的子类。可以把NSOperation理解为一个操作，一项任务。</p>
+<p>在<code>NSOperation.h</code>头文件中，可以看到子类有<code>NSBlockOperation</code>以及<code>NSInvocationOperation</code>。当然我们也可以自定义，需要继承NSOperation，并且重写必要的方法。</p>
+<h1 id="NSBlockOperation的使用"><a href="#NSBlockOperation的使用" class="headerlink" title="NSBlockOperation的使用"></a>NSBlockOperation的使用</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NSOperation *operation = [NSBlockOperation blockOperationWithBlock:^&#123;</span><br><span class="line">    NSLog(@&quot;currentThread = %@ &quot;, [NSThread currentThread]);</span><br><span class="line">&#125;];</span><br><span class="line">[operation start];</span><br></pre></td></tr></table></figure>
+<p>有点像NSThread一样，先初始化，当然调用start。代码块就会执行。</p>
+<h2 id="追加任务"><a href="#追加任务" class="headerlink" title="追加任务"></a>追加任务</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[operation addExecutionBlock:^&#123;</span><br><span class="line">    NSLog(@&quot;追加任务 task1 currentThread = %@ &quot;, [NSThread currentThread]);</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">追加任务 task1 currentThread = &lt;NSThread: 0x60000006f040&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">追加任务 task3 currentThread = &lt;NSThread: 0x60800026c540&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">追加任务 task2 currentThread = &lt;NSThread: 0x600000264f40&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">currentThread = &lt;NSThread: 0x60800026c4c0&gt;&#123;number = 3, name = (null)&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在主线程或者在子线程中执行任务。</li>
+<li>会并行执行任务</li>
+</ul>
+<h1 id="NSInvocationOperation的使用"><a href="#NSInvocationOperation的使用" class="headerlink" title="NSInvocationOperation的使用"></a>NSInvocationOperation的使用</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">NSOperation *operation = [[NSInvocationOperation alloc]</span><br><span class="line">                       initWithTarget:self</span><br><span class="line">                             selector:@selector(invocationOperation:)</span><br><span class="line">                               object:@&#123;@&quot;name&quot;: @&quot;lucaslee&quot;&#125;];</span><br><span class="line">[operation start];</span><br><span class="line">    </span><br><span class="line">- (void)invocationOperation:(NSDictionary *)info &#123;</span><br><span class="line">    NSLog(@&quot;currentThread = %@, info = %@&quot;, [NSThread currentThread], info);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同NSThread一样，invocationOperation方法的参数可以为nil。</p>
+<h1 id="NSBlockOperation与NSInvocationOperation区别"><a href="#NSBlockOperation与NSInvocationOperation区别" class="headerlink" title="NSBlockOperation与NSInvocationOperation区别"></a>NSBlockOperation与NSInvocationOperation区别</h1><h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>NSBlockOperation使用代码块的方式初始化，可以追加任务。<br>NSInvocationOperation使用<code>selector</code>方式初始化，不可以追加任务。</p>
+<h2 id="相同"><a href="#相同" class="headerlink" title="相同"></a>相同</h2><p>都是NSOperation的子类。并且都需要调用start启动。</p>
+<h1 id="自定义Operation"><a href="#自定义Operation" class="headerlink" title="自定义Operation"></a>自定义Operation</h1><ul>
+<li>继承NSOperation</li>
+<li>重写<code>- (void)main</code>方法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@interface LZCustomOperation : NSOperation</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation LZCustomOperation</span><br><span class="line"></span><br><span class="line">- (void)main &#123;</span><br><span class="line">    NSLog(@&quot;currentThread = %@&quot;, [NSThread currentThread]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NSOperation *operation = [[LZCustomOperation alloc] init];</span><br><span class="line">[operation start];</span><br></pre></td></tr></table></figure>
+<h1 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h1><p><img src="/images/nsoperation/nsoperation_1.png" alt="生命周期"></p>
+<h2 id="取消"><a href="#取消" class="headerlink" title="取消"></a>取消</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@property (readonly, getter=isCancelled) BOOL cancelled;</span><br><span class="line"></span><br><span class="line">- (void)cancel;</span><br></pre></td></tr></table></figure>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property (readonly, getter=isReady) BOOL ready;</span><br></pre></td></tr></table></figure>
+<h2 id="执行中"><a href="#执行中" class="headerlink" title="执行中"></a>执行中</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property (readonly, getter=isExecuting) BOOL executing;</span><br></pre></td></tr></table></figure>
+<h2 id="完成"><a href="#完成" class="headerlink" title="完成"></a>完成</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property (readonly, getter=isFinished) BOOL finished;</span><br></pre></td></tr></table></figure>
+
           
         
       
@@ -1572,312 +1749,7 @@
 <p>这个方法是在NSObject中的，所以只要继承自NSObject，就可以调用该方法，该方法可以理解为，调用某个对象（<strong>这里是self</strong>）的某个方法（<strong>selector</strong>）并传递参数（<strong>arg</strong>），是否需要阻塞等待（<strong>wait</strong>）方法执行完毕。</p>
 <h1 id="GCD"><a href="#GCD" class="headerlink" title="GCD"></a>GCD</h1><p>相对于NSThread的线程通讯，GCD就太简洁了，有些难以置信。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);</span><br><span class="line">   dispatch_async(queue, ^&#123;</span><br><span class="line">       NSLog(@&quot;执行数据库访问，下载网络图片等。当前线程 %@&quot;, [NSThread currentThread]);</span><br><span class="line">       </span><br><span class="line">       dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">           NSLog(@&quot;完成任务 回到主线程，可以刷新界面等处理 %@&quot;, [NSThread currentThread]);</span><br><span class="line">       &#125;);</span><br><span class="line">   &#125;);</span><br></pre></td></tr></table></figure>
-<h1 id="NSOperationQueue"><a href="#NSOperationQueue" class="headerlink" title="NSOperationQueue"></a>NSOperationQueue</h1>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/09/08/multithreading/gcd-concurrent-serial/" itemprop="url">
-                  GCD的基本使用
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-08T17:10:22+08:00" content="2016 09 08">
-              2016 09 08
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/08/multithreading/gcd-concurrent-serial/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/08/multithreading/gcd-concurrent-serial/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/09/08/multithreading/gcd-concurrent-serial/" class="leancloud_visitors" data-flag-title="GCD的基本使用">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h1><p>需要等待<code>Block</code>或者<code>闭包</code>代码块执行完毕才继续执行下一步操作。也就是说这里是一个线程阻塞。阻塞当前线程，添加任务到queue中，等待queue队列执行该任务。因此同步稍不注意就会死锁。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void dispatch_sync (</span><br><span class="line">    dispatch_queue_t queue,</span><br><span class="line">    dispatch_block_t block</span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
-<h1 id="异步"><a href="#异步" class="headerlink" title="异步"></a>异步</h1><p>把<code>Block</code>代码块任务加入到queue队列中，然后继续执行下一步操作。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void dispatch_async (</span><br><span class="line">	dispatch_queue_t queue, </span><br><span class="line">	dispatch_block_t block</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-<h1 id="主队列"><a href="#主队列" class="headerlink" title="主队列"></a>主队列</h1><p>主队列是全局唯一的，是串行队列。</p>
-<h2 id="同步-1"><a href="#同步-1" class="headerlink" title="同步"></a>同步</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dispatch_sync(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">    // do something task</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h2 id="异步-1"><a href="#异步-1" class="headerlink" title="异步"></a>异步</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">    // do something task</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h1 id="全局队列"><a href="#全局队列" class="headerlink" title="全局队列"></a>全局队列</h1><p>全局队列是并行队列。</p>
-<h2 id="获取全局队列API"><a href="#获取全局队列API" class="headerlink" title="获取全局队列API"></a>获取全局队列API</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t dispatch_get_global_queue (</span><br><span class="line">   long identifier,</span><br><span class="line">   unsigned long flags</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-<h3 id="identifier"><a href="#identifier" class="headerlink" title="identifier"></a>identifier</h3><p>队列执行任务的服务质量，服务质量有助于确定执行任务的优先级，可以指定以下<code>QOS</code>枚举值。</p>
-<ul>
-<li>QOS_CLASS_USER_INTERACTIVE</li>
-<li>QOS_CLASS_USER_INITIATED</li>
-<li>QOS_CLASS_DEFAULT</li>
-<li>QOS_CLASS_UTILITY</li>
-<li>QOS_CLASS_BACKGROUND</li>
-</ul>
-<p>用于处理用户交互或者用户发起的任务队列意味着优先级会比后台运行的任务要高，你也可以手动指定队列的优先级值。<code>dispatch_queue_priority_t</code>这实际是就是一个<code>long</code>类型值。</p>
-<p>而我们使用的时候都不会使用这个，而是直接使用宏，即如下几个值。</p>
-<ul>
-<li>DISPATCH_QUEUE_PRIORITY_HIGH</li>
-<li>DISPATCH_QUEUE_PRIORITY_DEFAULT</li>
-<li>DISPATCH_QUEUE_PRIORITY_LOW</li>
-<li>DISPATCH_QUEUE_PRIORITY_BACKGROUND</li>
-</ul>
-<p>实际上他们是相互映射的。</p>
-<table>
-<thead>
-<tr>
-<th>宏定义</th>
-<th>QOS</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>DISPATCH_QUEUE_PRIORITY_HIGH</td>
-<td>QOS_CLASS_USER_INITIATED</td>
-</tr>
-<tr>
-<td>DISPATCH_QUEUE_PRIORITY_DEFAULT</td>
-<td>QOS_CLASS_DEFAULT</td>
-</tr>
-<tr>
-<td>DISPATCH_QUEUE_PRIORITY_LOW</td>
-<td>QOS_CLASS_UTILITY</td>
-</tr>
-<tr>
-<td>DISPATCH_QUEUE_PRIORITY_BACKGROUND</td>
-<td>QOS_CLASS_BACKGROUND</td>
-</tr>
-</tbody>
-</table>
-<h3 id="flags"><a href="#flags" class="headerlink" title="flags"></a>flags</h3><p>保留参数，以供将来使用，现在始终是0</p>
-<h2 id="获取全局队列"><a href="#获取全局队列" class="headerlink" title="获取全局队列"></a>获取全局队列</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)</span><br><span class="line">dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)</span><br><span class="line">dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)</span><br><span class="line">dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)</span><br></pre></td></tr></table></figure>
-<h2 id="使用全局队列"><a href="#使用全局队列" class="headerlink" title="使用全局队列"></a>使用全局队列</h2><p>只需要将使用相应的优先级就尅了。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^&#123;</span><br><span class="line">    // do something task.</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^&#123;</span><br><span class="line">    // do something task.</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h1 id="如何创建自定义的队列"><a href="#如何创建自定义的队列" class="headerlink" title="如何创建自定义的队列"></a>如何创建自定义的队列</h1><h2 id="创建队列的API"><a href="#创建队列的API" class="headerlink" title="创建队列的API"></a>创建队列的API</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t dispatch_queue_create (</span><br><span class="line">   const char *label</span><br><span class="line">   dispatch_queue_attr_t attr</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-<h3 id="label"><a href="#label" class="headerlink" title="label"></a>label</h3><p>这是一个C语言字符串，而不是Objective-C中的NSString。所以直接使用<code>&quot;&quot;</code>就可以了。这里一般使用<code>Bundle Identifier</code> 加上有业务含义的名字，如何db，networking，用以处理数据库，网络的队列。这样会出现在app崩溃的时所产生的CrashLog中，而且调试的时候也能够查看到是哪一个队列。</p>
-<h3 id="attr"><a href="#attr" class="headerlink" title="attr"></a>attr</h3><p>虽然可以直接赋值为<code>NULL</code>，表示串行队列，但是为了更容易理解，强烈建议使用官方已经自定义好的宏。如下，</p>
-<ul>
-<li>DISPATCH_QUEUE_SERIAL  串行</li>
-<li>DISPATCH_QUEUE_CONCURRENT 并行</li>
-</ul>
-<p>虽然DISPATCH_QUEUE_SERIAL实际上还是一个NULL， 但还是强烈推荐使用DISPATCH_QUEUE_SERIAL。</p>
-<h2 id="创建串行队列"><a href="#创建串行队列" class="headerlink" title="创建串行队列"></a>创建串行队列</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t queue = dispatch_queue_create(&quot;com.lucaslz.db&quot;, DISPATCH_QUEUE_SERIAL);</span><br></pre></td></tr></table></figure>
-<h3 id="使用自定义的串行队列"><a href="#使用自定义的串行队列" class="headerlink" title="使用自定义的串行队列"></a>使用自定义的串行队列</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t queue = dispatch_queue_create(&quot;com.lucaslz.db&quot;, DISPATCH_QUEUE_SERIAL);</span><br><span class="line"></span><br><span class="line">// 同步</span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    // do something task.</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">// 异步</span><br><span class="line">dispatch_sync(queue, ^&#123;</span><br><span class="line">    // do something task.</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h2 id="创建并行队列"><a href="#创建并行队列" class="headerlink" title="创建并行队列"></a>创建并行队列</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t queue = dispatch_queue_create(&quot;com.lucaslz.db&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br></pre></td></tr></table></figure>
-<h3 id="使用自定义的并行队列"><a href="#使用自定义的并行队列" class="headerlink" title="使用自定义的并行队列"></a>使用自定义的并行队列</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t queue = dispatch_queue_create(&quot;com.lucaslz.db&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line"></span><br><span class="line">// 同步</span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    // do something task.</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">// 异步</span><br><span class="line">dispatch_sync(queue, ^&#123;</span><br><span class="line">    // do something task.</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h1 id="串行队列"><a href="#串行队列" class="headerlink" title="串行队列"></a>串行队列</h1><h2 id="串行同步"><a href="#串行同步" class="headerlink" title="串行同步"></a>串行同步</h2><p>创建串行队列，并添加同步任务。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    NSLog(@&quot;task start, thread = %@&quot;, [NSThread currentThread]);</span><br><span class="line">    </span><br><span class="line">    dispatch_queue_t serialQueue = dispatch_queue_create(&quot;com.lucaslz.db&quot;, DISPATCH_QUEUE_SERIAL);</span><br><span class="line">    for (NSUInteger index = 1; index &lt;= 10; ++index ) &#123;</span><br><span class="line">        dispatch_sync(serialQueue, ^&#123;</span><br><span class="line">            NSLog(@&quot;task = %@ thread = %@&quot;, @(index), [NSThread currentThread]);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    NSLog(@&quot;task end, thread = %@&quot;, [NSThread currentThread]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>控制台输出结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">task start, thread = &lt;NSThread: 0x7fd760702590&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 1 thread = &lt;NSThread: 0x7fd760702590&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 2 thread = &lt;NSThread: 0x7fd760702590&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 3 thread = &lt;NSThread: 0x7fd760702590&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 4 thread = &lt;NSThread: 0x7fd760702590&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 5 thread = &lt;NSThread: 0x7fd760702590&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 6 thread = &lt;NSThread: 0x7fd760702590&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 7 thread = &lt;NSThread: 0x7fd760702590&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 8 thread = &lt;NSThread: 0x7fd760702590&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 9 thread = &lt;NSThread: 0x7fd760702590&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 10 thread = &lt;NSThread: 0x7fd760702590&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task end, thread = &lt;NSThread: 0x7fd760702590&gt;&#123;number = 1, name = main&#125;</span><br></pre></td></tr></table></figure>
-<p>上下文环境是在<code>viewDidLoad</code>中，所以实际上是在主线程去执行<code>串行异步</code>任务。</p>
-<ul>
-<li>先执行task start</li>
-<li>然后执行for循环, 把任务添加进串行队列中，因为这是一个同步任务，所以会等待所有的同步任务执行完毕。</li>
-<li>再执行task end</li>
-</ul>
-<p>从输出结果可以看出，串行同步并不会创建新的线程，实际上还是在主线程中执行任务。</p>
-<h2 id="串行异步"><a href="#串行异步" class="headerlink" title="串行异步"></a>串行异步</h2><p>把刚刚的串行同步换成串行异步<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dispatch_async(serialQueue, ^&#123;</span><br><span class="line">    NSLog(@&quot;task = %@ thread = %@&quot;, @(index), [NSThread currentThread]);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>控制台输出结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">task start, thread = &lt;NSThread: 0x7f83c2504270&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task end, thread = &lt;NSThread: 0x7f83c2504270&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 1 thread = &lt;NSThread: 0x7f83c2416ed0&gt;&#123;number = 2, name = (null)&#125;</span><br><span class="line">task = 2 thread = &lt;NSThread: 0x7f83c2416ed0&gt;&#123;number = 2, name = (null)&#125;</span><br><span class="line">task = 3 thread = &lt;NSThread: 0x7f83c2416ed0&gt;&#123;number = 2, name = (null)&#125;</span><br><span class="line">task = 4 thread = &lt;NSThread: 0x7f83c2416ed0&gt;&#123;number = 2, name = (null)&#125;</span><br><span class="line">task = 5 thread = &lt;NSThread: 0x7f83c2416ed0&gt;&#123;number = 2, name = (null)&#125;</span><br><span class="line">task = 6 thread = &lt;NSThread: 0x7f83c2416ed0&gt;&#123;number = 2, name = (null)&#125;</span><br><span class="line">task = 7 thread = &lt;NSThread: 0x7f83c2416ed0&gt;&#123;number = 2, name = (null)&#125;</span><br><span class="line">task = 8 thread = &lt;NSThread: 0x7f83c2416ed0&gt;&#123;number = 2, name = (null)&#125;</span><br><span class="line">task = 9 thread = &lt;NSThread: 0x7f83c2416ed0&gt;&#123;number = 2, name = (null)&#125;</span><br><span class="line">task = 10 thread = &lt;NSThread: 0x7f83c2416ed0&gt;&#123;number = 2, name = (null)&#125;</span><br></pre></td></tr></table></figure>
-<p>上下文环境是在<code>viewDidLoad</code>中，所以实际上是在主线程去执行<code>串行异步</code>任务。</p>
-<ul>
-<li>先执行Task start。</li>
-<li>然后执行for循环, 把任务添加进串行队列中，因为是异步任务，所以不会等待。</li>
-<li>继续执行task end任务。</li>
-<li>再执行串行队列中的所有任务。</li>
-</ul>
-<p>串行异步，从输出结果中可以看到，会创建线程（number = 2, name = (null)）。<br>number = 1， name= main是主线程。</p>
-<h1 id="并行队列"><a href="#并行队列" class="headerlink" title="并行队列"></a>并行队列</h1><h2 id="并行同步"><a href="#并行同步" class="headerlink" title="并行同步"></a>并行同步</h2><p>创建并行队列concurrentQueue。并调用同步任务。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t concurrentQueue = dispatch_queue_create(&quot;com.lucaslz.db&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br></pre></td></tr></table></figure></p>
-<p>控制台输出结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">task start, thread = &lt;NSThread: 0x7fe1725077c0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 1 thread = &lt;NSThread: 0x7fe1725077c0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 2 thread = &lt;NSThread: 0x7fe1725077c0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 3 thread = &lt;NSThread: 0x7fe1725077c0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 4 thread = &lt;NSThread: 0x7fe1725077c0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 5 thread = &lt;NSThread: 0x7fe1725077c0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 6 thread = &lt;NSThread: 0x7fe1725077c0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 7 thread = &lt;NSThread: 0x7fe1725077c0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 8 thread = &lt;NSThread: 0x7fe1725077c0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 9 thread = &lt;NSThread: 0x7fe1725077c0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 10 thread = &lt;NSThread: 0x7fe1725077c0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task end, thread = &lt;NSThread: 0x7fe1725077c0&gt;&#123;number = 1, name = main&#125;</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>先执行task start</li>
-<li>再执行for循环，并把同步任务添加到并行队列中，因为是同步的~ 所以依旧就等待同步任务完成</li>
-<li>等所有的同步任务完成后才会去执行 task end</li>
-</ul>
-<p>从输出结果中可以看出，并行同步任务，也没有创建线程，与串行同步任务一样都是使用的主线程。</p>
-<h2 id="并行异步"><a href="#并行异步" class="headerlink" title="并行异步"></a>并行异步</h2><p>把同步任务替换成异步任务<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dispatch_async(concurrentQueue, ^&#123;</span><br><span class="line">    NSLog(@&quot;task = %@ thread = %@&quot;, @(index), [NSThread currentThread]);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>控制台输出结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">task start, thread = &lt;NSThread: 0x7fda2b504220&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task end, thread = &lt;NSThread: 0x7fda2b504220&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 2 thread = &lt;NSThread: 0x7fda2b419680&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">task = 1 thread = &lt;NSThread: 0x7fda2b71de60&gt;&#123;number = 2, name = (null)&#125;</span><br><span class="line">task = 3 thread = &lt;NSThread: 0x7fda2b506970&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">task = 4 thread = &lt;NSThread: 0x7fda2b50db50&gt;&#123;number = 5, name = (null)&#125;</span><br><span class="line">task = 5 thread = &lt;NSThread: 0x7fda2b419680&gt;&#123;number = 3, name = (null)&#125;</span><br><span class="line">task = 6 thread = &lt;NSThread: 0x7fda2b7034e0&gt;&#123;number = 6, name = (null)&#125;</span><br><span class="line">task = 7 thread = &lt;NSThread: 0x7fda2b71de60&gt;&#123;number = 2, name = (null)&#125;</span><br><span class="line">task = 8 thread = &lt;NSThread: 0x7fda2b72f9b0&gt;&#123;number = 7, name = (null)&#125;</span><br><span class="line">task = 9 thread = &lt;NSThread: 0x7fda2b506970&gt;&#123;number = 4, name = (null)&#125;</span><br><span class="line">task = 10 thread = &lt;NSThread: 0x7fda2b50db50&gt;&#123;number = 5, name = (null)&#125;</span><br></pre></td></tr></table></figure></p>
-<p>上下文环境是在<code>viewDidLoad</code>中，所以实际上是在主线程去执行<code>并行异步</code>任务。</p>
-<ul>
-<li>先执行task start任务</li>
-<li>再执行for循环，并把异步任务添加到并行队列中，因为是异步任务，所以不需要等待，继续往下执行任务</li>
-<li>执行task end</li>
-<li>再执行并行队列中的任务</li>
-</ul>
-<p>从输出结果中可以看出，并行异步任务，会创建多个线程，创建的线程数量会根据系统资源而定。</p>
-<h1 id="全局队列-1"><a href="#全局队列-1" class="headerlink" title="全局队列"></a>全局队列</h1><h2 id="全局队列同步"><a href="#全局队列同步" class="headerlink" title="全局队列同步"></a>全局队列同步</h2><p>创建默认优先级的全局队列，并添加同步任务。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t defaultQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);</span><br></pre></td></tr></table></figure></p>
-<p>控制台输出结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">task start, thread = &lt;NSThread: 0x7fc390701d10&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 1 thread = &lt;NSThread: 0x7fc390701d10&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 2 thread = &lt;NSThread: 0x7fc390701d10&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 3 thread = &lt;NSThread: 0x7fc390701d10&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 4 thread = &lt;NSThread: 0x7fc390701d10&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 5 thread = &lt;NSThread: 0x7fc390701d10&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 6 thread = &lt;NSThread: 0x7fc390701d10&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 7 thread = &lt;NSThread: 0x7fc390701d10&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 8 thread = &lt;NSThread: 0x7fc390701d10&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 9 thread = &lt;NSThread: 0x7fc390701d10&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 10 thread = &lt;NSThread: 0x7fc390701d10&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task end, thread = &lt;NSThread: 0x7fc390701d10&gt;&#123;number = 1, name = main&#125;</span><br></pre></td></tr></table></figure></p>
-<p>可以看出与并行同步执行的结果一样。</p>
-<h2 id="全局队列异步"><a href="#全局队列异步" class="headerlink" title="全局队列异步"></a>全局队列异步</h2><p>把同步任务修改成异步任务<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dispatch_async(defaultQueue, ^&#123;</span><br><span class="line">    NSLog(@&quot;task = %@ thread = %@&quot;, @(index), [NSThread currentThread]);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>控制台输出结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">task start, thread = &lt;NSThread: 0x7fe578602e30&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 1 thread = &lt;NSThread: 0x7fe578602e30&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 2 thread = &lt;NSThread: 0x7fe578602e30&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 3 thread = &lt;NSThread: 0x7fe578602e30&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 4 thread = &lt;NSThread: 0x7fe578602e30&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 5 thread = &lt;NSThread: 0x7fe578602e30&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 6 thread = &lt;NSThread: 0x7fe578602e30&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 7 thread = &lt;NSThread: 0x7fe578602e30&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 8 thread = &lt;NSThread: 0x7fe578602e30&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 9 thread = &lt;NSThread: 0x7fe578602e30&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 10 thread = &lt;NSThread: 0x7fe578602e30&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task end, thread = &lt;NSThread: 0x7fe578602e30&gt;&#123;number = 1, name = main&#125;</span><br></pre></td></tr></table></figure></p>
-<p>可以看出与并行异步队列执行的结果是一样。</p>
-<h2 id="其他的优先级全局队列"><a href="#其他的优先级全局队列" class="headerlink" title="其他的优先级全局队列"></a>其他的优先级全局队列</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t defaultQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);</span><br><span class="line">dispatch_queue_t defaultQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);</span><br><span class="line">dispatch_queue_t defaultQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);</span><br><span class="line">dispatch_queue_t defaultQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);</span><br></pre></td></tr></table></figure>
-<p>结果同上面的默认优先级的全局队列。</p>
-<h1 id="主队列-1"><a href="#主队列-1" class="headerlink" title="主队列"></a>主队列</h1><h2 id="主队列同步"><a href="#主队列同步" class="headerlink" title="主队列同步"></a>主队列同步</h2><p>同样的把队列修改成主队列。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t mainQueue = dispatch_get_main_queue();</span><br></pre></td></tr></table></figure></p>
-<p>控制台输出结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">task start, thread = &lt;NSThread: 0x7fe5c9d1aaf0&gt;&#123;number = 1, name = main&#125;</span><br></pre></td></tr></table></figure></p>
-<p>等待了很长一段时间，你发现同步任务没有执行。<br>实际上这已经是一个死锁了。</p>
-<p>因为上下文环境是在<code>viewDidLoad</code>中，所以实际上本身就是在主队列中。<br>先执行task start。然后把同步任务添加到主队列中，因为是同步任务，所以需要等待同步任务执行。而因为队列是先进先出FIFO的，即刚刚添加的任务需要等待前面一个任务执行完才能执行，而这又是一个同步任务，需要等这个任务执行，这个任务又需要前面的任务执行，所以造成了互相等待，结局就是死锁。</p>
-<h2 id="主队列异步"><a href="#主队列异步" class="headerlink" title="主队列异步"></a>主队列异步</h2><p>把同步任务修改成异步任务。</p>
-<p>控制台输出结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">task start, thread = &lt;NSThread: 0x7fd4c860f7f0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task end, thread = &lt;NSThread: 0x7fd4c860f7f0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 1 thread = &lt;NSThread: 0x7fd4c860f7f0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 2 thread = &lt;NSThread: 0x7fd4c860f7f0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 3 thread = &lt;NSThread: 0x7fd4c860f7f0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 4 thread = &lt;NSThread: 0x7fd4c860f7f0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 5 thread = &lt;NSThread: 0x7fd4c860f7f0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 6 thread = &lt;NSThread: 0x7fd4c860f7f0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 7 thread = &lt;NSThread: 0x7fd4c860f7f0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 8 thread = &lt;NSThread: 0x7fd4c860f7f0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 9 thread = &lt;NSThread: 0x7fd4c860f7f0&gt;&#123;number = 1, name = main&#125;</span><br><span class="line">task = 10 thread = &lt;NSThread: 0x7fd4c860f7f0&gt;&#123;number = 1, name = main&#125;</span><br></pre></td></tr></table></figure>
-<p>可以看出跟串行异步是一样的结果。</p>
-<h1 id="主队列、全局队列、自定义队列差异"><a href="#主队列、全局队列、自定义队列差异" class="headerlink" title="主队列、全局队列、自定义队列差异"></a>主队列、全局队列、自定义队列差异</h1><p>上下文环境是在<code>viewDidLoad</code>中。(这个也很重要，不然可能导致结论不一致)</p>
-<table>
-<thead>
-<tr>
-<th>队列</th>
-<th>队列类型</th>
-<th>任务类型</th>
-<th>创建新线程</th>
-<th>执行顺序</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Main</td>
-<td>串行</td>
-<td>sync</td>
-<td>NO</td>
-<td>死锁</td>
-</tr>
-<tr>
-<td>Main</td>
-<td>串行</td>
-<td>async</td>
-<td>NO</td>
-<td>顺序执行</td>
-</tr>
-<tr>
-<td>GlobalQueue</td>
-<td>并行</td>
-<td>sync</td>
-<td>NO</td>
-<td>顺序执行</td>
-</tr>
-<tr>
-<td>GlobalQueue</td>
-<td>并行</td>
-<td>async</td>
-<td>YES（多个线程）</td>
-<td>没有先后顺序</td>
-</tr>
-<tr>
-<td>自定义</td>
-<td>串行</td>
-<td>sync</td>
-<td>NO</td>
-<td>顺序执行</td>
-</tr>
-<tr>
-<td>自定义</td>
-<td>串行</td>
-<td>async</td>
-<td>YES (只有一个)</td>
-<td>顺序执行</td>
-</tr>
-<tr>
-<td>自定义</td>
-<td>并行</td>
-<td>sync</td>
-<td>NO</td>
-<td>顺序执行</td>
-</tr>
-<tr>
-<td>自定义</td>
-<td>并行</td>
-<td>async</td>
-<td>YES (多个线程)</td>
-<td>没有先后顺序</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>并行、串行同步任务都不会创建新的线程，只会在主线程中执行任务。</li>
-<li>只有并发异步任务才会创建多个线程。</li>
-</ul>
-
+<h1 id="NSOperationQueue"><a href="#NSOperationQueue" class="headerlink" title="NSOperationQueue"></a>NSOperationQueue</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">NSOperationQueue *queue = [[NSOperationQueue alloc] init];</span><br><span class="line">[queue addOperationWithBlock:^&#123;</span><br><span class="line">    NSLog(@&quot;执行数据库访问，下载网络图片等。当前线程 %@&quot;, [NSThread currentThread]);</span><br><span class="line">    </span><br><span class="line">    [[NSOperationQueue mainQueue] addOperationWithBlock:^&#123;</span><br><span class="line">        NSLog(@&quot;完成任务 回到主线程，可以刷新界面等处理 %@&quot;, [NSThread currentThread]);</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
           
         
       
@@ -1950,7 +1822,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-count">25</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1996,6 +1868,10 @@
               
                 <li class="links-of-blogroll-item">
                   <a href="http://boot.ren/" title="枫叶飘零" target="_blank">枫叶飘零</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://lingenliu.com" title="lingenliu" target="_blank">lingenliu</a>
                 </li>
               
             </ul>
