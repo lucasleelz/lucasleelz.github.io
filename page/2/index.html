@@ -1040,9 +1040,10 @@
 <h1 id="扫描一维码"><a href="#扫描一维码" class="headerlink" title="扫描一维码"></a>扫描一维码</h1><p>与扫描二维码一样，只需要设置<code>AVCaptureMetadataOutput</code>的metadataObjectTypes，发现如果同时设置二维码与一维码，一维码的识别很慢。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.output.metadataObjectTypes = [AVMetadataObjectTypeCode128Code]</span><br></pre></td></tr></table></figure></p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://developer.apple.com/library/tvos/documentation/GraphicsImaging/Reference/CoreImageFilterReference/index.html#//apple_ref/doc/filter/ci/CICode128BarcodeGenerator" target="_blank" rel="external">CICode128BarcodeGenerator</a><br><a href="https://developer.apple.com/library/tvos/documentation/GraphicsImaging/Reference/CoreImageFilterReference/index.html#//apple_ref/doc/filter/ci/CIQRCodeGenerator" target="_blank" rel="external">CIQRCodeGenerator</a></p>
 <h1 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h1><h2 id="源码环境"><a href="#源码环境" class="headerlink" title="源码环境"></a>源码环境</h2><ul>
-<li>Xcode 7.3</li>
-<li>Swift 2.2</li>
+<li>Xcode 8.0 (8A218a)</li>
+<li>Swift 3.0</li>
 </ul>
+<p>博客中的代码是Swift2.2，Xcode7.3。<br>目前源代码已经更新到了Swift3.0。</p>
 <h2 id="源码地址"><a href="#源码地址" class="headerlink" title="源码地址"></a>源码地址</h2><p><a href="https://github.com/lucasleelz/iOSExample/tree/master/QRCode" target="_blank" rel="external">QRCode</a></p>
 
           
