@@ -114,7 +114,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     scheme: 'Muse',
-    sidebar: {"position":"left","display":"post"},
+    sidebar: {"position":"left","display":"always"},
     fancybox: true,
     motion: true,
     duoshuo: {
@@ -259,6 +259,361 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/09/09/multithreading/nsthread-basic/" itemprop="url">
+                  NSThread的基本使用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-09T13:37:44+08:00" content="2016 09 09">
+              2016 09 09
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/09/multithreading/nsthread-basic/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/09/multithreading/nsthread-basic/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/09/09/multithreading/nsthread-basic/" class="leancloud_visitors" data-flag-title="NSThread的基本使用">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="NSThread是什么"><a href="#NSThread是什么" class="headerlink" title="NSThread是什么"></a>NSThread是什么</h1><p>这是<code>Foundation</code>框架，是OC层面的线程。面向对象，可以直接操作线程对象。</p>
+<h1 id="NSThread如何创建"><a href="#NSThread如何创建" class="headerlink" title="NSThread如何创建"></a>NSThread如何创建</h1><p>手动创建线程的方法有三种，一种是直接使用NSThread new 一个出来。</p>
+<h2 id="使用alloc-init"><a href="#使用alloc-init" class="headerlink" title="使用alloc init"></a>使用<code>alloc init</code></h2><ul>
+<li>手动调用<code>start</code>进行启动线程</li>
+<li>可以对线程属性对象设置</li>
+</ul>
+<h3 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>是否可为空</th>
+<th>描述 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>target</td>
+<td>id</td>
+<td>NO</td>
+<td>目标对象，一般用self。</td>
+</tr>
+<tr>
+<td>selector</td>
+<td>SEL</td>
+<td>NO</td>
+<td>这个可以理解为调用指定的方法</td>
+</tr>
+<tr>
+<td>argument</td>
+<td>id</td>
+<td>YES</td>
+<td>参数，只能够有一个，但是可以以字典的方式变相的添加多个对象</td>
+</tr>
+</tbody>
+</table>
+<h3 id="有参数的情况"><a href="#有参数的情况" class="headerlink" title="有参数的情况"></a>有参数的情况</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">NSThread *thread = [[NSThread alloc] initWithTarget:self</span><br><span class="line">                                           selector:@selector(run:)</span><br><span class="line">                                             object:@&#123;@&quot;name&quot;: @&quot;lucaslee&quot;&#125;];</span><br><span class="line">[thread start];</span><br><span class="line"></span><br><span class="line">- (void)run:(NSDictionary *)info &#123;</span><br><span class="line">	NSLog(@&quot;do something.&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="无参数的情况"><a href="#无参数的情况" class="headerlink" title="无参数的情况"></a>无参数的情况</h3><p>selector 这里没有：，并且参数为nil。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">NSThread *thread = [[NSThread alloc] initWithTarget:self</span><br><span class="line">                                           selector:@selector(run)</span><br><span class="line">                                             object:nil];</span><br><span class="line">- (void)run &#123;</span><br><span class="line">	NSLog(@&quot;do something.&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="detachNewThreadSelector"><a href="#detachNewThreadSelector" class="headerlink" title="detachNewThreadSelector"></a>detachNewThreadSelector</h2><p>分离出一条子线程</p>
+<ul>
+<li>自动启动线程</li>
+<li>方法调用没有返回值，所以无法对线程对象属性进行设置</li>
+</ul>
+<h3 id="参数说明-1"><a href="#参数说明-1" class="headerlink" title="参数说明"></a>参数说明</h3><p>同alloc init的创建线程的参数一样，只是target与selector位置调换了而已</p>
+<h3 id="方法调用"><a href="#方法调用" class="headerlink" title="方法调用"></a>方法调用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[NSThread detachNewThreadSelector:@selector(run:)</span><br><span class="line">                          toTarget:self</span><br><span class="line">                        withObject:@&#123;@&quot;name&quot;: @&quot;lucaslee&quot;&#125;];</span><br></pre></td></tr></table></figure>
+<h2 id="performSelectorInBackground"><a href="#performSelectorInBackground" class="headerlink" title="performSelectorInBackground"></a>performSelectorInBackground</h2><p>这个是NSObject的分类方法，所以只要是继承NSObject的类都可以调用该方法。</p>
+<ul>
+<li>后台线程，自动启动线程</li>
+<li>方法调用没有返回值，所以无法对线程对象属性进行设置</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[self performSelectorInBackground:@selector(run:)</span><br><span class="line">                       withObject:@&#123;@&quot;name&quot;: @&quot;lucaslee&quot;&#125;];</span><br></pre></td></tr></table></figure>
+<h1 id="NSThread属性"><a href="#NSThread属性" class="headerlink" title="NSThread属性"></a>NSThread属性</h1><h2 id="设置线程名称"><a href="#设置线程名称" class="headerlink" title="设置线程名称"></a>设置线程名称</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thread.name = @&quot;db&quot;;</span><br></pre></td></tr></table></figure>
+<p>控制台输出结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">do something. currentThread = &lt;NSThread: 0x7f882a42f9c0&gt;&#123;number = 2, name = db&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="设置线程优先级"><a href="#设置线程优先级" class="headerlink" title="设置线程优先级"></a>设置线程优先级</h2><h3 id="threadPriority"><a href="#threadPriority" class="headerlink" title="threadPriority"></a>threadPriority</h3><p>线程优先级的取值范围是<code>0.0 ~~~ 1.0</code> 1.0最高，这个范围的优先级映射到操作系统的优先级值，默认的值可能是<code>0.5</code>，但是由于优先级是由内核决定的，所以就不保证此值实际上讲师什么</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thread.threadPriority = 1.0</span><br></pre></td></tr></table></figure>
+<h3 id="qualityOfService"><a href="#qualityOfService" class="headerlink" title="qualityOfService"></a>qualityOfService</h3><p>实际上<code>threadPriority</code>已经过时了，需要使用qualityOfService替代。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thread.qualityOfService = NSQualityOfServiceUserInteractive;</span><br></pre></td></tr></table></figure>
+<p>这是一个枚举值。</p>
+<h2 id="stackSize"><a href="#stackSize" class="headerlink" title="stackSize"></a>stackSize</h2><p>创建线程是会有开销的，可以使用stackSize来更改堆栈的大小。<br>但是要满足一下条件</p>
+<ul>
+<li>必须是字节并且是4KB的倍数。</li>
+<li>必须在<code>启动线程</code>之前设置改属性</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thread.stackSize = 4096;</span><br></pre></td></tr></table></figure>
+<h1 id="NSThread生命周期"><a href="#NSThread生命周期" class="headerlink" title="NSThread生命周期"></a>NSThread生命周期</h1><p>分别是新建，可运行，运行中，睡眠，阻塞，死亡。</p>
+<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (void)start;</span><br></pre></td></tr></table></figure>
+<h2 id="运行中"><a href="#运行中" class="headerlink" title="运行中"></a>运行中</h2><p>这个是线程的只读属性。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property(readonly, getter=isExecuting) BOOL executing</span><br></pre></td></tr></table></figure>
+<h2 id="休眠-暂停"><a href="#休眠-暂停" class="headerlink" title="休眠 暂停"></a>休眠 暂停</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">+ (void)sleepUntilDate:(NSDate *)date;</span><br><span class="line">+ (void)sleepForTimeInterval:(NSTimeInterval)ti;</span><br></pre></td></tr></table></figure>
+<h2 id="取消"><a href="#取消" class="headerlink" title="取消"></a>取消</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 设置取消</span><br><span class="line">- (void)cancel</span><br><span class="line"></span><br><span class="line">// 查看线程是否是取消状态</span><br><span class="line">@property(readonly, getter=isCancelled) BOOL cancelled</span><br></pre></td></tr></table></figure>
+<h2 id="已完成"><a href="#已完成" class="headerlink" title="已完成"></a>已完成</h2><p>线程的只读属性。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property(readonly, getter=isFinished) BOOL finished</span><br></pre></td></tr></table></figure>
+<h2 id="退出"><a href="#退出" class="headerlink" title="退出"></a>退出</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">+ (void)exit;</span><br></pre></td></tr></table></figure>
+<h1 id="其他的API"><a href="#其他的API" class="headerlink" title="其他的API"></a>其他的API</h1><h2 id="主线程"><a href="#主线程" class="headerlink" title="主线程"></a>主线程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@property (readonly) BOOL isMainThread;</span><br><span class="line"></span><br><span class="line">+ (BOOL)isMainThread;</span><br><span class="line">+ (NSThread *)mainThread;</span><br></pre></td></tr></table></figure>
+<h2 id="当前线程"><a href="#当前线程" class="headerlink" title="当前线程"></a>当前线程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">+ (NSThread *)currentThread;</span><br></pre></td></tr></table></figure>
+<h1 id="线程成本"><a href="#线程成本" class="headerlink" title="线程成本"></a>线程成本</h1><p>多线程会占用你应用程序(和系统的)的内存使用和性能方面的资源。每个线程都需要分配一定的内核内存和应用程序内存空间的内存。管理你的线程和协调其调度所需的核心数据结构存储在使用Wired Memory的内核里面。你线程的堆栈空间和每个线程的数据都被存储在你应用程序的内存空间里面。这些数据结构里面的大部分都是当你首次创建线程或者进程的时候被创建和初始化的，它们所需的代价成本很高，因为需要和内核交互。</p>
+<table>
+<thead>
+<tr>
+<th>资源项</th>
+<th>大约消耗</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>内核</td>
+<td>1kb</td>
+</tr>
+<tr>
+<td>栈空间</td>
+<td>1. 子线程 512KB  2. Mac OS 8MB  3. iOS 主线程 1MB</td>
+</tr>
+<tr>
+<td>创建时间</td>
+<td>90毫秒</td>
+</tr>
+</tbody>
+</table>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://www.dreamingwish.com/article/ios-multi-threaded-programming-the-thread-management.html" target="_blank" rel="external">Thread Management 中文</a><br><a href="https://developer.apple.com/library/prerelease/content/documentation/Cocoa/Conceptual/Multithreading/CreatingThreads/CreatingThreads.html#//apple_ref/doc/uid/10000057i-CH15-SW2" target="_blank" rel="external">Thread Management</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/09/09/multithreading/thread-communication/" itemprop="url">
+                  线程之间通信
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-09T11:56:44+08:00" content="2016 09 09">
+              2016 09 09
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/09/multithreading/thread-communication/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/09/multithreading/thread-communication/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/09/09/multithreading/thread-communication/" class="leancloud_visitors" data-flag-title="线程之间通信">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="NSThread"><a href="#NSThread" class="headerlink" title="NSThread"></a>NSThread</h1><ul>
+<li>创建并启动一个子线程</li>
+<li>子线程完成任务后回到主线程</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    // 创建子线程并执行doWork任务。</span><br><span class="line">    [NSThread detachNewThreadSelector:@selector(doWork:)</span><br><span class="line">                             toTarget:self</span><br><span class="line">                           withObject:@&#123;@&quot;name&quot;: @&quot;lucaslee&quot;&#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)doWork:(NSDictionary *)info &#123;</span><br><span class="line">    NSLog(@&quot;执行数据库访问，下载网络图片等。当前线程 %@ 参数 = %@&quot;, [NSThread currentThread], info);</span><br><span class="line">    </span><br><span class="line">    // 回到主线程。</span><br><span class="line">    [self performSelectorOnMainThread:@selector(doneWork:)</span><br><span class="line">                           withObject:@&#123;@&quot;name&quot;: @&quot;lucaslee&quot;&#125;</span><br><span class="line">                        waitUntilDone:NO];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)doneWork:(NSDictionary *)info &#123;</span><br><span class="line">    NSLog(@&quot;完成任务 当前线程 %@ 参数 = %@&quot;, [NSThread currentThread], info);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h2><p><code>performSelectorOnMainThread</code>的参数说明</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>参数类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>aSelector</td>
+<td>SEL</td>
+<td>调用方法</td>
+</tr>
+<tr>
+<td>arg</td>
+<td>id</td>
+<td>传递参数</td>
+</tr>
+<tr>
+<td>wait</td>
+<td>BOOL</td>
+<td>是否等待执行完成后再继续往下执行，同GCD的async sync作用一样</td>
+</tr>
+</tbody>
+</table>
+<h2 id="回到指定线程"><a href="#回到指定线程" class="headerlink" title="回到指定线程"></a>回到指定线程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[self performSelector:@selector(doneWork)</span><br><span class="line">             onThread:[NSThread mainThread]</span><br><span class="line">           withObject:@&#123;@&quot;name&quot;: @&quot;lucaslee&quot;&#125;</span><br><span class="line">        waitUntilDone:YES];</span><br></pre></td></tr></table></figure>
+<p>onThread 回到指定的线程</p>
+<p>这个方法是在NSObject中的，所以只要继承自NSObject，就可以调用该方法，该方法可以理解为，调用某个对象（<strong>这里是self</strong>）的某个方法（<strong>selector</strong>）并传递参数（<strong>arg</strong>），是否需要阻塞等待（<strong>wait</strong>）方法执行完毕。</p>
+<h1 id="GCD"><a href="#GCD" class="headerlink" title="GCD"></a>GCD</h1><p>相对于NSThread的线程通讯，GCD就太简洁了，有些难以置信。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);</span><br><span class="line">   dispatch_async(queue, ^&#123;</span><br><span class="line">       NSLog(@&quot;执行数据库访问，下载网络图片等。当前线程 %@&quot;, [NSThread currentThread]);</span><br><span class="line">       </span><br><span class="line">       dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">           NSLog(@&quot;完成任务 回到主线程，可以刷新界面等处理 %@&quot;, [NSThread currentThread]);</span><br><span class="line">       &#125;);</span><br><span class="line">   &#125;);</span><br></pre></td></tr></table></figure>
+<h1 id="NSOperationQueue"><a href="#NSOperationQueue" class="headerlink" title="NSOperationQueue"></a>NSOperationQueue</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">NSOperationQueue *queue = [[NSOperationQueue alloc] init];</span><br><span class="line">[queue addOperationWithBlock:^&#123;</span><br><span class="line">    NSLog(@&quot;执行数据库访问，下载网络图片等。当前线程 %@&quot;, [NSThread currentThread]);</span><br><span class="line">    </span><br><span class="line">    [[NSOperationQueue mainQueue] addOperationWithBlock:^&#123;</span><br><span class="line">        NSLog(@&quot;完成任务 回到主线程，可以刷新界面等处理 %@&quot;, [NSThread currentThread]);</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
     
       
 
@@ -1543,335 +1898,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/28/quartz/gradients/" itemprop="url">
-                  渐变
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-28T16:06:43+08:00" content="2016 08 28">
-              2016 08 28
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/28/quartz/gradients/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/28/quartz/gradients/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/08/28/quartz/gradients/" class="leancloud_visitors" data-flag-title="渐变">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>使用Quartz提供的<code>CGContextDrawRadialGradient</code>或者<code>CGContextDrawLinearGradient</code>创建渐变。</p>
-<h1 id="如何创建渐变"><a href="#如何创建渐变" class="headerlink" title="如何创建渐变"></a>如何创建渐变</h1><ul>
-<li>创建<code>CGGradient</code>对象，提供颜色空间</li>
-<li>使用CGContextDrawRadialGradient或者CGContextDrawLinearGradient来绘制渐变</li>
-</ul>
-<h1 id="创建CGGradient"><a href="#创建CGGradient" class="headerlink" title="创建CGGradient"></a>创建CGGradient</h1><p>创建CGGradient提供了两个函数，<code>CGGradientCreateWithColorComponents</code>与<code>CGGradientCreateWithColors</code>。</p>
-<p>使用CGGradientCreateWithColorComponents创建CGGradient</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CGColorSpaceRef rgb = CGColorSpaceCreateDeviceRGB();</span><br><span class="line">CGFloat colors[] = &#123;</span><br><span class="line">    204.0 / 255.0, 224.0 / 255.0, 244.0 / 255.0, 1.00,</span><br><span class="line">    29.0 / 255.0, 156.0 / 255.0, 215.0 / 255.0, 1.00,</span><br><span class="line">    0.0 / 255.0,  50.0 / 255.0, 126.0 / 255.0, 1.00,</span><br><span class="line">&#125;;</span><br><span class="line">_gradient = CGGradientCreateWithColorComponents(rgb, colors, NULL, 3 * 4));</span><br><span class="line">CGColorSpaceRelease(rgb);</span><br></pre></td></tr></table></figure>
-<p>使用CGGradientCreateWithColors创建CGGradient</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CFMutableArrayRef array = CFArrayCreateMutable(NULL, 0, NULL);</span><br><span class="line">CFArrayAppendValue(array, [UIColor redColor].CGColor);</span><br><span class="line">CFArrayAppendValue(array, [UIColor blueColor].CGColor);</span><br><span class="line">_gradient = CGGradientCreateWithColors(rgb, array, NULL);</span><br><span class="line">CFRelease(array);</span><br></pre></td></tr></table></figure>
-<p>注意手动管理内存，需要手动释放。</p>
-<h1 id="CGContextDrawLinearGradient"><a href="#CGContextDrawLinearGradient" class="headerlink" title="CGContextDrawLinearGradient"></a>CGContextDrawLinearGradient</h1><p>CGContextDrawLinearGradient是线性渐变，由两个端点连接的轴线渐变。</p>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>类型</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>c</td>
-<td>CGContextRef</td>
-<td>上下文</td>
-</tr>
-<tr>
-<td>gradient</td>
-<td>CGGradientRef</td>
-<td>提供颜色空间</td>
-</tr>
-<tr>
-<td>startPoint</td>
-<td>CGGradientRef</td>
-<td>开始点颜色</td>
-</tr>
-<tr>
-<td>endPoint</td>
-<td>CGGradientRef</td>
-<td>结束点颜色</td>
-</tr>
-<tr>
-<td>options</td>
-<td>CGGradientDrawingOptions</td>
-<td>kCGGradientDrawsBeforeStartLocation或者kCGGradientDrawsBeforeStartLocation</td>
-</tr>
-</tbody>
-</table>
-<p>kCGGradientDrawsBeforeStartLocation 填充超出起始位置，延伸超过终点的颜色由CGGradient对象限定在位置0的颜色。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CGContextDrawLinearGradient(context,</span><br><span class="line">                            self.gradient,</span><br><span class="line">                            startPoint(self.bounds),</span><br><span class="line">                            endPoint(self.bounds),</span><br><span class="line">                            kCGGradientDrawsBeforeStartLocation);</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/quartz/gradients/gradient1.png" alt="gradients"></p>
-<p>kCGGradientDrawsAfterEndLocation 填充应超出结束位置。延伸超过终点的颜色由CGGradient对象限定在位置1的颜色<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CGContextDrawLinearGradient(context,</span><br><span class="line">                            self.gradient,</span><br><span class="line">                            startPoint(self.bounds),</span><br><span class="line">                            endPoint(self.bounds),</span><br><span class="line">                            kCGGradientDrawsAfterEndLocation);</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/quartz/gradients/gradient2.png" alt="gradients"></p>
-<p>因为这个是options，所以可以同时设两个值，那么会同时超过起点与结束点。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CGContextDrawLinearGradient(context,</span><br><span class="line">                            self.gradient,</span><br><span class="line">                            startPoint(self.bounds),</span><br><span class="line">                            endPoint(self.bounds),</span><br><span class="line">                            kCGGradientDrawsBeforeStartLocation </span><br><span class="line">                            | kCGGradientDrawsAfterEndLocation);</span><br></pre></td></tr></table></figure>
-<p><img src="/images/quartz/gradients/gradient3.png" alt="gradients"></p>
-<h1 id="CGContextDrawRadialGradient"><a href="#CGContextDrawRadialGradient" class="headerlink" title="CGContextDrawRadialGradient"></a>CGContextDrawRadialGradient</h1><p>CGContextDrawRadialGradient径向渐变，也是连个端口连接的轴线渐变，但是渐变路径是两个圆半径提供。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CGContextDrawRadialGradient(context,</span><br><span class="line">                            self.gradient,</span><br><span class="line">                            startCenter(self.bounds),</span><br><span class="line">                            startRadius(self.bounds),</span><br><span class="line">                            endCenter(self.bounds),</span><br><span class="line">                            endRadius(self.bounds),</span><br><span class="line">                            kCGGradientDrawsBeforeStartLocation);</span><br></pre></td></tr></table></figure>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>类型</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>c</td>
-<td>CGContextRef</td>
-<td>上下文</td>
-</tr>
-<tr>
-<td>gradient</td>
-<td>CGGradientRef</td>
-<td>提供颜色空间</td>
-</tr>
-<tr>
-<td>startCenter</td>
-<td>CGPoint</td>
-<td>开始圆的中心</td>
-</tr>
-<tr>
-<td>startRadius</td>
-<td>CGFloat</td>
-<td>开始圆半径</td>
-</tr>
-<tr>
-<td>endCenter</td>
-<td>CGPoint</td>
-<td>结束圆的中心</td>
-</tr>
-<tr>
-<td>endRadius</td>
-<td>CGFloat</td>
-<td>结束圆半径</td>
-</tr>
-<tr>
-<td>options</td>
-<td>CGGradientDrawingOptions</td>
-<td>同CGContextDrawLinearGradient中的options一样</td>
-</tr>
-</tbody>
-</table>
-<p><img src="/images/quartz/gradients/gradient4.png" alt="gradients"></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/08/27/quartz/shadow/" itemprop="url">
-                  阴影
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-27T17:41:07+08:00" content="2016 08 27">
-              2016 08 27
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/27/quartz/shadow/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/27/quartz/shadow/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/08/27/quartz/shadow/" class="leancloud_visitors" data-flag-title="阴影">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="阴影"><a href="#阴影" class="headerlink" title="阴影"></a>阴影</h1><p>如同人在太阳的倒影一样，那么阴影就模拟光源照射到图形对象上所形成的阴影效果。有时候可能需要一种悬浮的效果，那么就可以使用阴影。</p>
-<h1 id="如何设置阴影"><a href="#如何设置阴影" class="headerlink" title="如何设置阴影"></a>如何设置阴影</h1><ul>
-<li>使用<code>CGContextSetShadow</code>设置阴影</li>
-<li>绘制图形，阴影就会自动呈现</li>
-</ul>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/08/27/quartz/shadow/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1917,7 +1943,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">25</span>
+              <span class="site-state-item-count">27</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1946,7 +1972,7 @@
 
         
         
-          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
             <div class="links-of-blogroll-title">
               <i class="fa  fa-fw fa-globe"></i>
               友情链接
@@ -1954,19 +1980,19 @@
             <ul class="links-of-blogroll-list">
               
                 <li class="links-of-blogroll-item">
+                  <a href="http://www.yyang.io/" title="秋水逍遥" target="_blank">秋水逍遥</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://lingenliu.com" title="御剑轩" target="_blank">御剑轩</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
                   <a href="http://www.mossle.com" title="LemonOA" target="_blank">LemonOA</a>
                 </li>
               
                 <li class="links-of-blogroll-item">
-                  <a href="http://www.yyang.io/" title="YYang" target="_blank">YYang</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
                   <a href="http://boot.ren/" title="枫叶飘零" target="_blank">枫叶飘零</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://lingenliu.com" title="lingenliu" target="_blank">lingenliu</a>
                 </li>
               
             </ul>
