@@ -281,6 +281,3507 @@
             
               
                 
+                <a class="post-title-link" href="/2016/11/15/java/activiti/activiti-db-5-22/" itemprop="url">
+                  Activiti 5.22 框架数据库设计说明
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-15T14:27:17+08:00" content="2016 11 15">
+              2016 11 15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/15/java/activiti/activiti-db-5-22/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/15/java/activiti/activiti-db-5-22/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/11/15/java/activiti/activiti-db-5-22/" class="leancloud_visitors" data-flag-title="Activiti 5.22 框架数据库设计说明">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><code>因为MySQL用得最多，所以都是用MySQL进行说明。</code></p>
+<h1 id="结构设计"><a href="#结构设计" class="headerlink" title="结构设计"></a>结构设计</h1><p>Activiti使用到的表都是<code>ACT_</code>前缀，列名都是有<code>下划线</code>后缀，防止关键字冲突。</p>
+<h2 id="ACT-RE"><a href="#ACT-RE" class="headerlink" title="ACT_RE_*:"></a><code>ACT_RE_*</code>:</h2><p>’RE’表示repository(存储 )，RepositoryService接口所操作的表。带此前缀的表包含的是静态信息，如，流程定义，流程的资源（图片，规则等）。</p>
+<h2 id="ACT-RU"><a href="#ACT-RU" class="headerlink" title="ACT_RU_*:"></a><code>ACT_RU_*</code>:</h2><p>‘RU’表示runtime，运行时表-RuntimeService。这是运行时的表存储着流程变量，用户任务，变量，职责（job）等运行时的数据。Activiti只存储实例执行期间的运行时数据，当流程实例结束时，将删除这些记录。这就保证了这些运行时的表小且快。</p>
+<h2 id="ACT-ID"><a href="#ACT-ID" class="headerlink" title="ACT_ID_*:"></a><code>ACT_ID_*</code>:</h2><p>’ID’表示identity (组织机构)，IdentityService接口所操作的表。用户记录，流程中使用到的用户和组。这些表包含标识的信息，如用户，用户组，等等。</p>
+<h2 id="ACT-HI"><a href="#ACT-HI" class="headerlink" title="ACT_HI_*:"></a><code>ACT_HI_*</code>:</h2><p>’HI’表示history，历史数据表，HistoryService。就是这些表包含着流程执行的历史相关数据，如结束的流程实例，变量，任务，等等</p>
+<h2 id="ACT-GE"><a href="#ACT-GE" class="headerlink" title="ACT_GE_*:"></a><code>ACT_GE_*</code>:</h2><p>全局通用数据及设置(general)，各种情况都使用的数据。</p>
+<h1 id="所有表描述"><a href="#所有表描述" class="headerlink" title="所有表描述"></a>所有表描述</h1><table>
+<thead>
+<tr>
+<th>表名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ACT_EVT_LOG</td>
+<td>事件日志表</td>
+</tr>
+<tr>
+<td>ACT_GE_BYTEARRAY</td>
+<td>二进制数据表</td>
+</tr>
+<tr>
+<td>ACT_GE_PROPERTY</td>
+<td>属性数据表，存储整个流程引擎级别的数据,初始化表结构时，会默认插入三条记录。</td>
+</tr>
+<tr>
+<td>ACT_HI_ACTINST</td>
+<td>历史节点表</td>
+</tr>
+<tr>
+<td>ACT_HI_ATTACHMENT</td>
+<td>历史附件表</td>
+</tr>
+<tr>
+<td>ACT_HI_COMMENT</td>
+<td>历史意见表</td>
+</tr>
+<tr>
+<td>ACT_HI_DETAIL</td>
+<td>历史详情表，提供历史变量的查询</td>
+</tr>
+<tr>
+<td>ACT_HI_IDENTITYLINK</td>
+<td>历史流程人员表</td>
+</tr>
+<tr>
+<td>ACT_HI_PROCINST</td>
+<td>历史流程实例表</td>
+</tr>
+<tr>
+<td>ACT_HI_TASKINST</td>
+<td>历史流程任务表</td>
+</tr>
+<tr>
+<td>ACT_HI_VARINST</td>
+<td>历史变量表</td>
+</tr>
+<tr>
+<td>ACT_ID_GROUP</td>
+<td>用户组信息表</td>
+</tr>
+<tr>
+<td>ACT_ID_INFO</td>
+<td>用户扩展信息表</td>
+</tr>
+<tr>
+<td>ACT_ID_MEMBERSHIP</td>
+<td>用户与用户组关系信息表</td>
+</tr>
+<tr>
+<td>ACT_ID_USER</td>
+<td>用户信息表</td>
+</tr>
+<tr>
+<td>ACT_PROCDEF_INFO</td>
+<td></td>
+</tr>
+<tr>
+<td>ACT_RE_DEPLOYMENT</td>
+<td>部署信息表</td>
+</tr>
+<tr>
+<td>ACT_RE_MODEL</td>
+<td>流程设计模型部署表</td>
+</tr>
+<tr>
+<td>ACT_RE_PROCDEF</td>
+<td>流程定义数据表</td>
+</tr>
+<tr>
+<td>ACT_RU_EVENT_SUBSCR</td>
+<td>throwEvent、catchEvent时间监听信息表</td>
+</tr>
+<tr>
+<td>ACT_RU_EXECUTION</td>
+<td>运行时流程执行实例表</td>
+</tr>
+<tr>
+<td>ACT_RU_IDENTITYLINK</td>
+<td>运行时流程人员表，主要存储任务节点与参与者相关信息</td>
+</tr>
+<tr>
+<td>ACT_RU_JOB</td>
+<td>运行时定时任务数据表</td>
+</tr>
+<tr>
+<td>ACT_RU_TASK</td>
+<td>运行时任务节点表</td>
+</tr>
+<tr>
+<td>ACT_RU_VARIABLE</td>
+<td>运行时流程变量数据表</td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-EVT-LOG（事件日志表）"><a href="#ACT-EVT-LOG（事件日志表）" class="headerlink" title="ACT_EVT_LOG（事件日志表）"></a>ACT_EVT_LOG（事件日志表）</h1><p>Activiti 事件日志表。</p>
+<h2 id="表结构说明"><a href="#表结构说明" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LOG_NR_</code></td>
+<td>主键</td>
+<td>bigint(20)</td>
+<td>NO</td>
+<td>自增长</td>
+</tr>
+<tr>
+<td><code>TYPE_</code></td>
+<td>类型</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>类型</td>
+</tr>
+<tr>
+<td><code>PROC_DEF_ID_</code></td>
+<td>流程定义ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>流程定义ID</td>
+</tr>
+<tr>
+<td><code>PROC_INST_ID_</code></td>
+<td>流程实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>流程实例ID</td>
+</tr>
+<tr>
+<td><code>EXECUTION_ID_</code></td>
+<td>执行实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>执行实例ID</td>
+</tr>
+<tr>
+<td><code>TASK_ID_</code></td>
+<td>节点实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>节点实例ID</td>
+</tr>
+<tr>
+<td><code>TIME_STAMP_</code></td>
+<td>时间戳</td>
+<td>timestamp(3)</td>
+<td>NO</td>
+<td>时间戳</td>
+</tr>
+<tr>
+<td><code>USER_ID_</code></td>
+<td>用户ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>用户ID</td>
+</tr>
+<tr>
+<td><code>DATA_</code></td>
+<td>一些额外参数</td>
+<td>longblob</td>
+<td>YES</td>
+<td>例如 IP地址 等。</td>
+</tr>
+<tr>
+<td><code>LOCK_OWNER_</code></td>
+<td>挂起者</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>暂时没有用到</td>
+</tr>
+<tr>
+<td><code>LOCK_TIME_</code></td>
+<td>挂起时间</td>
+<td>timestamp(3)</td>
+<td>YES</td>
+<td>暂时没有用到</td>
+</tr>
+<tr>
+<td><code>IS_PROCESSED_</code></td>
+<td>是否处理过了</td>
+<td>tinyint(4)</td>
+<td>YES</td>
+<td>暂时没有用到</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明"><a href="#索引说明" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td><code>LOG_NR_</code></td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-GE-BYTEARRAY（二进制数据表）"><a href="#ACT-GE-BYTEARRAY（二进制数据表）" class="headerlink" title="ACT_GE_BYTEARRAY（二进制数据表）"></a>ACT_GE_BYTEARRAY（二进制数据表）</h1><p>保存流程定义图片和xml、Serializable(序列化)的变量,即保存所有二进制数据，特别注意类路径部署时候，不要把svn等隐藏文件或者其他与流程无关的文件也一起部署到该表中，会造成一些错误（可能导致流程定义无法删除）。 </p>
+<h2 id="表结构说明-1"><a href="#表结构说明-1" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>REV_</code></td>
+<td>乐观锁</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>默认值 NULL，version版本</td>
+</tr>
+<tr>
+<td><code>NAME_</code></td>
+<td>名称</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>部署文件名称，如 mail.bpmn、mail.png、mail.bpmn20.xml</td>
+</tr>
+<tr>
+<td><code>DEPLOYMENT_ID_</code></td>
+<td>部署ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>部署表ID</td>
+</tr>
+<tr>
+<td><code>BYTES_</code></td>
+<td>字节</td>
+<td>longblob</td>
+<td>YES</td>
+<td>部署文件</td>
+</tr>
+<tr>
+<td><code>GENERATED_</code></td>
+<td>是否是引擎生成</td>
+<td>tinyint(4)</td>
+<td>YES</td>
+<td>0：为用户生成，1：为Activiti生成。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-1"><a href="#索引说明-1" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+<tr>
+<td><code>ACT_FK_BYTEARR_DEPL</code></td>
+<td><code>DEPLOYMENT_ID_</code></td>
+<td>NO</td>
+<td><code>ACT_RE_DEPLOYMENT</code>表主键做外键。</td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-GE-PROPERTY（属性数据表）"><a href="#ACT-GE-PROPERTY（属性数据表）" class="headerlink" title="ACT_GE_PROPERTY（属性数据表）"></a>ACT_GE_PROPERTY（属性数据表）</h1><p>属性数据表存储整个流程引擎级别的数据,初始化表结构时，会默认插入三条记录。</p>
+<h2 id="表结构说明-2"><a href="#表结构说明-2" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NAME_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>schema.version、schema.history、next.dbid</td>
+</tr>
+<tr>
+<td><code>REV_</code></td>
+<td>乐观锁</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>默认值 NULL，version版本</td>
+</tr>
+<tr>
+<td><code>VALUE_</code></td>
+<td>值</td>
+<td>varchar(300)</td>
+<td>YES</td>
+<td>例如：<code>5.*</code>、<code>create(5.*)</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-2"><a href="#索引说明-2" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-HI-ACTINST（历史节点表）"><a href="#ACT-HI-ACTINST（历史节点表）" class="headerlink" title="ACT_HI_ACTINST（历史节点表）"></a>ACT_HI_ACTINST（历史节点表）</h1><p>历史活动信息。这里记录流程流转过的所有节点，与HI_TASKINST不同的是，taskinst只记录usertask内容。</p>
+<h2 id="表结构说明-3"><a href="#表结构说明-3" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>PROC_DEF_ID_</code></td>
+<td>流程定义ID</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>流程定义ID</td>
+</tr>
+<tr>
+<td><code>PROC_INST_ID_</code></td>
+<td>流程实例ID</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>流程实例ID</td>
+</tr>
+<tr>
+<td><code>EXECUTION_ID_</code></td>
+<td>执行实例ID</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>执行实例ID</td>
+</tr>
+<tr>
+<td><code>ACT_ID_</code></td>
+<td>节点ID</td>
+<td>varchar(255)</td>
+<td>NO</td>
+<td>节点定义ID</td>
+</tr>
+<tr>
+<td><code>TASK_ID_</code></td>
+<td>节点实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>默认值 NULL，其他节点类型实例ID在这里为空 </td>
+</tr>
+<tr>
+<td><code>CALL_PROC_INST_ID_</code></td>
+<td>调用外部的流程实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>默认值NULL，调用外部流程的流程实例ID</td>
+</tr>
+<tr>
+<td><code>ACT_NAME_</code></td>
+<td>节点名称</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>默认值 NULL，节点定义名称</td>
+</tr>
+<tr>
+<td><code>ACT_TYPE_</code></td>
+<td>节点类型</td>
+<td>varchar(255)</td>
+<td>NO</td>
+<td>如startEvent、userTask</td>
+</tr>
+<tr>
+<td><code>ASSIGNEE_</code></td>
+<td>签收人</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>默认值 NULL，节点签收人</td>
+</tr>
+<tr>
+<td><code>START_TIME_</code></td>
+<td>开始时间</td>
+<td>datetime(3)</td>
+<td>NO</td>
+<td>version版本，2016-11-15 11:30:00</td>
+</tr>
+<tr>
+<td><code>END_TIME_</code></td>
+<td>结束时间</td>
+<td>datetime(3)</td>
+<td>NO</td>
+<td>默认值 NULL，2016-11-15 11:30:00</td>
+</tr>
+<tr>
+<td><code>DURATION_</code></td>
+<td>耗时</td>
+<td>bigint(20)</td>
+<td>YES</td>
+<td>默认值 NULL，毫秒值</td>
+</tr>
+<tr>
+<td><code>TENANT_ID_</code></td>
+<td>租户标识</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>默认值``，</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-3"><a href="#索引说明-3" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+<tr>
+<td><code>ACT_IDX_HI_ACT_INST_START</code></td>
+<td><code>START_TIME_</code></td>
+<td>NO</td>
+<td>开始时间索引</td>
+</tr>
+<tr>
+<td><code>ACT_IDX_HI_ACT_INST_END</code></td>
+<td><code>END_TIME_</code></td>
+<td>NO</td>
+<td>结束时间索引</td>
+</tr>
+<tr>
+<td><code>ACT_IDX_HI_ACT_INST_PROCINST</code></td>
+<td><code>PROC_INST_ID_</code>，<code>ACT_ID_</code></td>
+<td>NO</td>
+<td>流程实例与节点联合索引。</td>
+</tr>
+<tr>
+<td><code>ACT_IDX_HI_ACT_INST_EXEC</code></td>
+<td><code>EXECUTION_ID_</code>，<code>ACT_ID_</code></td>
+<td>NO</td>
+<td>执行实例与节点联合索引。</td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-HI-ATTACHMENT（历史附件表）"><a href="#ACT-HI-ATTACHMENT（历史附件表）" class="headerlink" title="ACT_HI_ATTACHMENT（历史附件表）"></a>ACT_HI_ATTACHMENT（历史附件表）</h1><p>历史附件表。</p>
+<h2 id="表结构说明-4"><a href="#表结构说明-4" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>REV_</code></td>
+<td>乐观锁</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>默认值 NULL，version版本</td>
+</tr>
+<tr>
+<td><code>USER_ID_</code></td>
+<td>用户ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>默认值 NULL，用户标识</td>
+</tr>
+<tr>
+<td><code>NAME_</code></td>
+<td>名称</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>默认值 NULL</td>
+</tr>
+<tr>
+<td><code>DESCRIPTION_</code></td>
+<td>描述</td>
+<td>varchar(4000)</td>
+<td>YES</td>
+<td>默认值 NULL</td>
+</tr>
+<tr>
+<td><code>TYPE_</code></td>
+<td>类型</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>默认值 NULL，附件类型</td>
+</tr>
+<tr>
+<td><code>TASK_ID_</code></td>
+<td>节点实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>默认值 NULL</td>
+</tr>
+<tr>
+<td><code>PROC_INST_ID_</code></td>
+<td>流程实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>默认值 NULL，</td>
+</tr>
+<tr>
+<td><code>URL_</code></td>
+<td>URL附件地址</td>
+<td>varchar(4000)</td>
+<td>YES</td>
+<td>默认值 NULL，附件地址</td>
+</tr>
+<tr>
+<td><code>CONTENT_ID_</code></td>
+<td>字节表的ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>默认值 NULL，ACT_GE_BYTEARRAY的ID</td>
+</tr>
+<tr>
+<td><code>TIME_</code></td>
+<td>乐观锁</td>
+<td>datetime(3)</td>
+<td>YES</td>
+<td>默认值 NULL</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-4"><a href="#索引说明-4" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-HI-COMMENT（历史意见表）"><a href="#ACT-HI-COMMENT（历史意见表）" class="headerlink" title="ACT_HI_COMMENT（历史意见表）"></a>ACT_HI_COMMENT（历史意见表）</h1><p>历史意见表</p>
+<h2 id="表结构说明-5"><a href="#表结构说明-5" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>TYPE_</code></td>
+<td>类型</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>类型：event（事件）、comment（意见）</td>
+</tr>
+<tr>
+<td><code>TIME_</code></td>
+<td>时间</td>
+<td>datetime(3)</td>
+<td>NO</td>
+<td>填写时间</td>
+</tr>
+<tr>
+<td><code>USER_ID_</code></td>
+<td>用户ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>填写人ID</td>
+</tr>
+<tr>
+<td><code>TASK_ID_</code></td>
+<td>节点实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>默认值 NULL</td>
+</tr>
+<tr>
+<td><code>PROC_INST_ID_</code></td>
+<td>流程实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>默认值 NULL</td>
+</tr>
+<tr>
+<td><code>ACTION_</code></td>
+<td>行为类型</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>默认值 NULL，值为下列内容中的一种：AddUserLink、DeleteUserLink、AddGroupLink、DeleteGroupLink、AddComment、AddAttachment、DeleteAttachment</td>
+</tr>
+<tr>
+<td>MESSAGE_</td>
+<td>基本内容</td>
+<td>varchar(4000)</td>
+<td>YES</td>
+<td>默认值 NULL，用于存放流程产生的信息，比如审批意见</td>
+</tr>
+<tr>
+<td><code>FULL_MSG_</code></td>
+<td>全部内容</td>
+<td>longblob</td>
+<td>YES</td>
+<td>附件地址</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-5"><a href="#索引说明-5" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-HI-DETAIL（历史详情表）"><a href="#ACT-HI-DETAIL（历史详情表）" class="headerlink" title="ACT_HI_DETAIL（历史详情表）"></a>ACT_HI_DETAIL（历史详情表）</h1><p>历史详情表：流程中产生的变量详细，包括控制流程流转的变量，业务表单中填写的流程需要用到的变量等。</p>
+<h2 id="表结构说明-6"><a href="#表结构说明-6" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>REV_</code></td>
+<td>乐观锁</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>默认值 NULL，version版本</td>
+</tr>
+<tr>
+<td><code>TYPE_</code></td>
+<td>类型</td>
+<td>varchar(255)</td>
+<td>NO</td>
+<td>默认值 NULL，表单：FormProperty，参数：VariableUpdate</td>
+</tr>
+<tr>
+<td><code>PROC_INST_ID_</code></td>
+<td>流程实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>默认值 NULL，附件类型</td>
+</tr>
+<tr>
+<td><code>EXECUTION_ID_</code></td>
+<td>执行实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>默认值 NULL，附件类型</td>
+</tr>
+<tr>
+<td><code>TASK_ID_</code></td>
+<td>节点实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>默认值 NULL，附件类型</td>
+</tr>
+<tr>
+<td><code>ACT_INST_ID_</code></td>
+<td>节点实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>默认值 NULL，附件类型</td>
+</tr>
+<tr>
+<td><code>NAME_</code></td>
+<td>名称</td>
+<td>varchar(255)</td>
+<td>NO</td>
+<td>默认值 NULL，附件类型</td>
+</tr>
+<tr>
+<td><code>VAR_TYPE_</code></td>
+<td>参数类型</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>默认值 NULL，  jpa-entity、boolean、bytes、serializable(可序列化)、自定义type(根据你自身配置)、CustomVariableType、date、double、integer、long、null、short、string,</td>
+</tr>
+<tr>
+<td><code>TIME_</code></td>
+<td>时间</td>
+<td>datetime(3)</td>
+<td>NO</td>
+<td>默认值 NULL，创建时间</td>
+</tr>
+<tr>
+<td><code>BYTEARRAY_ID_</code></td>
+<td>字节表ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>默认值 NULL，ACT_GE_BYTEARRAY表的ID</td>
+</tr>
+<tr>
+<td><code>DOUBLE_</code></td>
+<td>Double</td>
+<td>double</td>
+<td>YES</td>
+<td>默认值 NULL，存储变量类型为Double</td>
+</tr>
+<tr>
+<td><code>LONG_</code></td>
+<td>Long</td>
+<td>bigint（20)</td>
+<td>YES</td>
+<td>默认值 NULL，存储变量类型为long</td>
+</tr>
+<tr>
+<td><code>TEXT_</code></td>
+<td>Text</td>
+<td>varchar(40000)</td>
+<td>YES</td>
+<td>默认值 NULL，存储变量值类型为String</td>
+</tr>
+<tr>
+<td><code>TEXT2_</code></td>
+<td>Text</td>
+<td>varchar(40000)</td>
+<td>YES</td>
+<td>默认值 NULL，此处存储的是JPA持久化对象时，才会有值。此值为对象ID</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-6"><a href="#索引说明-6" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+<tr>
+<td><code>ACT_IDX_HI_DETAIL_PROC_INST</code></td>
+<td><code>PROC_INST_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_IDX_HI_DETAIL_ACT_INST</code></td>
+<td><code>ACT_INST_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_IDX_HI_DETAIL_TIME</code></td>
+<td>TIME_</td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_IDX_HI_DETAIL_NAME</code></td>
+<td>NAME_</td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_IDX_HI_DETAIL_TASK_ID</code></td>
+<td><code>TASK_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-HI-IDENTITYLINK（历史流程人员表）"><a href="#ACT-HI-IDENTITYLINK（历史流程人员表）" class="headerlink" title="ACT_HI_IDENTITYLINK（历史流程人员表）"></a>ACT_HI_IDENTITYLINK（历史流程人员表）</h1><p>任务参与者数据表，主要存储历史节点参与者的信息。</p>
+<h2 id="表结构说明-7"><a href="#表结构说明-7" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>GROUP_ID_</code></td>
+<td>用户组ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>用户组ID</td>
+</tr>
+<tr>
+<td><code>TYPE_</code></td>
+<td>类型</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>assignee、candidate、owner、starter、<code>participant</code></td>
+</tr>
+<tr>
+<td><code>USER_ID_</code></td>
+<td>用户ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>用户ID</td>
+</tr>
+<tr>
+<td><code>TASK_ID_</code></td>
+<td>节点实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>节点实例ID</td>
+</tr>
+<tr>
+<td><code>PROC_INST_ID_</code></td>
+<td>流程实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>流程实例ID</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-7"><a href="#索引说明-7" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+<tr>
+<td><code>ACT_IDX_HI_IDENT_LNK_USER</code></td>
+<td><code>USER_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_IDX_HI_IDENT_LNK_TASK</code></td>
+<td><code>TASK_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_IDX_HI_IDENT_LNK_PROCINST</code></td>
+<td><code>PROC_INST_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-HI-PROCINST（历史流程实例表）"><a href="#ACT-HI-PROCINST（历史流程实例表）" class="headerlink" title="ACT_HI_PROCINST（历史流程实例表）"></a>ACT_HI_PROCINST（历史流程实例表）</h1><p>历史流程实例表。</p>
+<h2 id="表结构说明-8"><a href="#表结构说明-8" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>PROC_INST_ID_</code></td>
+<td>流程实例ID键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>流程实例ID键</td>
+</tr>
+<tr>
+<td><code>BUSINESS_KEY_</code></td>
+<td>业务主键</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>业务主键，业务表单的ID</td>
+</tr>
+<tr>
+<td><code>PROC_DEF_ID_</code></td>
+<td>流程定义ID</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>流程定义ID</td>
+</tr>
+<tr>
+<td><code>START_TIME_</code></td>
+<td>开始时间</td>
+<td>datetime(3)</td>
+<td>NO</td>
+<td>开始时间</td>
+</tr>
+<tr>
+<td><code>END_TIME_</code></td>
+<td>结束时间</td>
+<td>datetime(3)</td>
+<td>YES</td>
+<td>结束时间</td>
+</tr>
+<tr>
+<td><code>DURATION_</code></td>
+<td>耗时</td>
+<td>bigint(20)</td>
+<td>YES</td>
+<td>耗时</td>
+</tr>
+<tr>
+<td><code>START_USER_ID_</code></td>
+<td>起草人</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>起草人</td>
+</tr>
+<tr>
+<td><code>START_ACT_ID_</code></td>
+<td>开始节点ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>开始环节ID</td>
+</tr>
+<tr>
+<td><code>END_ACT_ID_</code></td>
+<td>结束节点ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>结束环节ID</td>
+</tr>
+<tr>
+<td><code>SUPER_PROCESS_INSTANCE_ID_</code></td>
+<td>父流程实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>父流程实例ID</td>
+</tr>
+<tr>
+<td><code>DELETE_REASON_</code></td>
+<td>删除原因</td>
+<td>varchar(4000)</td>
+<td>YES</td>
+<td>删除原因</td>
+</tr>
+<tr>
+<td><code>TENANT_ID_</code></td>
+<td>租户ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>租户ID</td>
+</tr>
+<tr>
+<td><code>NAME_</code></td>
+<td>名称</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>名称</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-8"><a href="#索引说明-8" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+<tr>
+<td><code>PROC_INST_ID_</code></td>
+<td><code>PROC_INST_ID_</code></td>
+<td>YES</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_IDX_HI_PRO_INST_END</code></td>
+<td><code>END_TIME_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_IDX_HI_PRO_I_BUSKEY</code></td>
+<td><code>BUSINESS_KEY_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-HI-TASKINST（历史流程任务表）"><a href="#ACT-HI-TASKINST（历史流程任务表）" class="headerlink" title="ACT_HI_TASKINST（历史流程任务表）"></a>ACT_HI_TASKINST（历史流程任务表）</h1><h2 id="表结构说明-9"><a href="#表结构说明-9" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>PROC_DEF_ID_</code></td>
+<td>流程定义ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>流程定义ID</td>
+</tr>
+<tr>
+<td><code>TASK_DEF_KEY_</code></td>
+<td>节点定义ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>节点定义ID</td>
+</tr>
+<tr>
+<td><code>PROC_INST_ID_</code></td>
+<td>流程实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>流程实例ID</td>
+</tr>
+<tr>
+<td><code>EXECUTION_ID_</code></td>
+<td>执行实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>执行实例ID</td>
+</tr>
+<tr>
+<td><code>NAME_</code></td>
+<td>名称</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>名称</td>
+</tr>
+<tr>
+<td><code>PARENT_TASK_ID_</code></td>
+<td>父节点实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>父节点实例ID</td>
+</tr>
+<tr>
+<td><code>DESCRIPTION_</code></td>
+<td>描述</td>
+<td>varchar(4000)</td>
+<td>YES</td>
+<td>描述</td>
+</tr>
+<tr>
+<td><code>OWNER_</code></td>
+<td>实际签收人 任务的拥有者</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>签收人（默认为空，只有在委托时才有值）</td>
+</tr>
+<tr>
+<td><code>ASSIGNEE_</code></td>
+<td>签收人或被委托</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>签收人或被委托</td>
+</tr>
+<tr>
+<td><code>START_TIME_</code></td>
+<td>开始时间</td>
+<td>datetime(3)</td>
+<td>NO</td>
+<td>开始时间</td>
+</tr>
+<tr>
+<td><code>CLAIM_TIME_</code></td>
+<td>提醒时间</td>
+<td>datetime(3)</td>
+<td>YES</td>
+<td>提醒时间</td>
+</tr>
+<tr>
+<td><code>END_TIME_</code></td>
+<td>结束时间</td>
+<td>datetime(3)</td>
+<td>YES</td>
+<td>结束时间</td>
+</tr>
+<tr>
+<td><code>DURATION_</code></td>
+<td>耗时</td>
+<td>datetime(3)</td>
+<td>YES</td>
+<td>耗时</td>
+</tr>
+<tr>
+<td><code>DELETE_REASON_</code></td>
+<td>删除原因</td>
+<td>varchar(4000)</td>
+<td>YES</td>
+<td>completed、deleted</td>
+</tr>
+<tr>
+<td><code>PRIORITY_</code></td>
+<td>优先级别</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>优先级别</td>
+</tr>
+<tr>
+<td><code>DUE_DATE_</code></td>
+<td>过期时间</td>
+<td>datetime(3)</td>
+<td>YES</td>
+<td>过期时间，表明任务应在多长时间内完成</td>
+</tr>
+<tr>
+<td><code>FORM_KEY_</code></td>
+<td>节点定义的formkey</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>desinger节点定义的form_key属性</td>
+</tr>
+<tr>
+<td><code>CATEGORY_</code></td>
+<td>类别</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>类别</td>
+</tr>
+<tr>
+<td><code>TENANT_ID_</code></td>
+<td>租户ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>租户ID</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-9"><a href="#索引说明-9" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+<tr>
+<td><code>ACT_IDX_HI_TASK_INST_PROCINST</code></td>
+<td><code>PROC_INST_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-HI-VARINST（流程历史变量表）"><a href="#ACT-HI-VARINST（流程历史变量表）" class="headerlink" title="ACT_HI_VARINST（流程历史变量表）"></a>ACT_HI_VARINST（流程历史变量表）</h1><p>流程历史变量表</p>
+<h2 id="表结构说明-10"><a href="#表结构说明-10" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>PROC_INST_ID_</code></td>
+<td>流程实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>流程实例ID</td>
+</tr>
+<tr>
+<td><code>EXECUTION_ID_</code></td>
+<td>执行实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>执行实例ID</td>
+</tr>
+<tr>
+<td><code>TASK_ID_</code></td>
+<td>节点实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>节点实例ID</td>
+</tr>
+<tr>
+<td><code>NAME_</code></td>
+<td>名称</td>
+<td>varchar(255)</td>
+<td>NO</td>
+<td>名称</td>
+</tr>
+<tr>
+<td><code>VAR_TYPE_</code></td>
+<td>参数类型</td>
+<td>varchar(100)</td>
+<td>YES</td>
+<td>jpa-entity、boolean、bytes、serializable、自定义type(根据你自身配置)、CustomVariableType、date、double、integer、jpa-entity、long、null、short、string</td>
+</tr>
+<tr>
+<td><code>REV_</code></td>
+<td>乐观锁</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>默认值 NULL，version版本</td>
+</tr>
+<tr>
+<td><code>BYTEARRAY_ID_</code></td>
+<td>字节表ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>ACT_GE_BYTEARRAY表的主键</td>
+</tr>
+<tr>
+<td><code>DOUBLE_</code></td>
+<td>double</td>
+<td>double</td>
+<td>YES</td>
+<td>存储DoubleType类型的数据</td>
+</tr>
+<tr>
+<td><code>LONG_</code></td>
+<td>long</td>
+<td>bigint(20)</td>
+<td>YES</td>
+<td>存储LongType类型的数据</td>
+</tr>
+<tr>
+<td><code>TEXT_</code></td>
+<td>文本</td>
+<td>varchar(4000)</td>
+<td>YES</td>
+<td>存储变量值类型为String，如此处存储持久化对象时，值jpa对象的class</td>
+</tr>
+<tr>
+<td><code>TEXT2_</code></td>
+<td>文本</td>
+<td>varchar(4000)</td>
+<td>YES</td>
+<td>此处存储的是JPA持久化对象时，才会有值。此值为对象ID</td>
+</tr>
+<tr>
+<td><code>CREATE_TIME_</code></td>
+<td>创建时间</td>
+<td>datetime(3)</td>
+<td>YES</td>
+<td>创建时间</td>
+</tr>
+<tr>
+<td><code>LAST_UPDATED_TIME_</code></td>
+<td>最新更改时间</td>
+<td>datetime(3)</td>
+<td>YES</td>
+<td>最新更改时间</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-10"><a href="#索引说明-10" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+<tr>
+<td><code>ACT_IDX_HI_PROCVAR_PROC_INST</code></td>
+<td>PROC_INST<em>ID</em></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_IDX_HI_PROCVAR_NAME_TYPE</code></td>
+<td>NAME_、VAR<em>TYPE</em></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_IDX_HI_PROCVAR_TASK_ID</code></td>
+<td>TASK<em>ID</em></td>
+<td>NO</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-ID-GROUP（用户组信息表）"><a href="#ACT-ID-GROUP（用户组信息表）" class="headerlink" title="ACT_ID_GROUP（用户组信息表）"></a>ACT_ID_GROUP（用户组信息表）</h1><p>用来存储用户组信息。</p>
+<h2 id="表结构说明-11"><a href="#表结构说明-11" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>REV_</code></td>
+<td>乐观锁</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>默认值 NULL，version版本</td>
+</tr>
+<tr>
+<td><code>NAME_</code></td>
+<td>名称</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>名称</td>
+</tr>
+<tr>
+<td><code>TYPE_</code></td>
+<td>类型</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>类型</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-11"><a href="#索引说明-11" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-ID-INFO（用户扩展信息表）"><a href="#ACT-ID-INFO（用户扩展信息表）" class="headerlink" title="ACT_ID_INFO（用户扩展信息表）"></a>ACT_ID_INFO（用户扩展信息表）</h1><p>用户扩展信息表。</p>
+<h2 id="表结构说明-12"><a href="#表结构说明-12" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>REV_</code></td>
+<td>乐观锁</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>默认值 NULL，version版本</td>
+</tr>
+<tr>
+<td><code>USER_ID_</code></td>
+<td>用户ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>用户ID</td>
+</tr>
+<tr>
+<td><code>TYPE_</code></td>
+<td>类型</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>userinfo 固定值</td>
+</tr>
+<tr>
+<td><code>KEY_</code></td>
+<td></td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>location、phone、skype等</td>
+</tr>
+<tr>
+<td><code>VALUE_</code></td>
+<td></td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>location、phone、skype等对应的值</td>
+</tr>
+<tr>
+<td><code>PASSWORD_</code></td>
+<td></td>
+<td>longblob</td>
+<td>YES</td>
+<td>密码</td>
+</tr>
+<tr>
+<td><code>PARENT_ID_</code></td>
+<td>租户ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>租户ID</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-12"><a href="#索引说明-12" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-ID-MEMBERSHIP（用户与用户组关系信息表）"><a href="#ACT-ID-MEMBERSHIP（用户与用户组关系信息表）" class="headerlink" title="ACT_ID_MEMBERSHIP（用户与用户组关系信息表）"></a>ACT_ID_MEMBERSHIP（用户与用户组关系信息表）</h1><p>用来保存用户的分组信息。</p>
+<h2 id="表结构说明-13"><a href="#表结构说明-13" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>USER_ID_</code></td>
+<td>用户ID</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>用户ID</td>
+</tr>
+<tr>
+<td><code>GROUP_ID_</code></td>
+<td>用户组ID</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>用户组ID</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-13"><a href="#索引说明-13" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td><code>ID_</code> , <code>GROUP_ID_</code></td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+<tr>
+<td><code>ACT_FK_MEMB_GROUP</code></td>
+<td><code>GROUP_ID_</code></td>
+<td>NO</td>
+<td>外键索引</td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-ID-USER（用户信息表）"><a href="#ACT-ID-USER（用户信息表）" class="headerlink" title="ACT_ID_USER（用户信息表）"></a>ACT_ID_USER（用户信息表）</h1><h2 id="表结构说明-14"><a href="#表结构说明-14" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>REV_</code></td>
+<td>乐观锁</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>默认值 NULL，version版本</td>
+</tr>
+<tr>
+<td><code>FIRST_</code></td>
+<td>名</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>名</td>
+</tr>
+<tr>
+<td><code>LAST_</code></td>
+<td>姓</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>姓</td>
+</tr>
+<tr>
+<td><code>EMAIL_</code></td>
+<td>邮箱</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>邮箱</td>
+</tr>
+<tr>
+<td><code>PWD_</code></td>
+<td>密码</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>密码</td>
+</tr>
+<tr>
+<td><code>PICTURE_ID_</code></td>
+<td>图片ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>头像</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-14"><a href="#索引说明-14" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-PROCDEF-INFO（流程定义扩展表）"><a href="#ACT-PROCDEF-INFO（流程定义扩展表）" class="headerlink" title="ACT_PROCDEF_INFO（流程定义扩展表）"></a>ACT_PROCDEF_INFO（流程定义扩展表）</h1><p>关联ACT_GE_BYTEARRAY与PROC_DEF<em>ID</em>表。</p>
+<h2 id="表结构说明-15"><a href="#表结构说明-15" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>PROC_DEF_ID_</code></td>
+<td>流程定义ID</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>流程定义ID</td>
+</tr>
+<tr>
+<td><code>REV_</code></td>
+<td>乐观锁</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>默认值 NULL，version版本</td>
+</tr>
+<tr>
+<td><code>INFO_JSON_ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>ACT_GE_BYTEARRAY的ID</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-15"><a href="#索引说明-15" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+<tr>
+<td><code>ACT_UNIQ_INFO_PROCDEF</code></td>
+<td><code>PROC_DEF_ID_</code></td>
+<td>YES</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_IDX_INFO_PROCDEF</code></td>
+<td><code>PROC_DEF_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_FK_INFO_JSON_BA</code></td>
+<td><code>INFO_JSON_ID_</code></td>
+<td>NO</td>
+<td>外键索引</td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-RE-DEPLOYMENT（部署信息表）"><a href="#ACT-RE-DEPLOYMENT（部署信息表）" class="headerlink" title="ACT_RE_DEPLOYMENT（部署信息表）"></a>ACT_RE_DEPLOYMENT（部署信息表）</h1><p>部署流程定义时需要被持久化保存下来的信息。</p>
+<h2 id="表结构说明-16"><a href="#表结构说明-16" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>NAME_</code></td>
+<td>名称</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>部署文件名称</td>
+</tr>
+<tr>
+<td><code>CATEGORY_</code></td>
+<td>类别</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>类别</td>
+</tr>
+<tr>
+<td><code>TENANT_ID_</code></td>
+<td>租户ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>租户ID</td>
+</tr>
+<tr>
+<td><code>DEPLOY_TIME_</code></td>
+<td>部署时间</td>
+<td>datetime(3)</td>
+<td>YES</td>
+<td>部署时间</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-16"><a href="#索引说明-16" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-RE-MODEL（流程设计模型部署表）"><a href="#ACT-RE-MODEL（流程设计模型部署表）" class="headerlink" title="ACT_RE_MODEL（流程设计模型部署表）"></a>ACT_RE_MODEL（流程设计模型部署表）</h1><p>流程设计器设计流程后，保存数据到该表。</p>
+<h2 id="表结构说明-17"><a href="#表结构说明-17" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>REV_</code></td>
+<td>乐观锁</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>默认值 NULL，version版本</td>
+</tr>
+<tr>
+<td><code>NAME_</code></td>
+<td>名称</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>部署文件名称</td>
+</tr>
+<tr>
+<td><code>KEY_</code></td>
+<td>key</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>例如：<a href="http://www.mossle.com/docs/activiti/" target="_blank" rel="external">http://www.mossle.com/docs/activiti/</a></td>
+</tr>
+<tr>
+<td><code>CATEGORY_</code></td>
+<td>分类</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>分类</td>
+</tr>
+<tr>
+<td><code>CREATE_TIME_</code></td>
+<td>创建时间</td>
+<td>datetime(3)</td>
+<td>YES</td>
+<td>创建时间</td>
+</tr>
+<tr>
+<td>LAST_UPDATE<em>TIME</em></td>
+<td>最新修改时间</td>
+<td>datetime(3)</td>
+<td>YES</td>
+<td>最新修改时间</td>
+</tr>
+<tr>
+<td><code>VERSION_</code></td>
+<td>版本</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>版本</td>
+</tr>
+<tr>
+<td><code>META_INFO_</code></td>
+<td>元数据</td>
+<td>varchar(4000)</td>
+<td>YES</td>
+<td>以json格式保存流程定义的信息</td>
+</tr>
+<tr>
+<td><code>DEPLOYMENT_ID_</code></td>
+<td>部署ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>部署ID</td>
+</tr>
+<tr>
+<td><code>EDITOR_SOURCE_VALUE_ID_</code></td>
+<td></td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>ACT_GE_BYTEARRAY的ID</td>
+</tr>
+<tr>
+<td><code>EDITOR_SOURCE_EXTRA_VALUE_ID_</code></td>
+<td></td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>ACT_GE_BYTEARRAY的ID</td>
+</tr>
+<tr>
+<td><code>TENANT_ID_</code></td>
+<td>租户ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>租户ID</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-17"><a href="#索引说明-17" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+<tr>
+<td><code>ACT_FK_MODEL_SOURCE</code></td>
+<td><code>EDITOR_SOURCE_VALUE_ID_</code></td>
+<td>NO</td>
+<td><code>ACT_GE_BYTEARRAY</code>的ID</td>
+</tr>
+<tr>
+<td><code>ACT_FK_MODEL_SOURCE_EXTRA</code></td>
+<td><code>EDITOR_SOURCE_EXTRA_VALUE_ID_</code></td>
+<td>NO</td>
+<td><code>ACT_GE_BYTEARRAY</code>的ID</td>
+</tr>
+<tr>
+<td><code>ACT_FK_MODEL_DEPLOYMENT</code></td>
+<td><code>DEPLOYMENT_ID_</code></td>
+<td>NO</td>
+<td><code>ACT_RE_DEPLOYMENT</code>的ID</td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-RE-PROCDEF（流程定义数据表）"><a href="#ACT-RE-PROCDEF（流程定义数据表）" class="headerlink" title="ACT_RE_PROCDEF（流程定义数据表）"></a>ACT_RE_PROCDEF（流程定义数据表）</h1><p>业务流程定义数据表。此表和ACT_RE_DEPLOYMENT是多对一的关系，即，一个部署的bar包里可能包含多个流程定义文件，每个流程定义文件都会有一条记录在ACT_REPROCDEF表内，每个流程定义的数据，都会对于ACT_GE_BYTEARRAY表内的一个资源文件和PNG图片文件。和ACT_GE_BYTEARRAY的关联是通过程序用ACT_GE_BYTEARRAY.NAME与ACT_RE<em>PROCDEF.NAME</em>完成的，在数据库表结构中没有体现。</p>
+<h2 id="表结构说明-18"><a href="#表结构说明-18" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>REV_</code></td>
+<td>乐观锁</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>默认值 NULL，version版本</td>
+</tr>
+<tr>
+<td><code>CATEGORY_</code></td>
+<td>类别</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>流程定义的Namespace就是类别</td>
+</tr>
+<tr>
+<td><code>NAME_</code></td>
+<td>名称</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>名称</td>
+</tr>
+<tr>
+<td><code>KEY_</code></td>
+<td>key</td>
+<td>varchar(255)</td>
+<td>NO</td>
+<td>流程定义的ID</td>
+</tr>
+<tr>
+<td><code>VERSION_</code></td>
+<td>版本</td>
+<td>int(11)</td>
+<td>NO</td>
+<td>版本</td>
+</tr>
+<tr>
+<td><code>DEPLOYMENT_ID_</code></td>
+<td>部署表ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>部署表ID</td>
+</tr>
+<tr>
+<td><code>RESOURCE_NAME_</code></td>
+<td>bpmn文件名称</td>
+<td>varchar(4000)</td>
+<td>YES</td>
+<td>流程bpmn文件名称</td>
+</tr>
+<tr>
+<td><code>DGRM_RESOURCE_NAME_</code></td>
+<td>png图片名称</td>
+<td>varchar(4000)</td>
+<td>YES</td>
+<td>流程图片名称</td>
+</tr>
+<tr>
+<td><code>DESCRIPTION_</code></td>
+<td>描述</td>
+<td>varchar(4000)</td>
+<td>YES</td>
+<td>描述</td>
+</tr>
+<tr>
+<td><code>HAS_START_FORM_KEY_</code></td>
+<td>是否存在开始节点formKey</td>
+<td>tinyint(4)</td>
+<td>YES</td>
+<td>start节点是否存在formKey（0：否、1：是）</td>
+</tr>
+<tr>
+<td><code>HAS_GRAPHICAL_NOTATION_</code></td>
+<td></td>
+<td>tinyint(4)</td>
+<td>YES</td>
+<td></td>
+</tr>
+<tr>
+<td><code>SUSPENSION_STATE_</code></td>
+<td>是否挂起</td>
+<td>int(4)</td>
+<td>YES</td>
+<td>1 激活 2挂起</td>
+</tr>
+<tr>
+<td><code>TENANT_ID_</code></td>
+<td>租户ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>租户ID</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-18"><a href="#索引说明-18" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+<tr>
+<td><code>ACT_UNIQ_PROCDEF</code></td>
+<td>KEY<em> 、VERSION</em> 、<code>TENANT_ID_</code></td>
+<td>YES</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-RU-EVENT-SUBSCR（监听信息表）"><a href="#ACT-RU-EVENT-SUBSCR（监听信息表）" class="headerlink" title="ACT_RU_EVENT_SUBSCR（监听信息表）"></a>ACT_RU_EVENT_SUBSCR（监听信息表）</h1><p>throwEvent、catchEvent时间监听信息表。</p>
+<h2 id="表结构说明-19"><a href="#表结构说明-19" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>REV_</code></td>
+<td>乐观锁</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>默认值 NULL，version版本</td>
+</tr>
+<tr>
+<td><code>EVENT_TYPE_</code></td>
+<td>类型</td>
+<td>varchar(255)</td>
+<td>NO</td>
+<td>事件类型</td>
+</tr>
+<tr>
+<td><code>EVENT_NAME_</code></td>
+<td>名称</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>事件名称</td>
+</tr>
+<tr>
+<td><code>EXECUTION_ID_</code></td>
+<td>执行实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>执行实例ID</td>
+</tr>
+<tr>
+<td><code>PROC_INST_ID_</code></td>
+<td>流程实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>流程实例ID</td>
+</tr>
+<tr>
+<td><code>ACTIVITY_ID_</code></td>
+<td>活动实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>活动实例ID</td>
+</tr>
+<tr>
+<td><code>CONFIGURATION_</code></td>
+<td>配置</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>流程定义的Namespace就是类别</td>
+</tr>
+<tr>
+<td><code>CREATED_</code></td>
+<td>是否创建</td>
+<td>timestamp(3)</td>
+<td>NO</td>
+<td>默认值，当前系统时间戳（CURRENT_TIMESTAMP(3)）</td>
+</tr>
+<tr>
+<td><code>PROC_DEF_ID_</code></td>
+<td>流程定义ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>流程定义ID</td>
+</tr>
+<tr>
+<td><code>TENANT_ID_</code></td>
+<td>租户ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>租户ID</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-19"><a href="#索引说明-19" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+<tr>
+<td><code>ACT_IDX_EVENT_SUBSCR_CONFIG_</code></td>
+<td>CONFIGURATION_</td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_FK_EVENT_EXEC</code></td>
+<td><code>EXECUTION_ID_</code></td>
+<td>NO</td>
+<td><code>ACT_RU_EXECUTION</code>的ID</td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-RU-EXECUTION（运行时流程执行实例表）"><a href="#ACT-RU-EXECUTION（运行时流程执行实例表）" class="headerlink" title="ACT_RU_EXECUTION（运行时流程执行实例表）"></a>ACT_RU_EXECUTION（运行时流程执行实例表）</h1><p>流程执行记录表。</p>
+<h2 id="表结构说明-20"><a href="#表结构说明-20" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>REV_</code></td>
+<td>乐观锁</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>默认值 NULL，version版本</td>
+</tr>
+<tr>
+<td><code>PROC_INST_ID_</code></td>
+<td>流程实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>流程实例ID</td>
+</tr>
+<tr>
+<td><code>BUSINESS_KEY_</code></td>
+<td>业务主键ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>业务主键ID</td>
+</tr>
+<tr>
+<td><code>PARENT_ID_</code></td>
+<td>父节点实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>父节点实例ID</td>
+</tr>
+<tr>
+<td><code>PROC_DEF_ID_</code></td>
+<td>流程定义ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>流程定义ID</td>
+</tr>
+<tr>
+<td><code>SUPER_EXEC_</code></td>
+<td></td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_ID_</code></td>
+<td>节点实例ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>节点实例ID即ACT_HI_ACTINST中ID</td>
+</tr>
+<tr>
+<td><code>IS_ACTIVE_</code></td>
+<td>是否存活</td>
+<td>tinyint(4)</td>
+<td>YES</td>
+<td>是否存活</td>
+</tr>
+<tr>
+<td><code>IS_CONCURRENT_</code></td>
+<td>是否并行</td>
+<td>tinyint(4)</td>
+<td>YES</td>
+<td>是否为并行(true/false）</td>
+</tr>
+<tr>
+<td><code>IS_SCOPE_</code></td>
+<td></td>
+<td>tinyint(4)</td>
+<td>YES</td>
+<td></td>
+</tr>
+<tr>
+<td><code>IS_EVENT_SCOPE_</code></td>
+<td></td>
+<td>tinyint(4)</td>
+<td>YES</td>
+<td></td>
+</tr>
+<tr>
+<td><code>SUSPENSION_STATE_</code></td>
+<td>是否挂起</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>挂起状态（1：激活、2：挂起）</td>
+</tr>
+<tr>
+<td><code>CACHED_ENT_STATE_</code></td>
+<td></td>
+<td>int(11)</td>
+<td>YES</td>
+<td></td>
+</tr>
+<tr>
+<td><code>TENANT_ID_</code></td>
+<td>租户ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>租户ID</td>
+</tr>
+<tr>
+<td><code>NAME_</code></td>
+<td>名称</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>名称</td>
+</tr>
+<tr>
+<td><code>LOCK_TIME_</code></td>
+<td></td>
+<td>timestamp(3)</td>
+<td>YES</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-20"><a href="#索引说明-20" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+<tr>
+<td><code>ACT_IDX_EXEC_BUSKEY</code></td>
+<td><code>BUSINESS_KEY_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_FK_EXE_PROCINST</code></td>
+<td><code>PROC_INST_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_FK_EXE_PARENT</code></td>
+<td><code>PARENT_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_FK_EXE_SUPER</code></td>
+<td><code>SUPER_EXEC_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_FK_EXE_PROCDEF</code></td>
+<td><code>PROC_DEF_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-RU-IDENTITYLINK（运行时流程人员表，主要存储任务节点与参与者相关信息）"><a href="#ACT-RU-IDENTITYLINK（运行时流程人员表，主要存储任务节点与参与者相关信息）" class="headerlink" title="ACT_RU_IDENTITYLINK（运行时流程人员表，主要存储任务节点与参与者相关信息）"></a>ACT_RU_IDENTITYLINK（运行时流程人员表，主要存储任务节点与参与者相关信息）</h1><p>任务参与者数据表。主要存储当前节点参与者的信息。</p>
+<h2 id="表结构说明-21"><a href="#表结构说明-21" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>REV_</code></td>
+<td>乐观锁</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>默认值 NULL，version版本</td>
+</tr>
+<tr>
+<td><code>GROUP_ID_</code></td>
+<td>用户组ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>用户组ID</td>
+</tr>
+<tr>
+<td><code>TYPE_</code></td>
+<td>类型</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>assignee、candidate、owner、starter、participant</td>
+</tr>
+<tr>
+<td><code>USER_ID_</code></td>
+<td>用户ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>用户ID</td>
+</tr>
+<tr>
+<td><code>TASK_ID_</code></td>
+<td>节点实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>节点实例ID</td>
+</tr>
+<tr>
+<td><code>PROC_INST_ID_</code></td>
+<td>流程实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>流程实例ID</td>
+</tr>
+<tr>
+<td><code>PROC_DEF_ID_</code></td>
+<td>流程定义ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>流程定义ID</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-21"><a href="#索引说明-21" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+<tr>
+<td><code>ACT_IDX_IDENT_LNK_USER</code></td>
+<td><code>USER_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_IDX_IDENT_LNK_GROUP</code></td>
+<td><code>GROUP_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_IDX_ATHRZ_PROCEDEF</code></td>
+<td><code>PROC_DEF_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_FK_TSKASS_TASK</code></td>
+<td><code>TASK_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_FK_IDL_PROCINST</code></td>
+<td><code>PROC_INST_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-RU-JOB（运行时定时任务数据表）"><a href="#ACT-RU-JOB（运行时定时任务数据表）" class="headerlink" title="ACT_RU_JOB（运行时定时任务数据表）"></a>ACT_RU_JOB（运行时定时任务数据表）</h1><p>运行时定时任务数据表。</p>
+<h2 id="表结构说明-22"><a href="#表结构说明-22" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>REV_</code></td>
+<td>乐观锁</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>默认值 NULL，version版本</td>
+</tr>
+<tr>
+<td><code>TYPE_</code></td>
+<td>类型</td>
+<td>varchar(255)</td>
+<td>NO</td>
+<td>类型</td>
+</tr>
+<tr>
+<td><code>LOCK_EXP_TIME_</code></td>
+<td>锁定释放时间</td>
+<td>timestamp(3)</td>
+<td>YES</td>
+<td>锁定释放时间</td>
+</tr>
+<tr>
+<td><code>LOCK_OWNER_</code></td>
+<td>挂起者</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>挂起者</td>
+</tr>
+<tr>
+<td><code>EXCLUSIVE_</code></td>
+<td></td>
+<td>tinyint(1)</td>
+<td>YES</td>
+<td></td>
+</tr>
+<tr>
+<td><code>EXECUTION_ID_</code></td>
+<td>执行实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>执行实例ID</td>
+</tr>
+<tr>
+<td><code>PROCESS_INSTANCE_ID_</code></td>
+<td>流程实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>流程实例ID</td>
+</tr>
+<tr>
+<td><code>PROC_DEF_ID_</code></td>
+<td>流程定义ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>流程定义ID</td>
+</tr>
+<tr>
+<td><code>RETRIES_</code></td>
+<td></td>
+<td>int(11)</td>
+<td>YES</td>
+<td></td>
+</tr>
+<tr>
+<td><code>EXCEPTION_STACK_ID_</code></td>
+<td>异常信息ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>异常信息ID</td>
+</tr>
+<tr>
+<td><code>EXCEPTION_MSG_</code></td>
+<td>异常信息</td>
+<td>varchar(4000)</td>
+<td>YES</td>
+<td>异常信息</td>
+</tr>
+<tr>
+<td><code>DUEDATE_</code></td>
+<td>到期时间</td>
+<td>timestamp(3)</td>
+<td>YES</td>
+<td>到期时间</td>
+</tr>
+<tr>
+<td><code>REPEAT_</code></td>
+<td>重复</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>重复</td>
+</tr>
+<tr>
+<td><code>HANDLER_TYPE_</code></td>
+<td>处理类型</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>处理类型</td>
+</tr>
+<tr>
+<td><code>HANDLER_CFG_</code></td>
+<td>处理标识</td>
+<td>varchar(4000)</td>
+<td>YES</td>
+<td>处理标识</td>
+</tr>
+<tr>
+<td><code>TENANT_ID_</code></td>
+<td>租户ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>处理</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-22"><a href="#索引说明-22" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+<tr>
+<td><code>ACT_FK_JOB_EXCEPTION</code></td>
+<td><code>EXCEPTION_STACK_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-RU-TASK（运行时任务节点表）"><a href="#ACT-RU-TASK（运行时任务节点表）" class="headerlink" title="ACT_RU_TASK（运行时任务节点表）"></a>ACT_RU_TASK（运行时任务节点表）</h1><p>行时任务数据表。</p>
+<h2 id="表结构说明-23"><a href="#表结构说明-23" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>REV_</code></td>
+<td>乐观锁</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>默认值 NULL，version版本</td>
+</tr>
+<tr>
+<td><code>EXECUTION_ID_</code></td>
+<td>执行实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>执行实例ID</td>
+</tr>
+<tr>
+<td><code>PROC_INST_ID_</code></td>
+<td>流程实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>流程实例ID</td>
+</tr>
+<tr>
+<td><code>PROC_DEF_ID_</code></td>
+<td>流程定义ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>流程定义ID</td>
+</tr>
+<tr>
+<td><code>NAME_</code></td>
+<td>节点定义名称</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>节点定义名称</td>
+</tr>
+<tr>
+<td><code>PARENT_TASK_ID_</code></td>
+<td>父节点实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>父节点实例ID</td>
+</tr>
+<tr>
+<td><code>DESCRIPTION_</code></td>
+<td>描述</td>
+<td>varchar(4000)</td>
+<td>YES</td>
+<td>节点定义描述</td>
+</tr>
+<tr>
+<td><code>TASK_DEF_KEY_</code></td>
+<td>节点定义的KEY</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>任务定义的ID</td>
+</tr>
+<tr>
+<td><code>OWNER_</code></td>
+<td>实际签收人</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>拥有者（一般情况下为空，只有在委托时才有值）</td>
+</tr>
+<tr>
+<td><code>ASSIGNEE_</code></td>
+<td>签收人或委托人</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>签收人或委托人</td>
+</tr>
+<tr>
+<td><code>DELEGATION_</code></td>
+<td>委托类型</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>DelegationState分为两种：PENDING，RESOLVED，如无委托则为空。</td>
+</tr>
+<tr>
+<td><code>PRIORITY_</code></td>
+<td>优先级别</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>优先级别，默认为：50</td>
+</tr>
+<tr>
+<td><code>CREATE_TIME_</code></td>
+<td>创建时间</td>
+<td>timestamp(3)</td>
+<td>YES</td>
+<td>创建时间</td>
+</tr>
+<tr>
+<td><code>DUE_DATE_</code></td>
+<td>过期时间</td>
+<td>datetime(3)</td>
+<td>YES</td>
+<td>过期时间</td>
+</tr>
+<tr>
+<td><code>CATEGORY_</code></td>
+<td>类别</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>类别</td>
+</tr>
+<tr>
+<td><code>SUSPENSION_STATE_</code></td>
+<td>是否挂起</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>（1：代表激活、2：代表挂起）</td>
+</tr>
+<tr>
+<td><code>TENANT_ID_</code></td>
+<td>租户ID</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>租户ID</td>
+</tr>
+<tr>
+<td><code>FORM_KEY_</code></td>
+<td>节点定义的formkey</td>
+<td>varchar(255)</td>
+<td>YES</td>
+<td>表单KEY</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-23"><a href="#索引说明-23" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+<tr>
+<td><code>ACT_IDX_TASK_CREATE</code></td>
+<td><code>CREATE_TIME_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_FK_TASK_EXE</code></td>
+<td><code>EXECUTION_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_FK_TASK_PROCINST</code></td>
+<td><code>PROC_INST_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_FK_TASK_PROCDEF</code></td>
+<td><code>PROC_DEF_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="ACT-RU-VARIABLE（运行时流程变量数据表）"><a href="#ACT-RU-VARIABLE（运行时流程变量数据表）" class="headerlink" title="ACT_RU_VARIABLE（运行时流程变量数据表）"></a>ACT_RU_VARIABLE（运行时流程变量数据表）</h1><p>运行时流程变量数据表。</p>
+<h2 id="表结构说明-24"><a href="#表结构说明-24" class="headerlink" title="表结构说明"></a>表结构说明</h2><table>
+<thead>
+<tr>
+<th>字段名称</th>
+<th>描述</th>
+<th>数据类型</th>
+<th>Nullable</th>
+<th>取值说明 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ID_</code></td>
+<td>主键</td>
+<td>varchar(64)</td>
+<td>NO</td>
+<td>主键ID</td>
+</tr>
+<tr>
+<td><code>REV_</code></td>
+<td>乐观锁</td>
+<td>int(11)</td>
+<td>YES</td>
+<td>默认值 NULL，version版本</td>
+</tr>
+<tr>
+<td><code>TYPE_</code></td>
+<td>类型</td>
+<td>varchar(255)</td>
+<td>NO</td>
+<td>jpa-entity、boolean、bytes、serializable、自定义type(根据你自身配置)、CustomVariableType、date、double、integer、jpa-entity、long、null、short、string</td>
+</tr>
+<tr>
+<td><code>NAME_</code></td>
+<td>名称</td>
+<td>varchar(255)</td>
+<td>NO</td>
+<td>变量名称</td>
+</tr>
+<tr>
+<td><code>EXECUTION_ID_</code></td>
+<td>执行实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>执行实例ID</td>
+</tr>
+<tr>
+<td><code>PROC_INST_ID_</code></td>
+<td>流程实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>流程实例ID</td>
+</tr>
+<tr>
+<td><code>TASK_ID_</code></td>
+<td>节点实例ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td>节点实例ID（Local）</td>
+</tr>
+<tr>
+<td><code>BYTEARRAY_ID_</code></td>
+<td>字节表ID</td>
+<td>varchar(64)</td>
+<td>YES</td>
+<td><code>ACT_GE_BYTEARRAY</code>的ID_</td>
+</tr>
+<tr>
+<td><code>DOUBLE_</code></td>
+<td>Double</td>
+<td>double</td>
+<td>YES</td>
+<td>存储变量类型为Double</td>
+</tr>
+<tr>
+<td><code>LONG_</code></td>
+<td>Long</td>
+<td>bigint(20)</td>
+<td>YES</td>
+<td>存储变量类型为Long</td>
+</tr>
+<tr>
+<td><code>TEXT_</code></td>
+<td>Text</td>
+<td>varchar(4000)</td>
+<td>YES</td>
+<td>‘存储变量值类型为String,如此处存储持久化对象时，值jpa对象的class</td>
+</tr>
+<tr>
+<td><code>TEXT2_</code></td>
+<td>Text</td>
+<td>varchar(4000)</td>
+<td>YES</td>
+<td>此处存储的是JPA持久化对象时，才会有值。此值为对象ID</td>
+</tr>
+</tbody>
+</table>
+<h2 id="索引说明-24"><a href="#索引说明-24" class="headerlink" title="索引说明"></a>索引说明</h2><table>
+<thead>
+<tr>
+<th>索引名称</th>
+<th>组成字段</th>
+<th>unique</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PRIMARY</td>
+<td>ID_</td>
+<td>YES</td>
+<td>主键唯一索引</td>
+</tr>
+<tr>
+<td><code>ACT_IDX_VARIABLE_TASK_ID</code></td>
+<td><code>TASK_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_FK_VAR_EXE</code></td>
+<td><code>EXECUTION_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_FK_VAR_PROCINST</code></td>
+<td><code>PROC_INST_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+<tr>
+<td><code>ACT_FK_VAR_BYTEARRAY</code></td>
+<td><code>BYTEARRAY_ID_</code></td>
+<td>NO</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="PDF下载"><a href="#PDF下载" class="headerlink" title="PDF下载"></a>PDF下载</h1>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/11/11/media/media-basic-video/" itemprop="url">
+                  视频播放基本使用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-11T09:16:48+08:00" content="2016 11 11">
+              2016 11 11
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/11/media/media-basic-video/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/11/media/media-basic-video/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/11/11/media/media-basic-video/" class="leancloud_visitors" data-flag-title="视频播放基本使用">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/11/11/media/media-basic-audio/" itemprop="url">
+                  音频播放基本使用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-11T09:15:43+08:00" content="2016 11 11">
+              2016 11 11
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/11/media/media-basic-audio/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/11/media/media-basic-audio/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/11/11/media/media-basic-audio/" class="leancloud_visitors" data-flag-title="音频播放基本使用">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/11/11/media/media-basic/" itemprop="url">
+                  多媒体概述
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-11-11T09:10:35+08:00" content="2016 11 11">
+              2016 11 11
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/11/11/media/media-basic/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/11/media/media-basic/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/11/11/media/media-basic/" class="leancloud_visitors" data-flag-title="多媒体概述">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>描述</p>
+<h1 id="在iOS-MacOS-TvOS-WatchOS中架构图"><a href="#在iOS-MacOS-TvOS-WatchOS中架构图" class="headerlink" title="在iOS MacOS TvOS WatchOS中架构图"></a>在iOS MacOS TvOS WatchOS中架构图</h1>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/01/frameworks/qrcode-framework/" itemprop="url">
                   从零开始打造一个扫码框架
                 </a>
@@ -1051,727 +4552,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/09/11/multithreading/gcd-dispatch-group/" itemprop="url">
-                  Dispatch Group
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-11T00:28:26+08:00" content="2016 09 11">
-              2016 09 11
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/11/multithreading/gcd-dispatch-group/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/11/multithreading/gcd-dispatch-group/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/09/11/multithreading/gcd-dispatch-group/" class="leancloud_visitors" data-flag-title="Dispatch Group">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>当<code>Dispatch Queue</code>中的多个任务处理全部结束后想要执行结束任务处理。</p>
-<p>只使用一个<code>Serial Dispatch Queue</code>串行队列时，只需要把结束任务追加到最后即可。</p>
-<p>当使用<code>Concurrent Dispatch Queue</code>并行队列或者多个<code>Serial Dispatch Queue</code>串行队列时，源代码就变得很复杂</p>
-<p>在这种情况下就可以使用<code>Dispatch Group</code>。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);</span><br><span class="line">dispatch_group_t group = dispatch_group_create();</span><br><span class="line"></span><br><span class="line">dispatch_group_async(group, queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 1&quot;);</span><br><span class="line">&#125;);</span><br><span class="line">dispatch_group_async(group, queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 2&quot;);</span><br><span class="line">&#125;);</span><br><span class="line">dispatch_group_async(group, queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 3&quot;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dispatch_group_notify(group, queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task done.&quot;);</span><br><span class="line">&#125;);</span><br><span class="line">dispatch_group_async(group, queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 4&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>控制台输出结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Task 3</span><br><span class="line">Task 4</span><br><span class="line">Task 1</span><br><span class="line">Task 2</span><br><span class="line">Task done.</span><br></pre></td></tr></table></figure>
-<p>因为使用的是全局并发队列，所以执行任务的顺序不定，但此时的完成任务<code>Task done.</code>永远是最后执行。</p>
-<p>使用<code>dispatch_group_create</code>来创建<code>dispatch_group_t</code>类型的Dispatch Group。</p>
-<p><code>dispatch_group_async</code>函数与<code>dispatch_async</code>相同，都是把任务追加到队列中，不同点在于多了一个Dispatch Group，并且任务属于Dispatch Group。Dispatch Group中并没有<strong>dispatch_group_sync</strong>函数。</p>
-<p>追加到Dispatch Group中的任务全部执行结束后，使用<code>dispatch_group_notify</code>来通知所有的任务都已经执行结束。</p>
-<h1 id="dispatch-group-wait"><a href="#dispatch-group-wait" class="headerlink" title="dispatch_group_wait"></a>dispatch_group_wait</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">long dispatch_group_wait(</span><br><span class="line">	dispatch_group_t group, </span><br><span class="line">	dispatch_time_t timeout</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-<h2 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h2><table>
-<thead>
-<tr>
-<th>参数</th>
-<th>类型</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>group</td>
-<td>dispatch_group_t</td>
-<td>不能为空</td>
-</tr>
-<tr>
-<td>timeout</td>
-<td>dispatch_time_t</td>
-<td>提供DISPATCH_TIME_NOW和DISPATCH_TIME_FOREVER常量，等待多久。即超时时间</td>
-</tr>
-</tbody>
-</table>
-<h2 id="返回结果"><a href="#返回结果" class="headerlink" title="返回结果"></a>返回结果</h2><p>long 类型， 返回0 则表示所有的任务都成功执行完毕。非0则表示正在执行，或者发生了错误。</p>
-<h2 id="马上执行"><a href="#马上执行" class="headerlink" title="马上执行"></a>马上执行</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">long result = dispatch_group_wait(group, DISPATCH_TIME_NOW);</span><br></pre></td></tr></table></figure>
-<h2 id="永久等待"><a href="#永久等待" class="headerlink" title="永久等待"></a>永久等待</h2><p>意思是只有所有的任务都执行完成后，才会等待才会结束。这个时候只会返回0。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">long result = dispatch_group_wait(group, DISPATCH_TIME_FOREVER);</span><br></pre></td></tr></table></figure>
-<h2 id="自定义超时时间"><a href="#自定义超时时间" class="headerlink" title="自定义超时时间"></a>自定义超时时间</h2><p>超时时间一秒。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 1ull * NSEC_PER_SEC);</span><br><span class="line">long result = dispatch_group_wait(group, DISPATCH_TIME_FOREVER);</span><br><span class="line">if (result == 0) &#123;</span><br><span class="line">    NSLog(@&quot;全部结束&quot;);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    NSLog(@&quot;正在执行&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h1 id="另一种方式"><a href="#另一种方式" class="headerlink" title="另一种方式"></a>另一种方式</h1><p>之前使用的<code>dispatch_group_async</code> 和 <code>dispatch_group_notify</code>，然后再更多的时候可能并没有<code>queue</code>队列。但是又想多个任务处理完成后执行完成任务。就可以使用<code>dispatch_group_enter</code>与<code>dispatch_group_leave</code>，这是成对出现的。</p>
-<p>dispatch_group_enter 执行该函数,异步执行的任务会被group监听.</p>
-<p>dispatch_group_leave 任务执行完成.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">dispatch_group_enter(group);</span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 1&quot;);</span><br><span class="line">    dispatch_group_leave(group);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dispatch_group_enter(group);</span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 2&quot;);</span><br><span class="line">    dispatch_group_leave(group);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dispatch_group_enter(group);</span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 3&quot;);</span><br><span class="line">    dispatch_group_leave(group);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dispatch_group_enter(group);</span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 4&quot;);</span><br><span class="line">    dispatch_group_leave(group);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">long result = dispatch_group_wait(group, DISPATCH_TIME_FOREVER);</span><br><span class="line"></span><br><span class="line">if (result == 0) &#123;</span><br><span class="line">    NSLog(@&quot;已经完成&quot;);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    NSLog(@&quot;正在执行&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>控制台输出结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Task 4</span><br><span class="line">Task 3</span><br><span class="line">Task 1</span><br><span class="line">Task 2</span><br><span class="line">已经完成</span><br></pre></td></tr></table></figure>
-<p>同时下载多张图片的时候，就可以使用这个方式，在最后通知主线程，去刷新界面。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">typedef void(^BatchPhotoDownloadingCompletionBlock)(NSError *error);</span><br><span class="line"></span><br><span class="line">- (void)downloadPhotosWithCompletionBlock:(BatchPhotoDownloadingCompletionBlock)completionBlock &#123;</span><br><span class="line">    __block NSError *error;</span><br><span class="line">    dispatch_group_t downloadGroup = dispatch_group_create();</span><br><span class="line">    for (NSUInteger index = 0; index &lt; 5; index++) &#123;</span><br><span class="line">        NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@&quot;http://lucaslz/%@&quot;, @(index)]];</span><br><span class="line">        </span><br><span class="line">        dispatch_group_enter(downloadGroup);</span><br><span class="line">        [[NSURLSession sharedSession] dataTaskWithURL:URL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable _error) &#123;</span><br><span class="line">            if (_error) &#123;</span><br><span class="line">                error = error;</span><br><span class="line">            &#125;</span><br><span class="line">            // 处理图片</span><br><span class="line">            </span><br><span class="line">            dispatch_group_leave(downloadGroup);</span><br><span class="line">        &#125;];</span><br><span class="line">    &#125;</span><br><span class="line">    dispatch_group_notify(downloadGroup, dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        if (completionBlock) &#123;</span><br><span class="line">            completionBlock(error);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://www.raywenderlich.com/63338/grand-central-dispatch-in-depth-part-2" target="_blank" rel="external">grand-central-dispatch</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/09/10/multithreading/gcd-queue-api/" itemprop="url">
-                  GCD Queue中其他的API
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-10T17:44:54+08:00" content="2016 09 10">
-              2016 09 10
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/10/multithreading/gcd-queue-api/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/10/multithreading/gcd-queue-api/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/09/10/multithreading/gcd-queue-api/" class="leancloud_visitors" data-flag-title="GCD Queue中其他的API">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="dispatch-apply"><a href="#dispatch-apply" class="headerlink" title="dispatch_apply"></a>dispatch_apply</h1><p>按指定的次数将指定的任务追加到指定的队列中，实际上就是多次执行任务。并等待全部任务执行结束（同dispatch_sync一样会等待），推荐在dispatch_async使用dispatch_apple。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dispatch_apply(size_t iterations, </span><br><span class="line">	dispatch_queue_t queue,</span><br><span class="line">	void (^block)(size_t));</span><br></pre></td></tr></table></figure>
-<h2 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h2><table>
-<thead>
-<tr>
-<th>参数</th>
-<th>类型</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>iterations</td>
-<td>size_t</td>
-<td>任务执行的次数</td>
-</tr>
-<tr>
-<td>queue</td>
-<td>dispatch_queue_t</td>
-<td>队列</td>
-</tr>
-<tr>
-<td>(^block)(size_t)</td>
-<td>void</td>
-<td>有参数的代码块 执行的任务</td>
-</tr>
-</tbody>
-</table>
-<h2 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);</span><br><span class="line">dispatch_apply(10, queue, ^(size_t index) &#123;</span><br><span class="line">    NSLog(@&quot;执行任务 %@。&quot;, @(index));</span><br><span class="line">&#125;);</span><br><span class="line">NSLog(@&quot;完成.&quot;);</span><br></pre></td></tr></table></figure>
-<p>因为apply是同步函数，会等待，所以<code>完成</code>会最后执行。</p>
-<h2 id="替代for循环"><a href="#替代for循环" class="headerlink" title="替代for循环"></a>替代for循环</h2><p>在需要对NSArray类对象中的所有元素处理时，可能需要调用一些函数进行计算，就不必一个一个编写for循环。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);</span><br><span class="line"></span><br><span class="line">NSArray *users = @[@&quot;user1&quot;, @&quot;user2&quot;, @&quot;user3&quot;];</span><br><span class="line"></span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">   </span><br><span class="line">   // 等待dispatch_apply函数全部之行结束。</span><br><span class="line">   dispatch_apply(users.count, queue, ^(size_t index) &#123;</span><br><span class="line">       // 并列处理</span><br><span class="line">       NSLog(@&quot;执行任务 %@&quot;, users[index]);</span><br><span class="line">   &#125;);</span><br><span class="line">   </span><br><span class="line">   dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">       NSLog(@&quot;完成. 刷新界面。&quot;);</span><br><span class="line">   &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h1 id="dispatch-set-target-queue"><a href="#dispatch-set-target-queue" class="headerlink" title="dispatch_set_target_queue"></a>dispatch_set_target_queue</h1><p>自定义队列，都会使用与默认优先级DISPATCH_QUEUE_PRIORITY_DEFAULT相同的执行任务的优先级线程。而需要手动变更生成的执行优先级就需要使用<code>dispatch_set_target_queue</code></p>
-<ul>
-<li>第一个参数指定需要改变执行优先级的队列。</li>
-<li>第二个参数是第一个参数的队列改变后的优先级。</li>
-<li>第一个参数不能指定全局队列和主队列。</li>
-</ul>
-<h2 id="默认优先级修改成后台优先级"><a href="#默认优先级修改成后台优先级" class="headerlink" title="默认优先级修改成后台优先级"></a>默认优先级修改成后台优先级</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t serialQueue = dispatch_queue_create(&quot;com.lucaslz.db&quot;, DISPATCH_QUEUE_SERIAL);</span><br><span class="line">dispatch_queue_t backgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);</span><br><span class="line"></span><br><span class="line">dispatch_set_target_queue(serialQueue, backgroundQueue);</span><br></pre></td></tr></table></figure>
-<h2 id="并发执行修改成串行执行"><a href="#并发执行修改成串行执行" class="headerlink" title="并发执行修改成串行执行"></a>并发执行修改成串行执行</h2><p>如果多个串行队列中使用<code>dispatch_set_target_queue</code>函数指定目标为同一个串行队列，那么本应该并行执行的多个串行队列，在目标串行队列上只能同时执行一个处理。这可以在必须不可并发执行的任务追加到多个串行队列中时，可以使用dispatch_set_target_queue，防止并行执行。</p>
-<h1 id="dispatch-after"><a href="#dispatch-after" class="headerlink" title="dispatch_after"></a>dispatch_after</h1><p><strong>注意：</strong><code>dispatch_after</code>是延时添加任务到队列中，而不是延时立即执行。</p>
-<p>延迟三秒后添加任务到主队列。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3ull * NSEC_PER_SEC));</span><br><span class="line">dispatch_after(time, dispatch_get_main_queue(), ^&#123;</span><br><span class="line">    NSLog(@&quot;等待...&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>这个延迟时间不是很准确，比如，队列中本身就有大量的任务需要等待执行时，这时候追加一个延迟时间的任务，这个时间会更长。</p>
-<h2 id="参数说明-1"><a href="#参数说明-1" class="headerlink" title="参数说明"></a>参数说明</h2><table>
-<thead>
-<tr>
-<th>参数</th>
-<th>类型</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>when</td>
-<td>dispatch_time_t</td>
-<td>使用dispatch_time或者dispatch_walltime创建</td>
-</tr>
-<tr>
-<td>queue</td>
-<td>dispatch_queue_t</td>
-<td>队列</td>
-</tr>
-<tr>
-<td>block</td>
-<td>dispatch_block_t</td>
-<td>代码块 即任务</td>
-</tr>
-</tbody>
-</table>
-<h2 id="dispatch-time函数"><a href="#dispatch-time函数" class="headerlink" title="dispatch_time函数"></a>dispatch_time函数</h2><table>
-<thead>
-<tr>
-<th>参数</th>
-<th>类型</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>when</td>
-<td>dispatch_time_t</td>
-<td>开始时间，经常使用DISPATCH_TIME_NOW</td>
-</tr>
-<tr>
-<td>delta</td>
-<td>int64_t</td>
-<td>纳秒</td>
-</tr>
-</tbody>
-</table>
-<p>ull 是C语言的数值字面量，显示表明类型是<code>unsigned long long</code><br>因为这个时间数字太大了，所以系统提供了三个宏来简化。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#define NSEC_PER_SEC 1000000000ull</span><br><span class="line">#define NSEC_PER_MSEC 1000000ull</span><br><span class="line">#define USEC_PER_SEC 1000000ull</span><br><span class="line">#define NSEC_PER_USEC 1000ull</span><br></pre></td></tr></table></figure>
-<ul>
-<li>NSEC_PER_SEC 每秒有多少纳秒</li>
-<li>NSEC_PER_MSEC 每毫秒有多少纳秒</li>
-<li>USEC_PER_SEC 每秒有多少微秒</li>
-<li>NSEC_PER_USEC 每微秒有多少纳秒</li>
-</ul>
-<h2 id="秒、毫秒、微秒、纳秒相互转换"><a href="#秒、毫秒、微秒、纳秒相互转换" class="headerlink" title="秒、毫秒、微秒、纳秒相互转换"></a>秒、毫秒、微秒、纳秒相互转换</h2><ul>
-<li>1秒 = 1000 毫秒 = 1000 <em> 1000 微秒= 1000 </em> 1000 * 1000 纳秒</li>
-<li>1毫秒 = 1000 微秒 = 1000 * 1000 纳秒</li>
-<li>1微秒 = 1000 纳秒</li>
-</ul>
-<p>因此一秒有多种方式方式</p>
-<ul>
-<li>1ull * NSEC_PER_SEC  1秒</li>
-<li>1000ull * NSEC_PER_MSEC 1秒</li>
-<li>1ull <em> USEC_PER_SEC </em> NSEC_PER_USEC 1秒</li>
-</ul>
-<h1 id="dispatch-barrier-async"><a href="#dispatch-barrier-async" class="headerlink" title="dispatch_barrier_async"></a>dispatch_barrier_async</h1><p>在访问数据库的时候，使用串行队列可以避免数据竞争。</p>
-<p>写入任务确实不可以与其他的写入任务以及包含读取任务等并行执行。但是读取任务只是与读取任务并行执行，那么多个并行执行就不会发生问题。</p>
-<p>为了提高效率，读取任务追加到并行队列中，写入任务在没有读取任务执行的状态下，追加到串行任务中。（写入任务处理结束，读取任务才能执行）</p>
-<p>使用<code>dispatch_barrier_async</code>函数就能够达到此目的，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t queue = dispatch_queue_create(&quot;com.lucaslz.db&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line"></span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;read 1&quot;);</span><br><span class="line">&#125;);</span><br><span class="line">dispatch_barrier_async(queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;write 1&quot;);</span><br><span class="line">&#125;);</span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;read 4&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>这既能保证高效的读取，又能保证写入时不会放生数据竞争。</p>
-<p>dispatch_barrier_async会等待追加到并行队列中所有任务全部执行结束后，再将指定的任务追加到并行队列中，当dispatch_barrier_async函数追加的任务处理的结束后，并行队列才恢复成并行执行任务。</p>
-<p>不过在<code>FMDB</code>这个框架中<code>FMDatabaseQueue</code>是串行队列。</p>
-<h1 id="specific"><a href="#specific" class="headerlink" title="specific"></a>specific</h1><p>队列关联对象，把一段时间直接关联到队列上。这个有点像<code>objc_setAssociatedObject</code>函数，在运行时，给对象关联一个其他的对象。</p>
-<p><code>dispatch_get_current_queue()</code>这个函数过时了，iOS6以后都不推荐使用了。使用dispatch_get_current_queue主要是用于判断dispatch_sync是否会死锁。这时候就可以使用<code>dispatch_queue_set_specific</code>设置一个标记。使用<code>dispatch_get_specific</code>来查询这个标记。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t queue = dispatch_queue_create(&quot;com.lucaslz.db&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line"></span><br><span class="line">static const void * const queueKey = &amp;queueKey;</span><br><span class="line"></span><br><span class="line">dispatch_queue_set_specific(queue, queueKey, (__bridge void *)queue, NULL);</span><br><span class="line"></span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">   dispatch_queue_t currentQueue = (__bridge dispatch_queue_t)(dispatch_get_specific(queueKey));</span><br><span class="line">   if (currentQueue == queue) &#123;</span><br><span class="line">       NSLog(@&quot;是当前队列.&quot;);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h1 id="如何解决死锁"><a href="#如何解决死锁" class="headerlink" title="如何解决死锁"></a>如何解决死锁</h1><h2 id="自定义串行队列"><a href="#自定义串行队列" class="headerlink" title="自定义串行队列"></a>自定义串行队列</h2><h3 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">static const void * const queueKey = &amp;queueKey;</span><br><span class="line"></span><br><span class="line">BOOL dispatch_serial_current_is_tagged_queue(dispatch_queue_t queue) &#123;</span><br><span class="line">    dispatch_queue_t currentQueue = (__bridge dispatch_queue_t)(dispatch_get_specific(queueKey));</span><br><span class="line">    return currentQueue == queue;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void dispatch_serial_sync_safe(dispatch_queue_t queue, dispatch_block_t block) &#123;</span><br><span class="line">    if (dispatch_serial_current_is_tagged_queue(queue)) &#123;</span><br><span class="line">        block();</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        dispatch_sync(queue, block);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)safeQueue &#123;</span><br><span class="line">    dispatch_queue_t queue = dispatch_queue_create(&quot;com.lucaslz.db&quot;, DISPATCH_QUEUE_SERIAL);</span><br><span class="line">    dispatch_queue_set_specific(queue, queueKey, (__bridge void *)queue, NULL);</span><br><span class="line"></span><br><span class="line">    dispatch_serial_sync_safe(queue, ^&#123;</span><br><span class="line">       dispatch_serial_sync_safe(queue, ^&#123;</span><br><span class="line">           NSLog(@&quot;正常执行。&quot;);</span><br><span class="line">       &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="异步"><a href="#异步" class="headerlink" title="异步"></a>异步</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">void dispatch_serial_async_safe(dispatch_queue_t queue, dispatch_block_t block) &#123;</span><br><span class="line">    if (dispatch_serial_current_is_tagged_queue(queue)) &#123;</span><br><span class="line">        block();</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        dispatch_async(queue, block);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dispatch_serial_async_safe(queue, ^&#123;</span><br><span class="line">    dispatch_serial_sync_safe(queue, ^&#123;</span><br><span class="line">        NSLog(@&quot;执行&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<h2 id="主队列"><a href="#主队列" class="headerlink" title="主队列"></a>主队列</h2><p>主队列判断因为NSThread有方法可以判断当前队列是不是主队列。</p>
-<h3 id="同步-1"><a href="#同步-1" class="headerlink" title="同步"></a>同步</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void dispatch_main_sync_safe(dispatch_block_t block) &#123;</span><br><span class="line">    if ([NSThread isMainThread]) &#123;</span><br><span class="line">        block();</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        dispatch_sync(dispatch_get_main_queue(), block);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="异步-1"><a href="#异步-1" class="headerlink" title="异步"></a>异步</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void dispatch_main_async_safe(dispatch_block_t block) &#123;</span><br><span class="line">    if ([NSThread isMainThread]) &#123;</span><br><span class="line">        block();</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), block);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/09/10/multithreading/gcd-deadlock/" itemprop="url">
-                  GCD 死锁
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-10T11:58:11+08:00" content="2016 09 10">
-              2016 09 10
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/10/multithreading/gcd-deadlock/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/10/multithreading/gcd-deadlock/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/09/10/multithreading/gcd-deadlock/" class="leancloud_visitors" data-flag-title="GCD 死锁">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>死锁可能导致iOS界面卡死。</p>
-<h1 id="主队列上的死锁"><a href="#主队列上的死锁" class="headerlink" title="主队列上的死锁"></a>主队列上的死锁</h1><p>在<code>viewDidAppear</code>方法中写，是为了不让界面卡死。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidAppear:(BOOL)animated &#123;</span><br><span class="line">    [super viewDidAppear:animated];</span><br><span class="line">    </span><br><span class="line">    NSLog(@&quot;Task 1&quot;);</span><br><span class="line">    dispatch_sync(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        NSLog(@&quot;Task 2&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">    NSLog(@&quot;Task 3&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="控制台输出结果"><a href="#控制台输出结果" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Task 1</span><br></pre></td></tr></table></figure>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>把<code>Task 2</code>追加到主队列中，同步调用，会等待，所以任务<code>Task 3</code>在等待<code>Task 2</code>执行完毕，而<code>Task 2</code>也在等待排在它之前的<code>Task 3</code>执行完毕，相互等待。造成死锁。</p>
-<h1 id="自定义串行队列"><a href="#自定义串行队列" class="headerlink" title="自定义串行队列"></a>自定义串行队列</h1><h2 id="第一种情况"><a href="#第一种情况" class="headerlink" title="第一种情况"></a>第一种情况</h2><p>调用2次同步函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t queue = dispatch_queue_create(&quot;com.lucaslz.queue&quot;, DISPATCH_QUEUE_SERIAL);</span><br><span class="line"></span><br><span class="line">dispatch_sync(queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 1&quot;);</span><br><span class="line">    dispatch_sync(queue, ^&#123;</span><br><span class="line">        NSLog(@&quot;Task 2&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">    NSLog(@&quot;Task 3&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<h3 id="控制台输出结果-1"><a href="#控制台输出结果-1" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Task 1</span><br></pre></td></tr></table></figure>
-<h3 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h3><p>首先是<code>Task 1</code>、<code>同步任务</code>、<code>Task 3</code>一起当做一个任务加入串行队列中。同步调用，表示会等待。当执行了<code>Task1</code>，又把<code>Task 2</code>加入串行队列中，这时候又是同步调用，又会等待前一个任务执行完毕。所以外层的任务等待<code>Task 2</code>，相互等待，造成死锁。</p>
-<h2 id="第二种情况"><a href="#第二种情况" class="headerlink" title="第二种情况"></a>第二种情况</h2><p>先异步调用，在同步调用。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">     NSLog(@&quot;Task 1&quot;);</span><br><span class="line">     dispatch_sync(queue, ^&#123;</span><br><span class="line">         NSLog(@&quot;Task 2&quot;);</span><br><span class="line">     &#125;);</span><br><span class="line">     NSLog(@&quot;Task 3&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<h3 id="控制台输出结果-2"><a href="#控制台输出结果-2" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Task 1</span><br></pre></td></tr></table></figure>
-<h3 id="分析-2"><a href="#分析-2" class="headerlink" title="分析"></a>分析</h3><p>因为串行队列是有顺序执行的。<br><code>Task 1</code>、<code>同步任务</code>、<code>Task 3</code>一起当做一个任务加入串行队列。当执行了<code>Task 1</code>后，又把<code>Task 2</code>加入到串行队列中，又需要等待队列中的前一个任务（即<code>Task 1</code>、<code>同步任务</code>、<code>Task 3</code>）执行。而前一个任务又需要等待<code>Task 2</code>，相互等待，造成死锁。</p>
-<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>只有在串行队列（主队列也是串行队列）中才有可能发生死锁，并且还是嵌套调用。实际上一般都直接使用异步调用，所以基本上不会遇见发生死锁。</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/09/09/multithreading/nsthread-basic/" itemprop="url">
-                  NSThread的基本使用
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-09-09T13:37:44+08:00" content="2016 09 09">
-              2016 09 09
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/09/09/multithreading/nsthread-basic/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/09/multithreading/nsthread-basic/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/09/09/multithreading/nsthread-basic/" class="leancloud_visitors" data-flag-title="NSThread的基本使用">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="NSThread是什么"><a href="#NSThread是什么" class="headerlink" title="NSThread是什么"></a>NSThread是什么</h1><p>这是<code>Foundation</code>框架，是OC层面的线程。面向对象，可以直接操作线程对象。</p>
-<h1 id="NSThread如何创建"><a href="#NSThread如何创建" class="headerlink" title="NSThread如何创建"></a>NSThread如何创建</h1><p>手动创建线程的方法有三种，一种是直接使用NSThread new 一个出来。</p>
-<h2 id="使用alloc-init"><a href="#使用alloc-init" class="headerlink" title="使用alloc init"></a>使用<code>alloc init</code></h2><ul>
-<li>手动调用<code>start</code>进行启动线程</li>
-<li>可以对线程属性对象设置</li>
-</ul>
-<h3 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h3><table>
-<thead>
-<tr>
-<th>参数</th>
-<th>类型</th>
-<th>是否可为空</th>
-<th>描述 </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>target</td>
-<td>id</td>
-<td>NO</td>
-<td>目标对象，一般用self。</td>
-</tr>
-<tr>
-<td>selector</td>
-<td>SEL</td>
-<td>NO</td>
-<td>这个可以理解为调用指定的方法</td>
-</tr>
-<tr>
-<td>argument</td>
-<td>id</td>
-<td>YES</td>
-<td>参数，只能够有一个，但是可以以字典的方式变相的添加多个对象</td>
-</tr>
-</tbody>
-</table>
-<h3 id="有参数的情况"><a href="#有参数的情况" class="headerlink" title="有参数的情况"></a>有参数的情况</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">NSThread *thread = [[NSThread alloc] initWithTarget:self</span><br><span class="line">                                           selector:@selector(run:)</span><br><span class="line">                                             object:@&#123;@&quot;name&quot;: @&quot;lucaslee&quot;&#125;];</span><br><span class="line">[thread start];</span><br><span class="line"></span><br><span class="line">- (void)run:(NSDictionary *)info &#123;</span><br><span class="line">	NSLog(@&quot;do something.&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="无参数的情况"><a href="#无参数的情况" class="headerlink" title="无参数的情况"></a>无参数的情况</h3><p>selector 这里没有：，并且参数为nil。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">NSThread *thread = [[NSThread alloc] initWithTarget:self</span><br><span class="line">                                           selector:@selector(run)</span><br><span class="line">                                             object:nil];</span><br><span class="line">- (void)run &#123;</span><br><span class="line">	NSLog(@&quot;do something.&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="detachNewThreadSelector"><a href="#detachNewThreadSelector" class="headerlink" title="detachNewThreadSelector"></a>detachNewThreadSelector</h2><p>分离出一条子线程</p>
-<ul>
-<li>自动启动线程</li>
-<li>方法调用没有返回值，所以无法对线程对象属性进行设置</li>
-</ul>
-<h3 id="参数说明-1"><a href="#参数说明-1" class="headerlink" title="参数说明"></a>参数说明</h3><p>同alloc init的创建线程的参数一样，只是target与selector位置调换了而已</p>
-<h3 id="方法调用"><a href="#方法调用" class="headerlink" title="方法调用"></a>方法调用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[NSThread detachNewThreadSelector:@selector(run:)</span><br><span class="line">                          toTarget:self</span><br><span class="line">                        withObject:@&#123;@&quot;name&quot;: @&quot;lucaslee&quot;&#125;];</span><br></pre></td></tr></table></figure>
-<h2 id="performSelectorInBackground"><a href="#performSelectorInBackground" class="headerlink" title="performSelectorInBackground"></a>performSelectorInBackground</h2><p>这个是NSObject的分类方法，所以只要是继承NSObject的类都可以调用该方法。</p>
-<ul>
-<li>后台线程，自动启动线程</li>
-<li>方法调用没有返回值，所以无法对线程对象属性进行设置</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[self performSelectorInBackground:@selector(run:)</span><br><span class="line">                       withObject:@&#123;@&quot;name&quot;: @&quot;lucaslee&quot;&#125;];</span><br></pre></td></tr></table></figure>
-<h1 id="NSThread属性"><a href="#NSThread属性" class="headerlink" title="NSThread属性"></a>NSThread属性</h1><h2 id="设置线程名称"><a href="#设置线程名称" class="headerlink" title="设置线程名称"></a>设置线程名称</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thread.name = @&quot;db&quot;;</span><br></pre></td></tr></table></figure>
-<p>控制台输出结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">do something. currentThread = &lt;NSThread: 0x7f882a42f9c0&gt;&#123;number = 2, name = db&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="设置线程优先级"><a href="#设置线程优先级" class="headerlink" title="设置线程优先级"></a>设置线程优先级</h2><h3 id="threadPriority"><a href="#threadPriority" class="headerlink" title="threadPriority"></a>threadPriority</h3><p>线程优先级的取值范围是<code>0.0 ~~~ 1.0</code> 1.0最高，这个范围的优先级映射到操作系统的优先级值，默认的值可能是<code>0.5</code>，但是由于优先级是由内核决定的，所以就不保证此值实际上讲师什么</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thread.threadPriority = 1.0</span><br></pre></td></tr></table></figure>
-<h3 id="qualityOfService"><a href="#qualityOfService" class="headerlink" title="qualityOfService"></a>qualityOfService</h3><p>实际上<code>threadPriority</code>已经过时了，需要使用qualityOfService替代。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thread.qualityOfService = NSQualityOfServiceUserInteractive;</span><br></pre></td></tr></table></figure>
-<p>这是一个枚举值。</p>
-<h2 id="stackSize"><a href="#stackSize" class="headerlink" title="stackSize"></a>stackSize</h2><p>创建线程是会有开销的，可以使用stackSize来更改堆栈的大小。<br>但是要满足一下条件</p>
-<ul>
-<li>必须是字节并且是4KB的倍数。</li>
-<li>必须在<code>启动线程</code>之前设置改属性</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thread.stackSize = 4096;</span><br></pre></td></tr></table></figure>
-<h1 id="NSThread生命周期"><a href="#NSThread生命周期" class="headerlink" title="NSThread生命周期"></a>NSThread生命周期</h1><p>分别是新建，可运行，运行中，睡眠，阻塞，死亡。</p>
-<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (void)start;</span><br></pre></td></tr></table></figure>
-<h2 id="运行中"><a href="#运行中" class="headerlink" title="运行中"></a>运行中</h2><p>这个是线程的只读属性。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property(readonly, getter=isExecuting) BOOL executing</span><br></pre></td></tr></table></figure>
-<h2 id="休眠-暂停"><a href="#休眠-暂停" class="headerlink" title="休眠 暂停"></a>休眠 暂停</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">+ (void)sleepUntilDate:(NSDate *)date;</span><br><span class="line">+ (void)sleepForTimeInterval:(NSTimeInterval)ti;</span><br></pre></td></tr></table></figure>
-<h2 id="取消"><a href="#取消" class="headerlink" title="取消"></a>取消</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 设置取消</span><br><span class="line">- (void)cancel</span><br><span class="line"></span><br><span class="line">// 查看线程是否是取消状态</span><br><span class="line">@property(readonly, getter=isCancelled) BOOL cancelled</span><br></pre></td></tr></table></figure>
-<h2 id="已完成"><a href="#已完成" class="headerlink" title="已完成"></a>已完成</h2><p>线程的只读属性。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property(readonly, getter=isFinished) BOOL finished</span><br></pre></td></tr></table></figure>
-<h2 id="退出"><a href="#退出" class="headerlink" title="退出"></a>退出</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">+ (void)exit;</span><br></pre></td></tr></table></figure>
-<h1 id="其他的API"><a href="#其他的API" class="headerlink" title="其他的API"></a>其他的API</h1><h2 id="主线程"><a href="#主线程" class="headerlink" title="主线程"></a>主线程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@property (readonly) BOOL isMainThread;</span><br><span class="line"></span><br><span class="line">+ (BOOL)isMainThread;</span><br><span class="line">+ (NSThread *)mainThread;</span><br></pre></td></tr></table></figure>
-<h2 id="当前线程"><a href="#当前线程" class="headerlink" title="当前线程"></a>当前线程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">+ (NSThread *)currentThread;</span><br></pre></td></tr></table></figure>
-<h1 id="线程成本"><a href="#线程成本" class="headerlink" title="线程成本"></a>线程成本</h1><p>多线程会占用你应用程序(和系统的)的内存使用和性能方面的资源。每个线程都需要分配一定的内核内存和应用程序内存空间的内存。管理你的线程和协调其调度所需的核心数据结构存储在使用Wired Memory的内核里面。你线程的堆栈空间和每个线程的数据都被存储在你应用程序的内存空间里面。这些数据结构里面的大部分都是当你首次创建线程或者进程的时候被创建和初始化的，它们所需的代价成本很高，因为需要和内核交互。</p>
-<table>
-<thead>
-<tr>
-<th>资源项</th>
-<th>大约消耗</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>内核</td>
-<td>1kb</td>
-</tr>
-<tr>
-<td>栈空间</td>
-<td>1. 子线程 512KB  2. Mac OS 8MB  3. iOS 主线程 1MB</td>
-</tr>
-<tr>
-<td>创建时间</td>
-<td>90毫秒</td>
-</tr>
-</tbody>
-</table>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://www.dreamingwish.com/article/ios-multi-threaded-programming-the-thread-management.html" target="_blank" rel="external">Thread Management 中文</a><br><a href="https://developer.apple.com/library/prerelease/content/documentation/Cocoa/Conceptual/Multithreading/CreatingThreads/CreatingThreads.html#//apple_ref/doc/uid/10000057i-CH15-SW2" target="_blank" rel="external">Thread Management</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1817,7 +4597,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">26</span>
+              <span class="site-state-item-count">30</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1827,7 +4607,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

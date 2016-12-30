@@ -281,6 +281,562 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/31/quartz/transparency-layers/" itemprop="url">
+                  透明层
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-31T19:41:17+08:00" content="2016 08 31">
+              2016 08 31
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/31/quartz/transparency-layers/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/31/quartz/transparency-layers/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/08/31/quartz/transparency-layers/" class="leancloud_visitors" data-flag-title="透明层">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>透明层通过组合来生成一个组合图形。当需要在一组对象上使用特效时，透明层非常有用。</p>
+<h1 id="透明层如何绘制"><a href="#透明层如何绘制" class="headerlink" title="透明层如何绘制"></a>透明层如何绘制</h1><ul>
+<li>调用<code>CGContextBeginTransparencyLayer</code>开始透明层</li>
+<li>绘制组合对象</li>
+<li>调用<code>CGContextEndTransparencyLayer</code>结束透明层</li>
+</ul>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/08/31/quartz/transparency-layers/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/29/quartz/color-colorspaces/" itemprop="url">
+                  颜色与颜色空间
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-29T21:40:22+08:00" content="2016 08 29">
+              2016 08 29
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/29/quartz/color-colorspaces/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/29/quartz/color-colorspaces/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/08/29/quartz/color-colorspaces/" class="leancloud_visitors" data-flag-title="颜色与颜色空间">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>在现代计算机图形学中，显示在屏幕上的颜色数据都会保存，并遵循色彩模型，也就是色彩空间，将显示生活中的颜色以计算机能够理解的数值表示出来。iOS就是以红绿蓝+透明度来表示颜色。在iOS中这些数组都是在<code>0.0 ~ 1.0</code>之间。 </p>
+<h1 id="RGB色彩模型"><a href="#RGB色彩模型" class="headerlink" title="RGB色彩模型"></a>RGB色彩模型</h1><p>红绿蓝 代表加法三原色，即（RGB色彩模型）。以不同的比例混合三种颜色，会生成一些列不同的颜色，统称为色域（gamut）。</p>
+<h1 id="RYB色彩模型"><a href="#RYB色彩模型" class="headerlink" title="RYB色彩模型"></a>RYB色彩模型</h1><p>以前学过红黄蓝，称之为减法三原色，即（RYB色彩模型）。它的局限性是色域非常有限，还很难用数学方式来表示。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/08/29/quartz/color-colorspaces/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/29/uiview/uistoryboard/" itemprop="url">
+                  UIStoryboard使用
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-29T13:19:05+08:00" content="2016 08 29">
+              2016 08 29
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/29/uiview/uistoryboard/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/29/uiview/uistoryboard/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/08/29/uiview/uistoryboard/" class="leancloud_visitors" data-flag-title="UIStoryboard使用">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="关于Storyboard-Reference"><a href="#关于Storyboard-Reference" class="headerlink" title="关于Storyboard Reference"></a>关于Storyboard Reference</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&apos;Storyboard (&lt;UIStoryboard: 0x7f96f9c049d0&gt;)</span><br><span class="line">    doesn&apos;t contain a view controller with identifier</span><br><span class="line">&apos;UIViewController-vU5-PH-Khc&apos;</span><br></pre></td></tr></table></figure>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/08/29/uiview/uistoryboard/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/08/28/quartz/gradients/" itemprop="url">
+                  渐变
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-28T16:06:43+08:00" content="2016 08 28">
+              2016 08 28
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/28/quartz/gradients/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/28/quartz/gradients/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/08/28/quartz/gradients/" class="leancloud_visitors" data-flag-title="渐变">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>使用Quartz提供的<code>CGContextDrawRadialGradient</code>或者<code>CGContextDrawLinearGradient</code>创建渐变。</p>
+<h1 id="如何创建渐变"><a href="#如何创建渐变" class="headerlink" title="如何创建渐变"></a>如何创建渐变</h1><ul>
+<li>创建<code>CGGradient</code>对象，提供颜色空间</li>
+<li>使用CGContextDrawRadialGradient或者CGContextDrawLinearGradient来绘制渐变</li>
+</ul>
+<h1 id="创建CGGradient"><a href="#创建CGGradient" class="headerlink" title="创建CGGradient"></a>创建CGGradient</h1><p>创建CGGradient提供了两个函数，<code>CGGradientCreateWithColorComponents</code>与<code>CGGradientCreateWithColors</code>。</p>
+<p>使用CGGradientCreateWithColorComponents创建CGGradient</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CGColorSpaceRef rgb = CGColorSpaceCreateDeviceRGB();</span><br><span class="line">CGFloat colors[] = &#123;</span><br><span class="line">    204.0 / 255.0, 224.0 / 255.0, 244.0 / 255.0, 1.00,</span><br><span class="line">    29.0 / 255.0, 156.0 / 255.0, 215.0 / 255.0, 1.00,</span><br><span class="line">    0.0 / 255.0,  50.0 / 255.0, 126.0 / 255.0, 1.00,</span><br><span class="line">&#125;;</span><br><span class="line">_gradient = CGGradientCreateWithColorComponents(rgb, colors, NULL, 3 * 4));</span><br><span class="line">CGColorSpaceRelease(rgb);</span><br></pre></td></tr></table></figure>
+<p>使用CGGradientCreateWithColors创建CGGradient</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CFMutableArrayRef array = CFArrayCreateMutable(NULL, 0, NULL);</span><br><span class="line">CFArrayAppendValue(array, [UIColor redColor].CGColor);</span><br><span class="line">CFArrayAppendValue(array, [UIColor blueColor].CGColor);</span><br><span class="line">_gradient = CGGradientCreateWithColors(rgb, array, NULL);</span><br><span class="line">CFRelease(array);</span><br></pre></td></tr></table></figure>
+<p>注意手动管理内存，需要手动释放。</p>
+<h1 id="CGContextDrawLinearGradient"><a href="#CGContextDrawLinearGradient" class="headerlink" title="CGContextDrawLinearGradient"></a>CGContextDrawLinearGradient</h1><p>CGContextDrawLinearGradient是线性渐变，由两个端点连接的轴线渐变。</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>c</td>
+<td>CGContextRef</td>
+<td>上下文</td>
+</tr>
+<tr>
+<td>gradient</td>
+<td>CGGradientRef</td>
+<td>提供颜色空间</td>
+</tr>
+<tr>
+<td>startPoint</td>
+<td>CGGradientRef</td>
+<td>开始点颜色</td>
+</tr>
+<tr>
+<td>endPoint</td>
+<td>CGGradientRef</td>
+<td>结束点颜色</td>
+</tr>
+<tr>
+<td>options</td>
+<td>CGGradientDrawingOptions</td>
+<td>kCGGradientDrawsBeforeStartLocation或者kCGGradientDrawsBeforeStartLocation</td>
+</tr>
+</tbody>
+</table>
+<p>kCGGradientDrawsBeforeStartLocation 填充超出起始位置，延伸超过终点的颜色由CGGradient对象限定在位置0的颜色。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CGContextDrawLinearGradient(context,</span><br><span class="line">                            self.gradient,</span><br><span class="line">                            startPoint(self.bounds),</span><br><span class="line">                            endPoint(self.bounds),</span><br><span class="line">                            kCGGradientDrawsBeforeStartLocation);</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/quartz/gradients/gradient1.png" alt="gradients"></p>
+<p>kCGGradientDrawsAfterEndLocation 填充应超出结束位置。延伸超过终点的颜色由CGGradient对象限定在位置1的颜色<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CGContextDrawLinearGradient(context,</span><br><span class="line">                            self.gradient,</span><br><span class="line">                            startPoint(self.bounds),</span><br><span class="line">                            endPoint(self.bounds),</span><br><span class="line">                            kCGGradientDrawsAfterEndLocation);</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/quartz/gradients/gradient2.png" alt="gradients"></p>
+<p>因为这个是options，所以可以同时设两个值，那么会同时超过起点与结束点。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CGContextDrawLinearGradient(context,</span><br><span class="line">                            self.gradient,</span><br><span class="line">                            startPoint(self.bounds),</span><br><span class="line">                            endPoint(self.bounds),</span><br><span class="line">                            kCGGradientDrawsBeforeStartLocation </span><br><span class="line">                            | kCGGradientDrawsAfterEndLocation);</span><br></pre></td></tr></table></figure>
+<p><img src="/images/quartz/gradients/gradient3.png" alt="gradients"></p>
+<h1 id="CGContextDrawRadialGradient"><a href="#CGContextDrawRadialGradient" class="headerlink" title="CGContextDrawRadialGradient"></a>CGContextDrawRadialGradient</h1><p>CGContextDrawRadialGradient径向渐变，也是连个端口连接的轴线渐变，但是渐变路径是两个圆半径提供。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CGContextDrawRadialGradient(context,</span><br><span class="line">                            self.gradient,</span><br><span class="line">                            startCenter(self.bounds),</span><br><span class="line">                            startRadius(self.bounds),</span><br><span class="line">                            endCenter(self.bounds),</span><br><span class="line">                            endRadius(self.bounds),</span><br><span class="line">                            kCGGradientDrawsBeforeStartLocation);</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>c</td>
+<td>CGContextRef</td>
+<td>上下文</td>
+</tr>
+<tr>
+<td>gradient</td>
+<td>CGGradientRef</td>
+<td>提供颜色空间</td>
+</tr>
+<tr>
+<td>startCenter</td>
+<td>CGPoint</td>
+<td>开始圆的中心</td>
+</tr>
+<tr>
+<td>startRadius</td>
+<td>CGFloat</td>
+<td>开始圆半径</td>
+</tr>
+<tr>
+<td>endCenter</td>
+<td>CGPoint</td>
+<td>结束圆的中心</td>
+</tr>
+<tr>
+<td>endRadius</td>
+<td>CGFloat</td>
+<td>结束圆半径</td>
+</tr>
+<tr>
+<td>options</td>
+<td>CGGradientDrawingOptions</td>
+<td>同CGContextDrawLinearGradient中的options一样</td>
+</tr>
+</tbody>
+</table>
+<p><img src="/images/quartz/gradients/gradient4.png" alt="gradients"></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/27/quartz/shadow/" itemprop="url">
                   阴影
                 </a>
@@ -997,7 +1553,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">26</span>
+              <span class="site-state-item-count">30</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1007,7 +1563,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
