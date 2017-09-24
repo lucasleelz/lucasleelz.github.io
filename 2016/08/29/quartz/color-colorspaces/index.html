@@ -42,7 +42,9 @@
 
   
   
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+    
+  
+  <link href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css" />
 
 
 
@@ -82,12 +84,14 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="iOS,UIView,Quartz 2D,UIColor,CGColor,CIColor," />
+  <meta name="keywords" content="iOS,Quartz 2D,UIView,UIColor,CGColor,CIColor," />
 
 
 
@@ -104,7 +108,7 @@
 
 
 <meta name="description" content="在现代计算机图形学中，显示在屏幕上的颜色数据都会保存，并遵循色彩模型，也就是色彩空间，将显示生活中的颜色以计算机能够理解的数值表示出来。iOS就是以红绿蓝+透明度来表示颜色。在iOS中这些数组都是在0.0 ~ 1.0之间。  RGB色彩模型红绿蓝 代表加法三原色，即（RGB色彩模型）。以不同的比例混合三种颜色，会生成一些列不同的颜色，统称为色域（gamut）。 RYB色彩模型以前学过红黄蓝，称之为">
-<meta name="keywords" content="iOS,UIView,Quartz 2D,UIColor,CGColor,CIColor">
+<meta name="keywords" content="iOS,Quartz 2D,UIView,UIColor,CGColor,CIColor">
 <meta property="og:type" content="article">
 <meta property="og:title" content="颜色与颜色空间">
 <meta property="og:url" content="https://lucasleelz.github.io/2016/08/29/quartz/color-colorspaces/index.html">
@@ -345,7 +349,8 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2016/08/29/quartz/color-colorspaces/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/29/quartz/color-colorspaces/" itemprop="commentCount"></span>
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2016/08/29/quartz/color-colorspaces/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -452,9 +457,9 @@
           
             <a href="/tags/iOS/" rel="tag"># iOS</a>
           
-            <a href="/tags/UIView/" rel="tag"># UIView</a>
-          
             <a href="/tags/Quartz-2D/" rel="tag"># Quartz 2D</a>
+          
+            <a href="/tags/UIView/" rel="tag"># UIView</a>
           
             <a href="/tags/UIColor/" rel="tag"># UIColor</a>
           
@@ -515,8 +520,11 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/08/29/quartz/color-colorspaces/"
-           data-title="颜色与颜色空间" data-url="https://lucasleelz.github.io/2016/08/29/quartz/color-colorspaces/">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
       </div>
     
   </div>
@@ -754,22 +762,22 @@
 
 
   
-  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
 
   
-  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fastclick/1.0.6/fastclick.min.js"></script>
 
   
-  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.lazyload/1.9.3/jquery.lazyload.min.js"></script>
 
   
-  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
 
   
-  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
 
   
-  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
 
 
   
@@ -799,35 +807,39 @@
 
   
 
+
   
+
     
-  
-
-  <script type="text/javascript">
-    var duoshuoQuery = {short_name:"lucaslee"};
-    (function() {
-      var ds = document.createElement('script');
-      ds.type = 'text/javascript';ds.async = true;
-      ds.id = 'duoshuo-script';
-      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-      ds.charset = 'UTF-8';
-      (document.getElementsByTagName('head')[0]
-      || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-  </script>
-
-  
+      <script id="dsq-count-scr" src="https://lucaslee.disqus.com/count.js" async></script>
     
+
     
-    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
-    <script src="/js/src/hook-duoshuo.js"></script>
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://lucasleelz.github.io/2016/08/29/quartz/color-colorspaces/';
+          this.page.identifier = '2016/08/29/quartz/color-colorspaces/';
+          this.page.title = '颜色与颜色空间';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://lucaslee.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
   
 
 
 
 
+	
 
 
+
+
+
+  
 
 
 
