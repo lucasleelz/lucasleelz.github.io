@@ -98,22 +98,18 @@
 
 
 
-<meta name="description" content="在现代计算机图形学中，显示在屏幕上的颜色数据都会保存，并遵循色彩模型，也就是色彩空间，将显示生活中的颜色以计算机能够理解的数值表示出来。iOS就是以红绿蓝+透明度来表示颜色。在iOS中这些数组都是在0.0 ~ 1.0之间。 
-RGB色彩模型红绿蓝 代表加法三原色，即（RGB色彩模型）。以不同的比例混合三种颜色，会生成一些列不同的颜色，统称为色域（gamut）。
-RYB色彩模型以前学过红黄蓝，称之为">
+<meta name="description" content="在现代计算机图形学中，显示在屏幕上的颜色数据都会保存，并遵循色彩模型，也就是色彩空间，将显示生活中的颜色以计算机能够理解的数值表示出来。iOS就是以红绿蓝+透明度来表示颜色。在iOS中这些数组都是在0.0 ~ 1.0之间。  RGB色彩模型红绿蓝 代表加法三原色，即（RGB色彩模型）。以不同的比例混合三种颜色，会生成一些列不同的颜色，统称为色域（gamut）。 RYB色彩模型以前学过红黄蓝，称之为">
+<meta name="keywords" content="iOS,UIView,Quartz 2D,UIColor,CGColor,CIColor">
 <meta property="og:type" content="article">
 <meta property="og:title" content="颜色与颜色空间">
 <meta property="og:url" content="https://lucasleelz.github.io/2016/08/29/quartz/color-colorspaces/index.html">
-<meta property="og:site_name" content="Lucas Lee's Blog">
-<meta property="og:description" content="在现代计算机图形学中，显示在屏幕上的颜色数据都会保存，并遵循色彩模型，也就是色彩空间，将显示生活中的颜色以计算机能够理解的数值表示出来。iOS就是以红绿蓝+透明度来表示颜色。在iOS中这些数组都是在0.0 ~ 1.0之间。 
-RGB色彩模型红绿蓝 代表加法三原色，即（RGB色彩模型）。以不同的比例混合三种颜色，会生成一些列不同的颜色，统称为色域（gamut）。
-RYB色彩模型以前学过红黄蓝，称之为">
-<meta property="og:updated_time" content="2016-08-30T12:47:05.000Z">
+<meta property="og:site_name" content="Lucas Lee&#39;s Blog">
+<meta property="og:description" content="在现代计算机图形学中，显示在屏幕上的颜色数据都会保存，并遵循色彩模型，也就是色彩空间，将显示生活中的颜色以计算机能够理解的数值表示出来。iOS就是以红绿蓝+透明度来表示颜色。在iOS中这些数组都是在0.0 ~ 1.0之间。  RGB色彩模型红绿蓝 代表加法三原色，即（RGB色彩模型）。以不同的比例混合三种颜色，会生成一些列不同的颜色，统称为色域（gamut）。 RYB色彩模型以前学过红黄蓝，称之为">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-02-26T06:23:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="颜色与颜色空间">
-<meta name="twitter:description" content="在现代计算机图形学中，显示在屏幕上的颜色数据都会保存，并遵循色彩模型，也就是色彩空间，将显示生活中的颜色以计算机能够理解的数值表示出来。iOS就是以红绿蓝+透明度来表示颜色。在iOS中这些数组都是在0.0 ~ 1.0之间。 
-RGB色彩模型红绿蓝 代表加法三原色，即（RGB色彩模型）。以不同的比例混合三种颜色，会生成一些列不同的颜色，统称为色域（gamut）。
-RYB色彩模型以前学过红黄蓝，称之为">
+<meta name="twitter:description" content="在现代计算机图形学中，显示在屏幕上的颜色数据都会保存，并遵循色彩模型，也就是色彩空间，将显示生活中的颜色以计算机能够理解的数值表示出来。iOS就是以红绿蓝+透明度来表示颜色。在iOS中这些数组都是在0.0 ~ 1.0之间。  RGB色彩模型红绿蓝 代表加法三原色，即（RGB色彩模型）。以不同的比例混合三种颜色，会生成一些列不同的颜色，统称为色域（gamut）。 RYB色彩模型以前学过红黄蓝，称之为">
 
 
 
@@ -348,15 +344,15 @@ RYB色彩模型以前学过红黄蓝，称之为">
 <h1 id="更多色彩模型"><a href="#更多色彩模型" class="headerlink" title="更多色彩模型"></a>更多色彩模型</h1><p>不同的设备处理颜色的方式是不同的（比如显示器，打印机，摄像头）。比如HSV、HSL。甚至RGB模型也有不同的版本变化。</p>
 <h1 id="Quartz中的颜色"><a href="#Quartz中的颜色" class="headerlink" title="Quartz中的颜色"></a>Quartz中的颜色</h1><p>除了RGB外，Quartz还使用了一个<code>alpha</code>颜色元素。他表示不透明度。所以使用了alpha的色彩模型成为RGBA色彩模型。</p>
 <p>颜色是绘图的一个重要组成，要理解颜色在iOS上的实现机制也非常重要，<code>UIKit</code>提供了<code>UIColor</code>来表示颜色，在<code>Quartz</code>中不直接使用UIColor对象，因为Quartz需要一个<code>CGColor</code>。 但我们可以通过UIColor实例的CGColor的属性来获取一个CGColor的引用。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">CGContextSetFillColorWithColor(context, UIColor.redColor.CGColor);</div></pre></td></tr></table></figure>
 <p>Objective-C中可以直接使用dot语法对类方法进行访问。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[UIColor redColor] -&gt; UIColor.redColor</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[UIColor redColor] -&gt; UIColor.redColor</div></pre></td></tr></table></figure>
 <h1 id="颜色与颜色空间"><a href="#颜色与颜色空间" class="headerlink" title="颜色与颜色空间"></a>颜色与颜色空间</h1><p>Quartz中的颜色是用一组值来表示, 例如：{red: 0.1, green: 0.2, blue: 1.0, alpha: 1.0}。而颜色空间用于解析这些颜色信息</p>
 <h1 id="颜色空间"><a href="#颜色空间" class="headerlink" title="颜色空间"></a>颜色空间</h1><p>Quartz支持颜色空间、索引颜色空间等等，但是<code>在iOS中必须使用设备颜色空间</code>。</p>
-<h1 id="创建设备依赖颜色空间"><a href="#创建设备依赖颜色空间" class="headerlink" title="创建设备依赖颜色空间"></a>创建设备依赖颜色空间</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CGColorSpaceCreateDeviceGray：创建设备依赖灰度颜色空间</span><br><span class="line">CGColorSpaceCreateDeviceRGB：创建设备依赖RGB颜色空间</span><br><span class="line">CGColorSpaceCreateDeviceCMYK：创建设备依赖CMYK颜色空间</span><br></pre></td></tr></table></figure>
-<h1 id="创建颜色"><a href="#创建颜色" class="headerlink" title="创建颜色"></a>创建颜色</h1><p>我们可以使用<code>CGColorCreate</code>来创建颜色。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();</span><br><span class="line">const CGFloat components[] = &#123;1.0, 0.0, 0.0, 0.6&#125;;</span><br><span class="line">CGColorRef color = CGColorCreate(colorSpace, components);</span><br></pre></td></tr></table></figure></p>
+<h1 id="创建设备依赖颜色空间"><a href="#创建设备依赖颜色空间" class="headerlink" title="创建设备依赖颜色空间"></a>创建设备依赖颜色空间</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">CGColorSpaceCreateDeviceGray：创建设备依赖灰度颜色空间</div><div class="line">CGColorSpaceCreateDeviceRGB：创建设备依赖RGB颜色空间</div><div class="line">CGColorSpaceCreateDeviceCMYK：创建设备依赖CMYK颜色空间</div></pre></td></tr></table></figure>
+<h1 id="创建颜色"><a href="#创建颜色" class="headerlink" title="创建颜色"></a>创建颜色</h1><p>我们可以使用<code>CGColorCreate</code>来创建颜色。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();</div><div class="line">const CGFloat components[] = &#123;1.0, 0.0, 0.0, 0.6&#125;;</div><div class="line">CGColorRef color = CGColorCreate(colorSpace, components);</div></pre></td></tr></table></figure></p>
 <h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><p>在<code>Quartz</code>中既然使用了<code>create</code>那么就需要手动管理内存，所以需要释放颜色空间与颜色</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CGColorRelease (color);</span><br><span class="line">CGColorSpaceRelease (colorSpace);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">CGColorRelease (color);</div><div class="line">CGColorSpaceRelease (colorSpace);</div></pre></td></tr></table></figure>
 <h1 id="UIColor"><a href="#UIColor" class="headerlink" title="UIColor"></a>UIColor</h1><p>UIColor是UIKit中存储颜色信息的类。它的颜色空间已经针对iOS进行了优化。它有一些类方法可以直接创建常见的颜色，白色、黑色等。UIColor还有CGColor与CIColor两个重要属性。</p>
 <h1 id="CGColor"><a href="#CGColor" class="headerlink" title="CGColor"></a>CGColor</h1><p>CGColor 是<code>CoreGraphics</code>框架中的。由颜色空间CGColorSpaceRef与Color Components组成。颜色空间不一样，显示的最终颜色也不一样。</p>
 <h1 id="CIColor"><a href="#CIColor" class="headerlink" title="CIColor"></a>CIColor</h1><p>CIColor主要用于<code>CoreImage</code>框架中。在iOS5被加入到UIColor中。</p>
@@ -584,7 +580,7 @@ RYB色彩模型以前学过红黄蓝，称之为">
         <div class="copyright" >
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

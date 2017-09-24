@@ -82,7 +82,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="MultiThread,GCD,NSThread,NSOperationQueue," />
+  <meta name="keywords" content="GCD,MultiThread,NSOperationQueue,NSThread," />
 
 
 
@@ -98,28 +98,18 @@
 
 
 
-<meta name="description" content="NSThread
-创建并启动一个子线程
-子线程完成任务后回到主线程
-
-123456789101112131415161718192021- (void)viewDidLoad &amp;#123;    [super viewDidLoad];        // 创建子线程并执行doWork任务。    [NSThread detachNewThreadSelector:@selector(doWork">
+<meta name="description" content="NSThread 创建并启动一个子线程 子线程完成任务后回到主线程  123456789101112131415161718192021- (void)viewDidLoad &amp;#123;    [super viewDidLoad];        // 创建子线程并执行doWork任务。    [NSThread detachNewThreadSelector:@selector(doWork">
+<meta name="keywords" content="GCD,MultiThread,NSOperationQueue,NSThread">
 <meta property="og:type" content="article">
 <meta property="og:title" content="线程之间通信">
 <meta property="og:url" content="https://lucasleelz.github.io/2016/09/09/multithreading/thread-communication/index.html">
-<meta property="og:site_name" content="Lucas Lee's Blog">
-<meta property="og:description" content="NSThread
-创建并启动一个子线程
-子线程完成任务后回到主线程
-
-123456789101112131415161718192021- (void)viewDidLoad &amp;#123;    [super viewDidLoad];        // 创建子线程并执行doWork任务。    [NSThread detachNewThreadSelector:@selector(doWork">
+<meta property="og:site_name" content="Lucas Lee&#39;s Blog">
+<meta property="og:description" content="NSThread 创建并启动一个子线程 子线程完成任务后回到主线程  123456789101112131415161718192021- (void)viewDidLoad &amp;#123;    [super viewDidLoad];        // 创建子线程并执行doWork任务。    [NSThread detachNewThreadSelector:@selector(doWork">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2016-09-17T07:14:03.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="线程之间通信">
-<meta name="twitter:description" content="NSThread
-创建并启动一个子线程
-子线程完成任务后回到主线程
-
-123456789101112131415161718192021- (void)viewDidLoad &amp;#123;    [super viewDidLoad];        // 创建子线程并执行doWork任务。    [NSThread detachNewThreadSelector:@selector(doWork">
+<meta name="twitter:description" content="NSThread 创建并启动一个子线程 子线程完成任务后回到主线程  123456789101112131415161718192021- (void)viewDidLoad &amp;#123;    [super viewDidLoad];        // 创建子线程并执行doWork任务。    [NSThread detachNewThreadSelector:@selector(doWork">
 
 
 
@@ -351,7 +341,7 @@
 <li>创建并启动一个子线程</li>
 <li>子线程完成任务后回到主线程</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    // 创建子线程并执行doWork任务。</span><br><span class="line">    [NSThread detachNewThreadSelector:@selector(doWork:)</span><br><span class="line">                             toTarget:self</span><br><span class="line">                           withObject:@&#123;@&quot;name&quot;: @&quot;lucaslee&quot;&#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)doWork:(NSDictionary *)info &#123;</span><br><span class="line">    NSLog(@&quot;执行数据库访问，下载网络图片等。当前线程 %@ 参数 = %@&quot;, [NSThread currentThread], info);</span><br><span class="line">    </span><br><span class="line">    // 回到主线程。</span><br><span class="line">    [self performSelectorOnMainThread:@selector(doneWork:)</span><br><span class="line">                           withObject:@&#123;@&quot;name&quot;: @&quot;lucaslee&quot;&#125;</span><br><span class="line">                        waitUntilDone:NO];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)doneWork:(NSDictionary *)info &#123;</span><br><span class="line">    NSLog(@&quot;完成任务 当前线程 %@ 参数 = %@&quot;, [NSThread currentThread], info);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">- (void)viewDidLoad &#123;</div><div class="line">    [super viewDidLoad];</div><div class="line">    </div><div class="line">    // 创建子线程并执行doWork任务。</div><div class="line">    [NSThread detachNewThreadSelector:@selector(doWork:)</div><div class="line">                             toTarget:self</div><div class="line">                           withObject:@&#123;@&quot;name&quot;: @&quot;lucaslee&quot;&#125;];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)doWork:(NSDictionary *)info &#123;</div><div class="line">    NSLog(@&quot;执行数据库访问，下载网络图片等。当前线程 %@ 参数 = %@&quot;, [NSThread currentThread], info);</div><div class="line">    </div><div class="line">    // 回到主线程。</div><div class="line">    [self performSelectorOnMainThread:@selector(doneWork:)</div><div class="line">                           withObject:@&#123;@&quot;name&quot;: @&quot;lucaslee&quot;&#125;</div><div class="line">                        waitUntilDone:NO];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)doneWork:(NSDictionary *)info &#123;</div><div class="line">    NSLog(@&quot;完成任务 当前线程 %@ 参数 = %@&quot;, [NSThread currentThread], info);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h2><p><code>performSelectorOnMainThread</code>的参数说明</p>
 <table>
 <thead>
@@ -379,12 +369,12 @@
 </tr>
 </tbody>
 </table>
-<h2 id="回到指定线程"><a href="#回到指定线程" class="headerlink" title="回到指定线程"></a>回到指定线程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[self performSelector:@selector(doneWork)</span><br><span class="line">             onThread:[NSThread mainThread]</span><br><span class="line">           withObject:@&#123;@&quot;name&quot;: @&quot;lucaslee&quot;&#125;</span><br><span class="line">        waitUntilDone:YES];</span><br></pre></td></tr></table></figure>
+<h2 id="回到指定线程"><a href="#回到指定线程" class="headerlink" title="回到指定线程"></a>回到指定线程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[self performSelector:@selector(doneWork)</div><div class="line">             onThread:[NSThread mainThread]</div><div class="line">           withObject:@&#123;@&quot;name&quot;: @&quot;lucaslee&quot;&#125;</div><div class="line">        waitUntilDone:YES];</div></pre></td></tr></table></figure>
 <p>onThread 回到指定的线程</p>
 <p>这个方法是在NSObject中的，所以只要继承自NSObject，就可以调用该方法，该方法可以理解为，调用某个对象（<strong>这里是self</strong>）的某个方法（<strong>selector</strong>）并传递参数（<strong>arg</strong>），是否需要阻塞等待（<strong>wait</strong>）方法执行完毕。</p>
 <h1 id="GCD"><a href="#GCD" class="headerlink" title="GCD"></a>GCD</h1><p>相对于NSThread的线程通讯，GCD就太简洁了，有些难以置信。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);</span><br><span class="line">   dispatch_async(queue, ^&#123;</span><br><span class="line">       NSLog(@&quot;执行数据库访问，下载网络图片等。当前线程 %@&quot;, [NSThread currentThread]);</span><br><span class="line">       </span><br><span class="line">       dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">           NSLog(@&quot;完成任务 回到主线程，可以刷新界面等处理 %@&quot;, [NSThread currentThread]);</span><br><span class="line">       &#125;);</span><br><span class="line">   &#125;);</span><br></pre></td></tr></table></figure>
-<h1 id="NSOperationQueue"><a href="#NSOperationQueue" class="headerlink" title="NSOperationQueue"></a>NSOperationQueue</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">NSOperationQueue *queue = [[NSOperationQueue alloc] init];</span><br><span class="line">[queue addOperationWithBlock:^&#123;</span><br><span class="line">    NSLog(@&quot;执行数据库访问，下载网络图片等。当前线程 %@&quot;, [NSThread currentThread]);</span><br><span class="line">    </span><br><span class="line">    [[NSOperationQueue mainQueue] addOperationWithBlock:^&#123;</span><br><span class="line">        NSLog(@&quot;完成任务 回到主线程，可以刷新界面等处理 %@&quot;, [NSThread currentThread]);</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);</div><div class="line">   dispatch_async(queue, ^&#123;</div><div class="line">       NSLog(@&quot;执行数据库访问，下载网络图片等。当前线程 %@&quot;, [NSThread currentThread]);</div><div class="line">       </div><div class="line">       dispatch_async(dispatch_get_main_queue(), ^&#123;</div><div class="line">           NSLog(@&quot;完成任务 回到主线程，可以刷新界面等处理 %@&quot;, [NSThread currentThread]);</div><div class="line">       &#125;);</div><div class="line">   &#125;);</div></pre></td></tr></table></figure>
+<h1 id="NSOperationQueue"><a href="#NSOperationQueue" class="headerlink" title="NSOperationQueue"></a>NSOperationQueue</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">NSOperationQueue *queue = [[NSOperationQueue alloc] init];</div><div class="line">[queue addOperationWithBlock:^&#123;</div><div class="line">    NSLog(@&quot;执行数据库访问，下载网络图片等。当前线程 %@&quot;, [NSThread currentThread]);</div><div class="line">    </div><div class="line">    [[NSOperationQueue mainQueue] addOperationWithBlock:^&#123;</div><div class="line">        NSLog(@&quot;完成任务 回到主线程，可以刷新界面等处理 %@&quot;, [NSThread currentThread]);</div><div class="line">    &#125;];</div><div class="line">&#125;];</div></pre></td></tr></table></figure>
       
     </div>
 
@@ -422,13 +412,13 @@
       
         <div class="post-tags">
           
-            <a href="/tags/MultiThread/" rel="tag">#MultiThread</a>
-          
             <a href="/tags/GCD/" rel="tag">#GCD</a>
           
-            <a href="/tags/NSThread/" rel="tag">#NSThread</a>
+            <a href="/tags/MultiThread/" rel="tag">#MultiThread</a>
           
             <a href="/tags/NSOperationQueue/" rel="tag">#NSOperationQueue</a>
+          
+            <a href="/tags/NSThread/" rel="tag">#NSThread</a>
           
         </div>
       
@@ -603,7 +593,7 @@
         <div class="copyright" >
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

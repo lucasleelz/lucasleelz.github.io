@@ -98,30 +98,20 @@
 
 
 
-<meta name="description" content="透明层通过组合来生成一个组合图形。当需要在一组对象上使用特效时，透明层非常有用。
-透明层如何绘制
-调用CGContextBeginTransparencyLayer开始透明层
-绘制组合对象
-调用CGContextEndTransparencyLayer结束透明层">
+<meta name="description" content="透明层通过组合来生成一个组合图形。当需要在一组对象上使用特效时，透明层非常有用。 透明层如何绘制 调用CGContextBeginTransparencyLayer开始透明层 绘制组合对象 调用CGContextEndTransparencyLayer结束透明层">
+<meta name="keywords" content="iOS,UIView,Quartz 2D">
 <meta property="og:type" content="article">
 <meta property="og:title" content="透明层">
 <meta property="og:url" content="https://lucasleelz.github.io/2016/08/31/quartz/transparency-layers/index.html">
-<meta property="og:site_name" content="Lucas Lee's Blog">
-<meta property="og:description" content="透明层通过组合来生成一个组合图形。当需要在一组对象上使用特效时，透明层非常有用。
-透明层如何绘制
-调用CGContextBeginTransparencyLayer开始透明层
-绘制组合对象
-调用CGContextEndTransparencyLayer结束透明层">
+<meta property="og:site_name" content="Lucas Lee&#39;s Blog">
+<meta property="og:description" content="透明层通过组合来生成一个组合图形。当需要在一组对象上使用特效时，透明层非常有用。 透明层如何绘制 调用CGContextBeginTransparencyLayer开始透明层 绘制组合对象 调用CGContextEndTransparencyLayer结束透明层">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/ransparencylayer/2.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/ransparencylayer/1.png">
 <meta property="og:updated_time" content="2016-08-31T04:53:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="透明层">
-<meta name="twitter:description" content="透明层通过组合来生成一个组合图形。当需要在一组对象上使用特效时，透明层非常有用。
-透明层如何绘制
-调用CGContextBeginTransparencyLayer开始透明层
-绘制组合对象
-调用CGContextEndTransparencyLayer结束透明层">
+<meta name="twitter:description" content="透明层通过组合来生成一个组合图形。当需要在一组对象上使用特效时，透明层非常有用。 透明层如何绘制 调用CGContextBeginTransparencyLayer开始透明层 绘制组合对象 调用CGContextEndTransparencyLayer结束透明层">
 <meta name="twitter:image" content="https://lucasleelz.github.io/images/quartz/ransparencylayer/2.png">
 
 
@@ -357,7 +347,7 @@
 <li>调用<code>CGContextEndTransparencyLayer</code>结束透明层</li>
 </ul>
 <a id="more"></a>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">CGContextSetShadowWithColor(context, CGSizeZero, 10, [UIColor yellowColor].CGColor);</span><br><span class="line"></span><br><span class="line">CGContextBeginTransparencyLayer(context, NULL);</span><br><span class="line"></span><br><span class="line">CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);</span><br><span class="line">CGContextFillEllipseInRect(context, CGRectMake(100, 150, 100, 100));</span><br><span class="line"></span><br><span class="line">CGContextSetFillColorWithColor(context, [UIColor greenColor].CGColor);</span><br><span class="line">CGContextFillEllipseInRect(context, CGRectMake(150, 100, 100, 100));</span><br><span class="line"></span><br><span class="line">CGContextSetFillColorWithColor(context, [UIColor blueColor].CGColor);</span><br><span class="line">CGContextFillEllipseInRect(context, CGRectMake(150, 150, 100, 100));</span><br><span class="line"></span><br><span class="line">CGContextEndTransparencyLayer(context);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">CGContextSetShadowWithColor(context, CGSizeZero, 10, [UIColor yellowColor].CGColor);</div><div class="line"></div><div class="line">CGContextBeginTransparencyLayer(context, NULL);</div><div class="line"></div><div class="line">CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);</div><div class="line">CGContextFillEllipseInRect(context, CGRectMake(100, 150, 100, 100));</div><div class="line"></div><div class="line">CGContextSetFillColorWithColor(context, [UIColor greenColor].CGColor);</div><div class="line">CGContextFillEllipseInRect(context, CGRectMake(150, 100, 100, 100));</div><div class="line"></div><div class="line">CGContextSetFillColorWithColor(context, [UIColor blueColor].CGColor);</div><div class="line">CGContextFillEllipseInRect(context, CGRectMake(150, 150, 100, 100));</div><div class="line"></div><div class="line">CGContextEndTransparencyLayer(context);</div></pre></td></tr></table></figure>
 <p><img src="/images/quartz/ransparencylayer/2.png" alt="TransparencyLayer"></p>
 <h1 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h1><p><code>CGContextSetShadowWithColor</code>一定要在<code>CGContextBeginTransparencyLayer</code>透明层开始之前。<br>因为CGContextBeginTransparencyLayer与CGContextEndTransparencyLayer之间是一个整体，你可以把整个看做是一个对象，阴影作用在整个对象上面，如果写在CGContextBeginTransparencyLayer之后，那么就变成内部组合对象每一个都有阴影。 也就是说写不写透明层都没有关系了。 如下图没有加透明层或者阴影写在了透明层内部,可以看到视图层叠处也有阴影。</p>
 <p><img src="/images/quartz/ransparencylayer/1.png" alt="TransparencyLayer"></p>
@@ -579,7 +569,7 @@
         <div class="copyright" >
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

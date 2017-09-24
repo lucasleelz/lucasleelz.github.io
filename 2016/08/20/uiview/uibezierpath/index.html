@@ -98,25 +98,21 @@
 
 
 
-<meta name="description" content="UIBezierPath是什么
-在iPad出现之前，大部分定义绘图只能够使用Core Graphics，因为UIKit并不能绘制任意形状。
-在iOS3.2中添加了UIBezierPath更高级的API来绘制。实际上UIBezierPath是对CGPathRef的封装。
-UIKit依然缺乏对渐变、阴影等高级特性的支持。但UIKit却可以非常方便的实现大部分常见的自定义绘制。">
+<meta name="description" content="UIBezierPath是什么 在iPad出现之前，大部分定义绘图只能够使用Core Graphics，因为UIKit并不能绘制任意形状。 在iOS3.2中添加了UIBezierPath更高级的API来绘制。实际上UIBezierPath是对CGPathRef的封装。 UIKit依然缺乏对渐变、阴影等高级特性的支持。但UIKit却可以非常方便的实现大部分常见的自定义绘制。">
+<meta name="keywords" content="UIView,Quartz 2D,UIBezierPath">
 <meta property="og:type" content="article">
 <meta property="og:title" content="UIBezierPath">
 <meta property="og:url" content="https://lucasleelz.github.io/2016/08/20/uiview/uibezierpath/index.html">
-<meta property="og:site_name" content="Lucas Lee's Blog">
-<meta property="og:description" content="UIBezierPath是什么
-在iPad出现之前，大部分定义绘图只能够使用Core Graphics，因为UIKit并不能绘制任意形状。
-在iOS3.2中添加了UIBezierPath更高级的API来绘制。实际上UIBezierPath是对CGPathRef的封装。
-UIKit依然缺乏对渐变、阴影等高级特性的支持。但UIKit却可以非常方便的实现大部分常见的自定义绘制。">
+<meta property="og:site_name" content="Lucas Lee&#39;s Blog">
+<meta property="og:description" content="UIBezierPath是什么 在iPad出现之前，大部分定义绘图只能够使用Core Graphics，因为UIKit并不能绘制任意形状。 在iOS3.2中添加了UIBezierPath更高级的API来绘制。实际上UIBezierPath是对CGPathRef的封装。 UIKit依然缺乏对渐变、阴影等高级特性的支持。但UIKit却可以非常方便的实现大部分常见的自定义绘制。">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/ui_bezier_path/black_line.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/ui_bezier_path/red_line.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/ui_bezier_path/width_line.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/ui_bezier_path/quad_curve.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/ui_bezier_path/quad_curve_principle.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/ui_bezier_path/curve.png">
-<meta property="og:image" content="https://lucasleelz.github.io/images/quartz/ui_bezier_path/curve_ principle.png">
+<meta property="og:image" content="https://lucasleelz.github.io/images/quartz/ui_bezier_path/curve_%20principle.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/ui_bezier_path/angles_in_the_default_coordinate_system.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/ui_bezier_path/arc.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/ui_bezier_path/rectangle.png">
@@ -129,10 +125,7 @@ UIKit依然缺乏对渐变、阴影等高级特性的支持。但UIKit却可以�
 <meta property="og:updated_time" content="2016-08-31T04:54:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="UIBezierPath">
-<meta name="twitter:description" content="UIBezierPath是什么
-在iPad出现之前，大部分定义绘图只能够使用Core Graphics，因为UIKit并不能绘制任意形状。
-在iOS3.2中添加了UIBezierPath更高级的API来绘制。实际上UIBezierPath是对CGPathRef的封装。
-UIKit依然缺乏对渐变、阴影等高级特性的支持。但UIKit却可以非常方便的实现大部分常见的自定义绘制。">
+<meta name="twitter:description" content="UIBezierPath是什么 在iPad出现之前，大部分定义绘图只能够使用Core Graphics，因为UIKit并不能绘制任意形状。 在iOS3.2中添加了UIBezierPath更高级的API来绘制。实际上UIBezierPath是对CGPathRef的封装。 UIKit依然缺乏对渐变、阴影等高级特性的支持。但UIKit却可以非常方便的实现大部分常见的自定义绘制。">
 <meta name="twitter:image" content="https://lucasleelz.github.io/images/quartz/ui_bezier_path/black_line.png">
 
 
@@ -375,14 +368,14 @@ UIKit依然缺乏对渐变、阴影等高级特性的支持。但UIKit却可以�
 <li>添加路径到UIBezierPath</li>
 <li>将UIBezierPath绘制出来</li>
 </ul>
-<h1 id="line-直线"><a href="#line-直线" class="headerlink" title="line 直线"></a>line 直线</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">UIBezierPath *path = [UIBezierPath bezierPath];</span><br><span class="line">[path moveToPoint:CGPointMake(100, 100)];</span><br><span class="line">[path addLineToPoint:CGPointMake(200, 100)];</span><br><span class="line">[path stroke];</span><br></pre></td></tr></table></figure>
+<h1 id="line-直线"><a href="#line-直线" class="headerlink" title="line 直线"></a>line 直线</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">UIBezierPath *path = [UIBezierPath bezierPath];</div><div class="line">[path moveToPoint:CGPointMake(100, 100)];</div><div class="line">[path addLineToPoint:CGPointMake(200, 100)];</div><div class="line">[path stroke];</div></pre></td></tr></table></figure>
 <p><img src="/images/quartz/ui_bezier_path/black_line.png" alt="blackLine"></p>
-<h2 id="使用IB-DESIGNABLE"><a href="#使用IB-DESIGNABLE" class="headerlink" title="使用IB_DESIGNABLE"></a>使用<code>IB_DESIGNABLE</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">IB_DESIGNABLE</span><br><span class="line">@interface LZLineView : UIView</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<h2 id="使用IB-DESIGNABLE"><a href="#使用IB-DESIGNABLE" class="headerlink" title="使用IB_DESIGNABLE"></a>使用<code>IB_DESIGNABLE</code></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">IB_DESIGNABLE</div><div class="line">@interface LZLineView : UIView</div><div class="line">@end</div></pre></td></tr></table></figure>
 <p>这样可以直接在storyboard中预览刚刚画出来的直线。</p>
-<h2 id="给直线添加颜色"><a href="#给直线添加颜色" class="headerlink" title="给直线添加颜色"></a>给直线添加颜色</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[UIColor redColor] setStroke];</span><br></pre></td></tr></table></figure>
+<h2 id="给直线添加颜色"><a href="#给直线添加颜色" class="headerlink" title="给直线添加颜色"></a>给直线添加颜色</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[[UIColor redColor] setStroke];</div></pre></td></tr></table></figure>
 <p>默认是黑色，这里让线条变成红色。</p>
 <p><img src="/images/quartz/ui_bezier_path/red_line.png" alt="redLine"></p>
-<h2 id="给直线添加宽度"><a href="#给直线添加宽度" class="headerlink" title="给直线添加宽度"></a>给直线添加宽度</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">path.lineWidth = 10;</span><br></pre></td></tr></table></figure>
+<h2 id="给直线添加宽度"><a href="#给直线添加宽度" class="headerlink" title="给直线添加宽度"></a>给直线添加宽度</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">path.lineWidth = 10;</div></pre></td></tr></table></figure>
 <p><img src="/images/quartz/ui_bezier_path/width_line.png" alt="widthLine"></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>可以把UIBezierPath看做是一支画笔，从某个点开始到一个点结束，画笔也有很多种颜色, 画笔也有大小，即宽度。</p>
 <h1 id="Bezier-curve-贝塞尔曲线"><a href="#Bezier-curve-贝塞尔曲线" class="headerlink" title="Bézier curve 贝塞尔曲线"></a>Bézier curve 贝塞尔曲线</h1><ul>
@@ -390,12 +383,12 @@ UIKit依然缺乏对渐变、阴影等高级特性的支持。但UIKit却可以�
 <li>贝塞尔曲线由线段与节点组成，节点是可拖动的支点，线段像可伸缩的皮筋。</li>
 </ul>
 <h2 id="Quad-Curve-二次贝塞尔曲线"><a href="#Quad-Curve-二次贝塞尔曲线" class="headerlink" title="Quad Curve 二次贝塞尔曲线"></a>Quad Curve 二次贝塞尔曲线</h2><p>附加一个从当前点到结束点的二次贝塞尔曲线到路径。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[path moveToPoint:CGPointMake(200, 200)];</span><br><span class="line">[path addQuadCurveToPoint:CGPointMake(300, 200) controlPoint:CGPointMake(250, 250)];</span><br><span class="line">[path stroke];</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[path moveToPoint:CGPointMake(200, 200)];</div><div class="line">[path addQuadCurveToPoint:CGPointMake(300, 200) controlPoint:CGPointMake(250, 250)];</div><div class="line">[path stroke];</div></pre></td></tr></table></figure>
 <p>效果<br><img src="/images/quartz/ui_bezier_path/quad_curve.png" alt="Quad Curve"></p>
 <p>在调用此方法之前：必须设置路径的当前点（方法或通过先前创建直线或曲线段使用moveToPoint）。如果路径是空的，这个方法不起作用。</p>
 <p>下图给图了二次贝塞尔曲线的近似值。<br>图来自于苹果官方文档<br><img src="/images/quartz/ui_bezier_path/quad_curve_principle.png" alt="Quad Curve Principle"></p>
 <h2 id="Bezier-curve-三次贝塞尔曲线"><a href="#Bezier-curve-三次贝塞尔曲线" class="headerlink" title="Bézier curve 三次贝塞尔曲线"></a>Bézier curve 三次贝塞尔曲线</h2><p>附加一个三次贝塞尔曲线到路径。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">UIBezierPath *path = [UIBezierPath bezierPath];</span><br><span class="line">[path moveToPoint:CGPointMake(100, 100)];</span><br><span class="line"></span><br><span class="line">[path addCurveToPoint:CGPointMake(250, 100)</span><br><span class="line">        controlPoint1:CGPointMake(150, 50)</span><br><span class="line">        controlPoint2:CGPointMake(200, 150)];</span><br><span class="line">[path stroke];</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">UIBezierPath *path = [UIBezierPath bezierPath];</div><div class="line">[path moveToPoint:CGPointMake(100, 100)];</div><div class="line"></div><div class="line">[path addCurveToPoint:CGPointMake(250, 100)</div><div class="line">        controlPoint1:CGPointMake(150, 50)</div><div class="line">        controlPoint2:CGPointMake(200, 150)];</div><div class="line">[path stroke];</div></pre></td></tr></table></figure>
 <p><img src="/images/quartz/ui_bezier_path/curve.png" alt="curve"></p>
 <p><code>- (void)addCurveToPoint:(CGPoint)endPoint
           controlPoint1:(CGPoint)controlPoint1 
@@ -407,7 +400,7 @@ UIKit依然缺乏对渐变、阴影等高级特性的支持。但UIKit却可以�
 <li>角度 -&gt; 弧度的转换关系：(角度/180) × π</li>
 </ul>
 <h2 id="在坐标系统中的角度"><a href="#在坐标系统中的角度" class="headerlink" title="在坐标系统中的角度"></a>在坐标系统中的角度</h2><p>图来自于苹果官方文档<br><img src="/images/quartz/ui_bezier_path/angles_in_the_default_coordinate_system.png" alt="Angles in the default coordinate system"></p>
-<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">UIBezierPath *path = [UIBezierPath bezierPath];    </span><br><span class="line">[path addArcWithCenter:CGPointMake(100, 100) radius:100 startAngle:0 endAngle:M_PI_2 clockwise:YES];</span><br><span class="line">[path stroke];</span><br></pre></td></tr></table></figure>
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">UIBezierPath *path = [UIBezierPath bezierPath];    </div><div class="line">[path addArcWithCenter:CGPointMake(100, 100) radius:100 startAngle:0 endAngle:M_PI_2 clockwise:YES];</div><div class="line">[path stroke];</div></pre></td></tr></table></figure>
 <p>效果图<br><img src="/images/quartz/ui_bezier_path/arc.png" alt="arc"></p>
 <h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><table>
 <thead>
@@ -439,31 +432,31 @@ UIKit依然缺乏对渐变、阴影等高级特性的支持。但UIKit却可以�
 </tr>
 </tbody>
 </table>
-<h2 id="提供了类方法直接画弧"><a href="#提供了类方法直接画弧" class="headerlink" title="提供了类方法直接画弧"></a>提供了类方法直接画弧</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(100, 100)</span><br><span class="line">                                                    radius:100</span><br><span class="line">                                                startAngle:0</span><br><span class="line">                                                  endAngle:M_PI_2</span><br><span class="line">                                                 clockwise:YES];</span><br><span class="line">[path stroke];</span><br></pre></td></tr></table></figure>
+<h2 id="提供了类方法直接画弧"><a href="#提供了类方法直接画弧" class="headerlink" title="提供了类方法直接画弧"></a>提供了类方法直接画弧</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(100, 100)</div><div class="line">                                                    radius:100</div><div class="line">                                                startAngle:0</div><div class="line">                                                  endAngle:M_PI_2</div><div class="line">                                                 clockwise:YES];</div><div class="line">[path stroke];</div></pre></td></tr></table></figure>
 <h1 id="画矩形"><a href="#画矩形" class="headerlink" title="画矩形"></a>画矩形</h1><ul>
 <li>（x, y） 决定矩形左上角的点。</li>
 <li>（width, height） 是矩形的宽度与高度。</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UIBezierPath *path = [UIBezierPath bezierPathWithRect:CGRectMake(100, 100, 100, 100)];</span><br><span class="line">[path stroke];</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">UIBezierPath *path = [UIBezierPath bezierPathWithRect:CGRectMake(100, 100, 100, 100)];</div><div class="line">[path stroke];</div></pre></td></tr></table></figure>
 <p>效果图</p>
 <p><img src="/images/quartz/ui_bezier_path/rectangle.png" alt="Rectangle"></p>
-<h1 id="画有圆角的矩形"><a href="#画有圆角的矩形" class="headerlink" title="画有圆角的矩形"></a>画有圆角的矩形</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[UIBezierPath bezierPathWithRoundedRect:CGRectMake(100, 400, 100, 100) cornerRadius:15] stroke];</span><br></pre></td></tr></table></figure>
+<h1 id="画有圆角的矩形"><a href="#画有圆角的矩形" class="headerlink" title="画有圆角的矩形"></a>画有圆角的矩形</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[[UIBezierPath bezierPathWithRoundedRect:CGRectMake(100, 400, 100, 100) cornerRadius:15] stroke];</div></pre></td></tr></table></figure>
 <ul>
 <li>cornerRadius 值越大，圆角越明显。</li>
 <li>如果宽高相等，cornerRadius是宽的一半，那么画出来的就是一个圆。</li>
 </ul>
 <p>效果图</p>
 <p><img src="/images/quartz/ui_bezier_path/rectangle_rounded.png" alt="rectangleRounded"></p>
-<h1 id="画有一个或者多个圆角的矩形"><a href="#画有一个或者多个圆角的矩形" class="headerlink" title="画有一个或者多个圆角的矩形"></a>画有一个或者多个圆角的矩形</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[[UIBezierPath bezierPathWithRoundedRect:CGRectMake(250, 200, 100, 100)</span><br><span class="line">                       byRoundingCorners:UIRectCornerTopLeft</span><br><span class="line">                             cornerRadii:CGSizeMake(20, 0)] stroke];</span><br></pre></td></tr></table></figure>
+<h1 id="画有一个或者多个圆角的矩形"><a href="#画有一个或者多个圆角的矩形" class="headerlink" title="画有一个或者多个圆角的矩形"></a>画有一个或者多个圆角的矩形</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[[UIBezierPath bezierPathWithRoundedRect:CGRectMake(250, 200, 100, 100)</div><div class="line">                       byRoundingCorners:UIRectCornerTopLeft</div><div class="line">                             cornerRadii:CGSizeMake(20, 0)] stroke];</div></pre></td></tr></table></figure>
 <p>效果图</p>
 <p><img src="/images/quartz/ui_bezier_path/rectangle_roundingcorners.png" alt="rectangleRoundingCorners"></p>
 <p>corners 可以传递传递多个值</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomLeft |UIRectCornerBottomRight</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomLeft |UIRectCornerBottomRight</div></pre></td></tr></table></figure>
 <p>如果是全部那么就可以直接使用<code>UIRectCornerAllCorners</code>。</p>
-<h1 id="画椭圆"><a href="#画椭圆" class="headerlink" title="画椭圆"></a>画椭圆</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[UIBezierPath bezierPathWithOvalInRect:CGRectMake(100, 250, 50, 90)] stroke];</span><br></pre></td></tr></table></figure>
+<h1 id="画椭圆"><a href="#画椭圆" class="headerlink" title="画椭圆"></a>画椭圆</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[[UIBezierPath bezierPathWithOvalInRect:CGRectMake(100, 250, 50, 90)] stroke];</div></pre></td></tr></table></figure>
 <p>效果图</p>
 <p><img src="/images/quartz/ui_bezier_path/rectangle_oval.png" alt="RectangleRound"></p>
-<h1 id="圆"><a href="#圆" class="headerlink" title="圆"></a>圆</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 方式1</span><br><span class="line">[[UIBezierPath bezierPathWithOvalInRect:CGRectMake(100, 250, 50, 50)] stroke];</span><br><span class="line"></span><br><span class="line">// 方式2</span><br><span class="line">[[UIBezierPath bezierPathWithRoundedRect:CGRectMake(100, 400, 100, 100) cornerRadius:50] stroke];</span><br></pre></td></tr></table></figure>
+<h1 id="圆"><a href="#圆" class="headerlink" title="圆"></a>圆</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// 方式1</div><div class="line">[[UIBezierPath bezierPathWithOvalInRect:CGRectMake(100, 250, 50, 50)] stroke];</div><div class="line"></div><div class="line">// 方式2</div><div class="line">[[UIBezierPath bezierPathWithRoundedRect:CGRectMake(100, 400, 100, 100) cornerRadius:50] stroke];</div></pre></td></tr></table></figure>
 <p>如果宽高相同，那么画出来的就是圆，如下图：<br><img src="/images/quartz/ui_bezier_path/rectangle_round.png" alt="RectangleRound"></p>
 <h1 id="Stroke与Fill"><a href="#Stroke与Fill" class="headerlink" title="Stroke与Fill"></a>Stroke与Fill</h1><ul>
 <li>Stroke 沿着路径画线。</li>
@@ -483,11 +476,11 @@ UIKit依然缺乏对渐变、阴影等高级特性的支持。但UIKit却可以�
 <ul>
 <li>先画一个灰色的圆。</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CGFloat centerX = (rect.size.width - rect.origin.x) * 0.5;</span><br><span class="line">CGFloat centerY = (rect.size.height - rect.origin.y) * 0.5;</span><br><span class="line"></span><br><span class="line">UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(centerX, centerY) radius:10 startAngle:0 endAngle:2 * M_PI clockwise:YES];</span><br><span class="line">path.lineWidth = 2;</span><br><span class="line">[[UIColor lightGrayColor] setStroke];</span><br><span class="line">[path stroke];</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">CGFloat centerX = (rect.size.width - rect.origin.x) * 0.5;</div><div class="line">CGFloat centerY = (rect.size.height - rect.origin.y) * 0.5;</div><div class="line"></div><div class="line">UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(centerX, centerY) radius:10 startAngle:0 endAngle:2 * M_PI clockwise:YES];</div><div class="line">path.lineWidth = 2;</div><div class="line">[[UIColor lightGrayColor] setStroke];</div><div class="line">[path stroke];</div></pre></td></tr></table></figure>
 <ul>
 <li>然后在根据滑动块的值再画一条路径。</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (void)setProgressValue:(CGFloat)progressValue &#123;</span><br><span class="line">    if (progressValue != _progressValue) &#123;</span><br><span class="line">        _progressValue = progressValue;</span><br><span class="line">        [self setNeedsDisplay]; // 重绘</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">CGFloat startAngle = -M_PI_2;</span><br><span class="line">CGFloat endAngle = startAngle + self.progressValue * M_PI * 2;</span><br><span class="line">UIBezierPath *progreePath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(centerX, centerY) radius:10 startAngle:startAngle endAngle:endAngle clockwise:YES];</span><br><span class="line">progreePath.lineWidth = 2;</span><br><span class="line">[[UIColor blueColor] setStroke];</span><br><span class="line">[progreePath stroke];</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">- (void)setProgressValue:(CGFloat)progressValue &#123;</div><div class="line">    if (progressValue != _progressValue) &#123;</div><div class="line">        _progressValue = progressValue;</div><div class="line">        [self setNeedsDisplay]; // 重绘</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">CGFloat startAngle = -M_PI_2;</div><div class="line">CGFloat endAngle = startAngle + self.progressValue * M_PI * 2;</div><div class="line">UIBezierPath *progreePath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(centerX, centerY) radius:10 startAngle:startAngle endAngle:endAngle clockwise:YES];</div><div class="line">progreePath.lineWidth = 2;</div><div class="line">[[UIColor blueColor] setStroke];</div><div class="line">[progreePath stroke];</div></pre></td></tr></table></figure>
 <p>效果图：<br><img src="/images/quartz/ui_bezier_path/progress.png" alt="progress"></p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="https://en.wikipedia.org/wiki/B%C3%A9zier_curve" target="_blank" rel="external">Bézier curve 贝塞尔曲线</a></li>
@@ -712,7 +705,7 @@ UIKit依然缺乏对渐变、阴影等高级特性的支持。但UIKit却可以�
         <div class="copyright" >
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

@@ -98,27 +98,23 @@
 
 
 
-<meta name="description" content="什么是Quartz 2D
-Quartz 是一个二维绘图引擎，所以也叫Quartz 2D。为了简单，后面都叫Quartz。
-Quartz的API是纯C语言的，API来自于Core Graphics。">
+<meta name="description" content="什么是Quartz 2D Quartz 是一个二维绘图引擎，所以也叫Quartz 2D。为了简单，后面都叫Quartz。 Quartz的API是纯C语言的，API来自于Core Graphics。">
+<meta name="keywords" content="iOS,Quartz 2D">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Quartz 2D基本概念">
 <meta property="og:url" content="https://lucasleelz.github.io/2016/08/20/quartz/basic/index.html">
-<meta property="og:site_name" content="Lucas Lee's Blog">
-<meta property="og:description" content="什么是Quartz 2D
-Quartz 是一个二维绘图引擎，所以也叫Quartz 2D。为了简单，后面都叫Quartz。
-Quartz的API是纯C语言的，API来自于Core Graphics。">
-<meta property="og:image" content="https://lucasleelz.github.io/images/quartz/painer's_model.png">
+<meta property="og:site_name" content="Lucas Lee&#39;s Blog">
+<meta property="og:description" content="什么是Quartz 2D Quartz 是一个二维绘图引擎，所以也叫Quartz 2D。为了简单，后面都叫Quartz。 Quartz的API是纯C语言的，API来自于Core Graphics。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lucasleelz.github.io/images/quartz/painer%27s_model.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/quartz_drawing_destinations.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/the_quartz_coordinate_system.png">
 <meta property="og:image" content="https://lucasleelz.github.io/images/quartz/the_uikit_coordinate_system.png">
 <meta property="og:updated_time" content="2016-08-27T09:26:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Quartz 2D基本概念">
-<meta name="twitter:description" content="什么是Quartz 2D
-Quartz 是一个二维绘图引擎，所以也叫Quartz 2D。为了简单，后面都叫Quartz。
-Quartz的API是纯C语言的，API来自于Core Graphics。">
-<meta name="twitter:image" content="https://lucasleelz.github.io/images/quartz/painer's_model.png">
+<meta name="twitter:description" content="什么是Quartz 2D Quartz 是一个二维绘图引擎，所以也叫Quartz 2D。为了简单，后面都叫Quartz。 Quartz的API是纯C语言的，API来自于Core Graphics。">
+<meta name="twitter:image" content="https://lucasleelz.github.io/images/quartz/painer%27s_model.png">
 
 
 
@@ -390,10 +386,10 @@ Quartz的API是纯C语言的，API来自于Core Graphics。">
 <p>Graphics Context 包含一个绘图状态栈。</p>
 <ol>
 <li><p>将当前的上下文copy一份,保存到栈顶(那个栈叫做”图形上下文栈”)</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void CGContextSaveGState(CGContextRef c)</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">void CGContextSaveGState(CGContextRef c)</div></pre></td></tr></table></figure>
 </li>
 <li><p>将栈顶的上下文出栈,替换掉当前的上下文    </p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void CGContextRestoreGState(CGContextRef c)</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">void CGContextRestoreGState(CGContextRef c)</div></pre></td></tr></table></figure>
 </li>
 </ol>
 <h1 id="Coordinate-Systems"><a href="#Coordinate-Systems" class="headerlink" title="Coordinate Systems"></a>Coordinate Systems</h1><ol>
@@ -630,7 +626,7 @@ Quartz的API是纯C语言的，API来自于Core Graphics。">
         <div class="copyright" >
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

@@ -82,7 +82,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="MultiThread,GCD," />
+  <meta name="keywords" content="GCD,MultiThread," />
 
 
 
@@ -98,19 +98,18 @@
 
 
 
-<meta name="description" content="GCD 中除了主要的Dispatch Queue, 还有Dispatch Source, Dispatch I/O, Dispatch Data, 不过这些基本上没有使用。使用Dispatch Source用得最多的就是定时器功能。 在IM中，socket超时等情况就可以使用下面这个例子
-123456789101112131415dispatch_source_t timer = dispatch">
+<meta name="description" content="GCD 中除了主要的Dispatch Queue, 还有Dispatch Source, Dispatch I/O, Dispatch Data, 不过这些基本上没有使用。使用Dispatch Source用得最多的就是定时器功能。 在IM中，socket超时等情况就可以使用下面这个例子 123456789101112131415dispatch_source_t timer = dispatch">
+<meta name="keywords" content="GCD,MultiThread">
 <meta property="og:type" content="article">
 <meta property="og:title" content="GCD 定时器">
 <meta property="og:url" content="https://lucasleelz.github.io/2016/09/11/multithreading/gcd-dispatch-source-timer/index.html">
-<meta property="og:site_name" content="Lucas Lee's Blog">
-<meta property="og:description" content="GCD 中除了主要的Dispatch Queue, 还有Dispatch Source, Dispatch I/O, Dispatch Data, 不过这些基本上没有使用。使用Dispatch Source用得最多的就是定时器功能。 在IM中，socket超时等情况就可以使用下面这个例子
-123456789101112131415dispatch_source_t timer = dispatch">
+<meta property="og:site_name" content="Lucas Lee&#39;s Blog">
+<meta property="og:description" content="GCD 中除了主要的Dispatch Queue, 还有Dispatch Source, Dispatch I/O, Dispatch Data, 不过这些基本上没有使用。使用Dispatch Source用得最多的就是定时器功能。 在IM中，socket超时等情况就可以使用下面这个例子 123456789101112131415dispatch_source_t timer = dispatch">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2016-09-17T07:12:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GCD 定时器">
-<meta name="twitter:description" content="GCD 中除了主要的Dispatch Queue, 还有Dispatch Source, Dispatch I/O, Dispatch Data, 不过这些基本上没有使用。使用Dispatch Source用得最多的就是定时器功能。 在IM中，socket超时等情况就可以使用下面这个例子
-123456789101112131415dispatch_source_t timer = dispatch">
+<meta name="twitter:description" content="GCD 中除了主要的Dispatch Queue, 还有Dispatch Source, Dispatch I/O, Dispatch Data, 不过这些基本上没有使用。使用Dispatch Source用得最多的就是定时器功能。 在IM中，socket超时等情况就可以使用下面这个例子 123456789101112131415dispatch_source_t timer = dispatch">
 
 
 
@@ -339,7 +338,7 @@
 
       
         <p>GCD 中除了主要的Dispatch Queue, 还有Dispatch Source, Dispatch I/O, Dispatch Data, 不过这些基本上没有使用。使用Dispatch Source用得最多的就是定时器功能。 在IM中，socket超时等情况就可以使用下面这个例子</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());</span><br><span class="line"></span><br><span class="line">dispatch_time_t start = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(15ull * NSEC_PER_SEC));</span><br><span class="line">dispatch_source_set_timer(timer, start, DISPATCH_TIME_FOREVER, (int64_t)(1ull * NSEC_PER_SEC));</span><br><span class="line"></span><br><span class="line">dispatch_source_set_event_handler(timer, ^&#123;</span><br><span class="line">    NSLog(@&quot;唤醒了定时器&quot;);</span><br><span class="line">    dispatch_source_cancel(timer);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dispatch_source_set_cancel_handler(timer, ^&#123;</span><br><span class="line">    NSLog(@&quot;取消&quot;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dispatch_resume(timer);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());</div><div class="line"></div><div class="line">dispatch_time_t start = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(15ull * NSEC_PER_SEC));</div><div class="line">dispatch_source_set_timer(timer, start, DISPATCH_TIME_FOREVER, (int64_t)(1ull * NSEC_PER_SEC));</div><div class="line"></div><div class="line">dispatch_source_set_event_handler(timer, ^&#123;</div><div class="line">    NSLog(@&quot;唤醒了定时器&quot;);</div><div class="line">    dispatch_source_cancel(timer);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">dispatch_source_set_cancel_handler(timer, ^&#123;</div><div class="line">    NSLog(@&quot;取消&quot;);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">dispatch_resume(timer);</div></pre></td></tr></table></figure>
 <p>使用<code>dispatch_source_create</code>创建一个dispatch_source_t类型的timer。经过指定的时间把处理任务追加到住队列中。</p>
 <p>使用<code>dispatch_source_set_timer</code>指定15秒后执行任务，不允许重复，允许延迟1秒。</p>
 <p><code>dispatch_source_set_event_handler</code>定时器指定时间内处理的任务。</p>
@@ -347,7 +346,7 @@
 <p>最后使用dispatch_resume启动定时器。</p>
 <p>Dispatch Source 中是可以取消任务的，而Dispatch Queue中是没有的，只有挂起。</p>
 <h1 id="完整的定时器"><a href="#完整的定时器" class="headerlink" title="完整的定时器"></a>完整的定时器</h1><p>会重复执行，直到调用<code>invalidate</code>。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">@interface LZTimer ()</span><br><span class="line"></span><br><span class="line">@property (nonatomic, assign) dispatch_source_t source;</span><br><span class="line"></span><br><span class="line">@property (nonatomic, copy) dispatch_block_t block;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation LZTimer</span><br><span class="line"></span><br><span class="line">+ (LZTimer *)timerRepeatintWithTimeInterval:(NSTimeInterval)seconds block:(dispatch_block_t)block &#123;</span><br><span class="line">    </span><br><span class="line">    NSParameterAssert(seconds);</span><br><span class="line">    NSParameterAssert(block);</span><br><span class="line">    </span><br><span class="line">    LZTimer *timer = [[self alloc] init];</span><br><span class="line">    timer.block = block;</span><br><span class="line">    timer.source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());</span><br><span class="line">    </span><br><span class="line">    uint64_t nsec = (uint64_t)(seconds * NSEC_PER_SEC);</span><br><span class="line">    </span><br><span class="line">    dispatch_source_set_timer(timer.source, dispatch_time(DISPATCH_TIME_NOW, nsec), nsec, 0);</span><br><span class="line">    </span><br><span class="line">    dispatch_source_set_event_handler(timer.source, block);</span><br><span class="line">    </span><br><span class="line">    dispatch_resume(timer.source);</span><br><span class="line">    </span><br><span class="line">    return timer;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)invalidate &#123;</span><br><span class="line">    if (self.source) &#123;</span><br><span class="line">        dispatch_source_cancel(self.source);</span><br><span class="line">        self.source = nil;</span><br><span class="line">    &#125;</span><br><span class="line">    self.block = nil;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)dealloc &#123;</span><br><span class="line">    [self invalidate];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)fire &#123;</span><br><span class="line">    self.block();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">@interface LZTimer ()</div><div class="line"></div><div class="line">@property (nonatomic, assign) dispatch_source_t source;</div><div class="line"></div><div class="line">@property (nonatomic, copy) dispatch_block_t block;</div><div class="line"></div><div class="line">@end</div><div class="line"></div><div class="line">@implementation LZTimer</div><div class="line"></div><div class="line">+ (LZTimer *)timerRepeatintWithTimeInterval:(NSTimeInterval)seconds block:(dispatch_block_t)block &#123;</div><div class="line">    </div><div class="line">    NSParameterAssert(seconds);</div><div class="line">    NSParameterAssert(block);</div><div class="line">    </div><div class="line">    LZTimer *timer = [[self alloc] init];</div><div class="line">    timer.block = block;</div><div class="line">    timer.source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());</div><div class="line">    </div><div class="line">    uint64_t nsec = (uint64_t)(seconds * NSEC_PER_SEC);</div><div class="line">    </div><div class="line">    dispatch_source_set_timer(timer.source, dispatch_time(DISPATCH_TIME_NOW, nsec), nsec, 0);</div><div class="line">    </div><div class="line">    dispatch_source_set_event_handler(timer.source, block);</div><div class="line">    </div><div class="line">    dispatch_resume(timer.source);</div><div class="line">    </div><div class="line">    return timer;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)invalidate &#123;</div><div class="line">    if (self.source) &#123;</div><div class="line">        dispatch_source_cancel(self.source);</div><div class="line">        self.source = nil;</div><div class="line">    &#125;</div><div class="line">    self.block = nil;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)dealloc &#123;</div><div class="line">    [self invalidate];</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)fire &#123;</div><div class="line">    self.block();</div><div class="line">&#125;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -386,9 +385,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/MultiThread/" rel="tag">#MultiThread</a>
-          
             <a href="/tags/GCD/" rel="tag">#GCD</a>
+          
+            <a href="/tags/MultiThread/" rel="tag">#MultiThread</a>
           
         </div>
       
@@ -563,7 +562,7 @@
         <div class="copyright" >
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

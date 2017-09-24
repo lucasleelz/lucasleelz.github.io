@@ -82,7 +82,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="MultiThread,GCD," />
+  <meta name="keywords" content="GCD,MultiThread," />
 
 
 
@@ -98,22 +98,18 @@
 
 
 
-<meta name="description" content="并行执行任务时更新数据，会产生数据不一致的情况，还可能导致异常。虽然使用Serial Dispatch Queue和dispatch_barrier_async函数可以避免。但有必要进行细粒度的排他控制。
-信号量内部有一个可以原子递增或者递减的值，如果一个任务尝试减少信号量的值，使其等于0，那么这个任务将被等待。直到其他的任务（其他的线程中）增加信号量的值。
-通常一个信号量被初始化一个最大值，表示">
+<meta name="description" content="并行执行任务时更新数据，会产生数据不一致的情况，还可能导致异常。虽然使用Serial Dispatch Queue和dispatch_barrier_async函数可以避免。但有必要进行细粒度的排他控制。 信号量内部有一个可以原子递增或者递减的值，如果一个任务尝试减少信号量的值，使其等于0，那么这个任务将被等待。直到其他的任务（其他的线程中）增加信号量的值。 通常一个信号量被初始化一个最大值，表示">
+<meta name="keywords" content="GCD,MultiThread">
 <meta property="og:type" content="article">
 <meta property="og:title" content="信号量">
 <meta property="og:url" content="https://lucasleelz.github.io/2016/09/11/multithreading/gcd-dispatch-semaphore/index.html">
-<meta property="og:site_name" content="Lucas Lee's Blog">
-<meta property="og:description" content="并行执行任务时更新数据，会产生数据不一致的情况，还可能导致异常。虽然使用Serial Dispatch Queue和dispatch_barrier_async函数可以避免。但有必要进行细粒度的排他控制。
-信号量内部有一个可以原子递增或者递减的值，如果一个任务尝试减少信号量的值，使其等于0，那么这个任务将被等待。直到其他的任务（其他的线程中）增加信号量的值。
-通常一个信号量被初始化一个最大值，表示">
+<meta property="og:site_name" content="Lucas Lee&#39;s Blog">
+<meta property="og:description" content="并行执行任务时更新数据，会产生数据不一致的情况，还可能导致异常。虽然使用Serial Dispatch Queue和dispatch_barrier_async函数可以避免。但有必要进行细粒度的排他控制。 信号量内部有一个可以原子递增或者递减的值，如果一个任务尝试减少信号量的值，使其等于0，那么这个任务将被等待。直到其他的任务（其他的线程中）增加信号量的值。 通常一个信号量被初始化一个最大值，表示">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2016-09-17T07:12:49.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="信号量">
-<meta name="twitter:description" content="并行执行任务时更新数据，会产生数据不一致的情况，还可能导致异常。虽然使用Serial Dispatch Queue和dispatch_barrier_async函数可以避免。但有必要进行细粒度的排他控制。
-信号量内部有一个可以原子递增或者递减的值，如果一个任务尝试减少信号量的值，使其等于0，那么这个任务将被等待。直到其他的任务（其他的线程中）增加信号量的值。
-通常一个信号量被初始化一个最大值，表示">
+<meta name="twitter:description" content="并行执行任务时更新数据，会产生数据不一致的情况，还可能导致异常。虽然使用Serial Dispatch Queue和dispatch_barrier_async函数可以避免。但有必要进行细粒度的排他控制。 信号量内部有一个可以原子递增或者递减的值，如果一个任务尝试减少信号量的值，使其等于0，那么这个任务将被等待。直到其他的任务（其他的线程中）增加信号量的值。 通常一个信号量被初始化一个最大值，表示">
 
 
 
@@ -344,12 +340,12 @@
         <p>并行执行任务时更新数据，会产生数据不一致的情况，还可能导致异常。虽然使用<code>Serial Dispatch Queue</code>和<code>dispatch_barrier_async</code>函数可以避免。但有必要进行细粒度的排他控制。</p>
 <p>信号量内部有一个可以原子递增或者递减的值，如果一个任务尝试减少信号量的值，使其等于0，那么这个任务将被等待。直到其他的任务（其他的线程中）增加信号量的值。</p>
 <p>通常一个信号量被初始化一个最大值，表示资源可以同时访问的最大数。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">dispatch_semaphore_t semaphore = dispatch_semaphore_create(1);</span><br><span class="line"></span><br><span class="line">NSMutableArray *array = [NSMutableArray array];</span><br><span class="line"></span><br><span class="line">for (NSUInteger index = 0; index &lt; 1000; index++) &#123;</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);</span><br><span class="line">        [array addObject:@(index)];</span><br><span class="line">        dispatch_semaphore_signal(semaphore);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">dispatch_semaphore_t semaphore = dispatch_semaphore_create(1);</div><div class="line"></div><div class="line">NSMutableArray *array = [NSMutableArray array];</div><div class="line"></div><div class="line">for (NSUInteger index = 0; index &lt; 1000; index++) &#123;</div><div class="line">    dispatch_async(queue, ^&#123;</div><div class="line">        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);</div><div class="line">        [array addObject:@(index)];</div><div class="line">        dispatch_semaphore_signal(semaphore);</div><div class="line">    &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>使用<code>dispatch_semaphore_create</code>生成一个dispatch_semaphore_t类型的Dispatch Semaphore。</p>
 <p>开始的时候初始化为1。</p>
 <p>dispatch_semaphore_wait等待，一直到Dispatch Semaphore的计数值大于等于1。并且会减1后返回，下一个并发任务进行访问的时候，就刚好为0，需要等待。直到前一个任务执行完成后，进行<code>dispatch_semaphore_signal</code>，对计数值进行加1。那么这时候计数值又大于1了，下一个并发任务就可以执行了。</p>
 <h1 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h1><p>在<code>AFNetworing</code>框架的<code>AFURLSessionManager</code>中的方法如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">- (NSArray *)tasksForKeyPath:(NSString *)keyPath &#123;</span><br><span class="line">    __block NSArray *tasks = nil;</span><br><span class="line">    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);</span><br><span class="line">    [self.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) &#123;</span><br><span class="line">        if ([keyPath isEqualToString:NSStringFromSelector(@selector(dataTasks))]) &#123;</span><br><span class="line">            tasks = dataTasks;</span><br><span class="line">        &#125; else if ([keyPath isEqualToString:NSStringFromSelector(@selector(uploadTasks))]) &#123;</span><br><span class="line">            tasks = uploadTasks;</span><br><span class="line">        &#125; else if ([keyPath isEqualToString:NSStringFromSelector(@selector(downloadTasks))]) &#123;</span><br><span class="line">            tasks = downloadTasks;</span><br><span class="line">        &#125; else if ([keyPath isEqualToString:NSStringFromSelector(@selector(tasks))]) &#123;</span><br><span class="line">            tasks = [@[dataTasks, uploadTasks, downloadTasks] valueForKeyPath:@&quot;@unionOfArrays.self&quot;];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        dispatch_semaphore_signal(semaphore);</span><br><span class="line">    &#125;];</span><br><span class="line"></span><br><span class="line">    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);</span><br><span class="line"></span><br><span class="line">    return tasks;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">- (NSArray *)tasksForKeyPath:(NSString *)keyPath &#123;</div><div class="line">    __block NSArray *tasks = nil;</div><div class="line">    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);</div><div class="line">    [self.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) &#123;</div><div class="line">        if ([keyPath isEqualToString:NSStringFromSelector(@selector(dataTasks))]) &#123;</div><div class="line">            tasks = dataTasks;</div><div class="line">        &#125; else if ([keyPath isEqualToString:NSStringFromSelector(@selector(uploadTasks))]) &#123;</div><div class="line">            tasks = uploadTasks;</div><div class="line">        &#125; else if ([keyPath isEqualToString:NSStringFromSelector(@selector(downloadTasks))]) &#123;</div><div class="line">            tasks = downloadTasks;</div><div class="line">        &#125; else if ([keyPath isEqualToString:NSStringFromSelector(@selector(tasks))]) &#123;</div><div class="line">            tasks = [@[dataTasks, uploadTasks, downloadTasks] valueForKeyPath:@&quot;@unionOfArrays.self&quot;];</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        dispatch_semaphore_signal(semaphore);</div><div class="line">    &#125;];</div><div class="line"></div><div class="line">    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);</div><div class="line"></div><div class="line">    return tasks;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>Dispatch Semaphore 初始化就是0，所以dispatch_semaphore_wait会一直等待，直到任务中调用dispatch_semaphore_signal。</p>
 <h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><p>信号量是底层工具，它还是很强大的，但是信号量本身就是锁，能不用锁就不要用。有些时候需要把异步任务转换成同步任务时，信号量就非常适合，例如 <code>AFNetworing</code>的使用。</p>
 
@@ -390,9 +386,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/MultiThread/" rel="tag">#MultiThread</a>
-          
             <a href="/tags/GCD/" rel="tag">#GCD</a>
+          
+            <a href="/tags/MultiThread/" rel="tag">#MultiThread</a>
           
         </div>
       
@@ -567,7 +563,7 @@
         <div class="copyright" >
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

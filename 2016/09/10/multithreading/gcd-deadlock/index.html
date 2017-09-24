@@ -82,7 +82,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="MultiThread,GCD," />
+  <meta name="keywords" content="GCD,MultiThread," />
 
 
 
@@ -98,22 +98,18 @@
 
 
 
-<meta name="description" content="死锁可能导致iOS界面卡死。
-主队列上的死锁在viewDidAppear方法中写，是为了不让界面卡死。
-123456789- (void)viewDidAppear:(BOOL)animated &amp;#123;    [super viewDidAppear:animated];        NSLog(@&amp;quot;Task 1&amp;quot;);    dispatch_sync(dispatch">
+<meta name="description" content="死锁可能导致iOS界面卡死。 主队列上的死锁在viewDidAppear方法中写，是为了不让界面卡死。 123456789- (void)viewDidAppear:(BOOL)animated &amp;#123;    [super viewDidAppear:animated];        NSLog(@&amp;quot;Task 1&amp;quot;);    dispatch_sync(dispatch">
+<meta name="keywords" content="GCD,MultiThread">
 <meta property="og:type" content="article">
 <meta property="og:title" content="GCD 死锁">
 <meta property="og:url" content="https://lucasleelz.github.io/2016/09/10/multithreading/gcd-deadlock/index.html">
-<meta property="og:site_name" content="Lucas Lee's Blog">
-<meta property="og:description" content="死锁可能导致iOS界面卡死。
-主队列上的死锁在viewDidAppear方法中写，是为了不让界面卡死。
-123456789- (void)viewDidAppear:(BOOL)animated &amp;#123;    [super viewDidAppear:animated];        NSLog(@&amp;quot;Task 1&amp;quot;);    dispatch_sync(dispatch">
+<meta property="og:site_name" content="Lucas Lee&#39;s Blog">
+<meta property="og:description" content="死锁可能导致iOS界面卡死。 主队列上的死锁在viewDidAppear方法中写，是为了不让界面卡死。 123456789- (void)viewDidAppear:(BOOL)animated &amp;#123;    [super viewDidAppear:animated];        NSLog(@&amp;quot;Task 1&amp;quot;);    dispatch_sync(dispatch">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2016-09-17T07:12:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GCD 死锁">
-<meta name="twitter:description" content="死锁可能导致iOS界面卡死。
-主队列上的死锁在viewDidAppear方法中写，是为了不让界面卡死。
-123456789- (void)viewDidAppear:(BOOL)animated &amp;#123;    [super viewDidAppear:animated];        NSLog(@&amp;quot;Task 1&amp;quot;);    dispatch_sync(dispatch">
+<meta name="twitter:description" content="死锁可能导致iOS界面卡死。 主队列上的死锁在viewDidAppear方法中写，是为了不让界面卡死。 123456789- (void)viewDidAppear:(BOOL)animated &amp;#123;    [super viewDidAppear:animated];        NSLog(@&amp;quot;Task 1&amp;quot;);    dispatch_sync(dispatch">
 
 
 
@@ -343,14 +339,14 @@
       
         <p>死锁可能导致iOS界面卡死。</p>
 <h1 id="主队列上的死锁"><a href="#主队列上的死锁" class="headerlink" title="主队列上的死锁"></a>主队列上的死锁</h1><p>在<code>viewDidAppear</code>方法中写，是为了不让界面卡死。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidAppear:(BOOL)animated &#123;</span><br><span class="line">    [super viewDidAppear:animated];</span><br><span class="line">    </span><br><span class="line">    NSLog(@&quot;Task 1&quot;);</span><br><span class="line">    dispatch_sync(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        NSLog(@&quot;Task 2&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">    NSLog(@&quot;Task 3&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="控制台输出结果"><a href="#控制台输出结果" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Task 1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">- (void)viewDidAppear:(BOOL)animated &#123;</div><div class="line">    [super viewDidAppear:animated];</div><div class="line">    </div><div class="line">    NSLog(@&quot;Task 1&quot;);</div><div class="line">    dispatch_sync(dispatch_get_main_queue(), ^&#123;</div><div class="line">        NSLog(@&quot;Task 2&quot;);</div><div class="line">    &#125;);</div><div class="line">    NSLog(@&quot;Task 3&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="控制台输出结果"><a href="#控制台输出结果" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Task 1</div></pre></td></tr></table></figure>
 <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>把<code>Task 2</code>追加到主队列中，同步调用，会等待，所以任务<code>Task 3</code>在等待<code>Task 2</code>执行完毕，而<code>Task 2</code>也在等待排在它之前的<code>Task 3</code>执行完毕，相互等待。造成死锁。</p>
-<h1 id="自定义串行队列"><a href="#自定义串行队列" class="headerlink" title="自定义串行队列"></a>自定义串行队列</h1><h2 id="第一种情况"><a href="#第一种情况" class="headerlink" title="第一种情况"></a>第一种情况</h2><p>调用2次同步函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">dispatch_queue_t queue = dispatch_queue_create(&quot;com.lucaslz.queue&quot;, DISPATCH_QUEUE_SERIAL);</span><br><span class="line"></span><br><span class="line">dispatch_sync(queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;Task 1&quot;);</span><br><span class="line">    dispatch_sync(queue, ^&#123;</span><br><span class="line">        NSLog(@&quot;Task 2&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">    NSLog(@&quot;Task 3&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<h3 id="控制台输出结果-1"><a href="#控制台输出结果-1" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Task 1</span><br></pre></td></tr></table></figure>
+<h1 id="自定义串行队列"><a href="#自定义串行队列" class="headerlink" title="自定义串行队列"></a>自定义串行队列</h1><h2 id="第一种情况"><a href="#第一种情况" class="headerlink" title="第一种情况"></a>第一种情况</h2><p>调用2次同步函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">dispatch_queue_t queue = dispatch_queue_create(&quot;com.lucaslz.queue&quot;, DISPATCH_QUEUE_SERIAL);</div><div class="line"></div><div class="line">dispatch_sync(queue, ^&#123;</div><div class="line">    NSLog(@&quot;Task 1&quot;);</div><div class="line">    dispatch_sync(queue, ^&#123;</div><div class="line">        NSLog(@&quot;Task 2&quot;);</div><div class="line">    &#125;);</div><div class="line">    NSLog(@&quot;Task 3&quot;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<h3 id="控制台输出结果-1"><a href="#控制台输出结果-1" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Task 1</div></pre></td></tr></table></figure>
 <h3 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h3><p>首先是<code>Task 1</code>、<code>同步任务</code>、<code>Task 3</code>一起当做一个任务加入串行队列中。同步调用，表示会等待。当执行了<code>Task1</code>，又把<code>Task 2</code>加入串行队列中，这时候又是同步调用，又会等待前一个任务执行完毕。所以外层的任务等待<code>Task 2</code>，相互等待，造成死锁。</p>
-<h2 id="第二种情况"><a href="#第二种情况" class="headerlink" title="第二种情况"></a>第二种情况</h2><p>先异步调用，在同步调用。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">     NSLog(@&quot;Task 1&quot;);</span><br><span class="line">     dispatch_sync(queue, ^&#123;</span><br><span class="line">         NSLog(@&quot;Task 2&quot;);</span><br><span class="line">     &#125;);</span><br><span class="line">     NSLog(@&quot;Task 3&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<h3 id="控制台输出结果-2"><a href="#控制台输出结果-2" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Task 1</span><br></pre></td></tr></table></figure>
+<h2 id="第二种情况"><a href="#第二种情况" class="headerlink" title="第二种情况"></a>第二种情况</h2><p>先异步调用，在同步调用。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">dispatch_async(queue, ^&#123;</div><div class="line">     NSLog(@&quot;Task 1&quot;);</div><div class="line">     dispatch_sync(queue, ^&#123;</div><div class="line">         NSLog(@&quot;Task 2&quot;);</div><div class="line">     &#125;);</div><div class="line">     NSLog(@&quot;Task 3&quot;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<h3 id="控制台输出结果-2"><a href="#控制台输出结果-2" class="headerlink" title="控制台输出结果"></a>控制台输出结果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Task 1</div></pre></td></tr></table></figure>
 <h3 id="分析-2"><a href="#分析-2" class="headerlink" title="分析"></a>分析</h3><p>因为串行队列是有顺序执行的。<br><code>Task 1</code>、<code>同步任务</code>、<code>Task 3</code>一起当做一个任务加入串行队列。当执行了<code>Task 1</code>后，又把<code>Task 2</code>加入到串行队列中，又需要等待队列中的前一个任务（即<code>Task 1</code>、<code>同步任务</code>、<code>Task 3</code>）执行。而前一个任务又需要等待<code>Task 2</code>，相互等待，造成死锁。</p>
 <h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>只有在串行队列（主队列也是串行队列）中才有可能发生死锁，并且还是嵌套调用。实际上一般都直接使用异步调用，所以基本上不会遇见发生死锁。</p>
 
@@ -391,9 +387,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/MultiThread/" rel="tag">#MultiThread</a>
-          
             <a href="/tags/GCD/" rel="tag">#GCD</a>
+          
+            <a href="/tags/MultiThread/" rel="tag">#MultiThread</a>
           
         </div>
       
@@ -568,7 +564,7 @@
         <div class="copyright" >
   
   &copy;  2015 - 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
